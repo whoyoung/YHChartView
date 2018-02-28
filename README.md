@@ -10,6 +10,9 @@ pod 'YHChartView'
 
 ## Manual install
 1.clone or download respository.
-2.copy 'YHChartView' to your project
+
+
+2.copy 'YHChartView' to your project.
+
 
 
