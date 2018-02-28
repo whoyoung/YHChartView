@@ -15,13 +15,13 @@ pod 'YHChartView'
 2.copy 'YHChartView' to your project.
 ## Demo
 Line Chart <br>
-![line](./Gif/line.gif) <br>
+![line](./Gif/line.gif) <br><br>
 Stack Horizontal Bar Chart <br>
-![line](./Gif/HorizontalBar.gif) <br>
+![line](./Gif/HorizontalBar.gif) <br><br>
 Stack Vertical Bar Chart <br>
-![line](./Gif/VerticalBar.gif) <br>
+![line](./Gif/VerticalBar.gif) <br><br>
 Group Horizontal Bar Chart <br>
-![line](./Gif/GroupH.gif) <br>
+![line](./Gif/GroupH.gif) <br><br>
 Group Vertical Bar Chart <br>
-![line](./Gif/GroupV.gif) <br>
+![line](./Gif/GroupV.gif) <br><br>
 
