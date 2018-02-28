@@ -13,6 +13,6 @@ pod 'YHChartView'
 
 
 2.copy 'YHChartView' to your project.
-
-
+## Demo
+![mov](./mov/line.mov) <br>
 
