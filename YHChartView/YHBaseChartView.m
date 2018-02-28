@@ -479,7 +479,7 @@
 - (void)addDataLayer {
 }
 - (NSString *)adjustScaleValue:(NSUInteger)scaleValue {
-    NSString *tempStr = [NSString stringWithFormat:@"%lu", scaleValue];
+    NSString *tempStr = [NSString stringWithFormat:@"%ld", scaleValue];
     NSUInteger length = tempStr.length;
     if (3 < length && length < 7) {
         if ([[tempStr substringWithRange:NSMakeRange(length - 3, 3)] isEqualToString:@"000"]) {
