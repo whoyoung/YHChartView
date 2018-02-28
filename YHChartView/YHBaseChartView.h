@@ -73,6 +73,8 @@ YHTapPointRatioInItemMake(CGFloat x, CGFloat y) {
 @property (nonatomic, strong, readonly) UIColor *referenceLineColor;
 @property (nonatomic, strong, readonly) UIColor *axisTextColor;
 @property (nonatomic, strong, readonly) UIColor *dataTextColor;
+@property (nonatomic, assign, readonly) CGFloat axisTextFontSize;
+@property (nonatomic, assign, readonly) CGFloat dataTextFontSize;
 
 
 - (void)redraw;

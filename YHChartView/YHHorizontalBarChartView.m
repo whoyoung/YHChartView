@@ -490,15 +490,15 @@
             if ((self.Datas.count * self.zoomedItemAxis + self.groupSpace) * (i + 0.5) - offsetX < 0) continue;
             textFrame =
                 CGRectMake(LeftEdge + (self.Datas.count * self.zoomedItemAxis + self.groupSpace) * i - offsetX,
-                           self.bounds.size.height - TextHeight, self.Datas.count * self.zoomedItemAxis, TextHeight);
+                           self.bounds.size.height - self.axisTextFontSize-2, self.Datas.count * self.zoomedItemAxis, self.axisTextFontSize+1);
         } else {
             if ((self.zoomedItemAxis + self.groupSpace) * (i + 0.5) - offsetX < 0) continue;
             textFrame = CGRectMake(LeftEdge + (self.zoomedItemAxis + self.groupSpace) * i - offsetX,
-                                   self.bounds.size.height - TextHeight, self.zoomedItemAxis, TextHeight);
+                                   self.bounds.size.height - self.axisTextFontSize-2, self.zoomedItemAxis, self.axisTextFontSize+1);
         }
         CATextLayer *text = [self getTextLayerWithString:self.AxisArray[i]
                                                textColor:self.dataTextColor
-                                                fontSize:AxistTextFont
+                                                fontSize:self.axisTextFontSize
                                          backgroundColor:[UIColor clearColor]
                                                    frame:textFrame
                                            alignmentMode:kCAAlignmentCenter];
@@ -527,7 +527,7 @@
             [NSString stringWithFormat:@"-%@", [self adjustScaleValue:(self.dataNegativeSegmentNum - i) * self.itemDataScale]];
         CATextLayer *text = [self getTextLayerWithString:str
                                                textColor:self.dataTextColor
-                                                fontSize:DataTextFont
+                                                fontSize:self.dataTextFontSize
                                          backgroundColor:[UIColor clearColor]
                                                    frame:textFrame
                                            alignmentMode:kCAAlignmentRight];
@@ -540,7 +540,7 @@
         NSString *str = [NSString stringWithFormat:@"%@", [self adjustScaleValue:i * self.itemDataScale]];
         CATextLayer *text = [self getTextLayerWithString:str
                                                textColor:self.dataTextColor
-                                                fontSize:DataTextFont
+                                                fontSize:self.dataTextFontSize
                                          backgroundColor:[UIColor clearColor]
                                                    frame:textFrame
                                            alignmentMode:kCAAlignmentRight];

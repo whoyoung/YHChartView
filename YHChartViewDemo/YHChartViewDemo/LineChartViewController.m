@@ -30,6 +30,7 @@
                            @"referenceLineColor": @"dddddd",
                            @"axisTextColor": @"000000",
                            @"dataTextColor": @"000000",
+                           @"axisTextFontSize":@10,
                            @"styles": @{
                                    @"lineStyle": @{
                                            @"lineWidth":@"1",

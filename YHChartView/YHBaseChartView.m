@@ -75,6 +75,8 @@
     _referenceLineColor = [dict objectForKey:@"referenceLineColor"] ? [UIColor hexChangeFloat:[dict objectForKey:@"referenceLineColor"]] : AxisScaleColor;
     _axisTextColor = [dict objectForKey:@"axisTextColor"] ? [UIColor hexChangeFloat:[dict objectForKey:@"axisTextColor"]] : AxisTextColor;
     _dataTextColor = [dict objectForKey:@"dataTextColor"] ? [UIColor hexChangeFloat:[dict objectForKey:@"dataTextColor"]] : DataTextColor;
+    _axisTextFontSize = [dict objectForKey:@"axisTextFontSize"] ? [[dict objectForKey:@"axisTextFontSize"] floatValue] : AxistTextFont;
+    _dataTextFontSize = [dict objectForKey:@"dataTextFontSize"] ? [[dict objectForKey:@"dataTextFontSize"] floatValue] : DataTextFont;
     NSDictionary *styleDict = [dict objectForKey:@"styles"];
     [self dealStyleDict:styleDict];
 }
