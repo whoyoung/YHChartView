@@ -460,7 +460,7 @@
             if ((self.zoomedItemAxis+self.groupSpace)*i - offsetY + (self.zoomedItemAxis-TextHeight)/2.0 < 0) continue;
             textFrame = CGRectMake(0, TopEdge+(self.zoomedItemAxis+self.groupSpace)*i - offsetY + (self.zoomedItemAxis-TextHeight)/2.0, LeftEdge, TextHeight);
         }
-        CATextLayer *text = [self getTextLayerWithString:self.AxisArray[i] textColor:AxisTextColor fontSize:AxistTextFont backgroundColor:[UIColor clearColor] frame:textFrame alignmentMode:kCAAlignmentRight];
+        CATextLayer *text = [self getTextLayerWithString:self.AxisArray[i] textColor:self.axisTextColor fontSize:AxistTextFont backgroundColor:[UIColor clearColor] frame:textFrame alignmentMode:kCAAlignmentRight];
         [self.containerView.layer addSublayer:text];
     }
 }
@@ -478,12 +478,12 @@
 - (void)addDataLayer {
     for (NSUInteger i=0; i<self.dataNegativeSegmentNum; i++) {
         CGRect textFrame = CGRectMake((i-0.5)*[self axisUnitScale]+LeftEdge, self.bounds.size.height-TextHeight, [self axisUnitScale], TextHeight);
-        CATextLayer *text = [self getTextLayerWithString:[NSString stringWithFormat:@"-%@",[self adjustScaleValue:(self.dataNegativeSegmentNum-i)*self.itemDataScale]] textColor:DataTextColor fontSize:DataTextFont backgroundColor:[UIColor clearColor] frame:textFrame alignmentMode:kCAAlignmentCenter];
+        CATextLayer *text = [self getTextLayerWithString:[NSString stringWithFormat:@"-%@",[self adjustScaleValue:(self.dataNegativeSegmentNum-i)*self.itemDataScale]] textColor:self.dataTextColor fontSize:DataTextFont backgroundColor:[UIColor clearColor] frame:textFrame alignmentMode:kCAAlignmentCenter];
         [self.containerView.layer addSublayer:text];
     }
     for (NSInteger i=0; i<=self.dataPostiveSegmentNum+1; i++) {
         CGRect textFrame = CGRectMake((self.dataNegativeSegmentNum+i-0.5)*[self axisUnitScale]+LeftEdge, self.bounds.size.height-TextHeight, [self axisUnitScale], TextHeight);
-        CATextLayer *text = [self getTextLayerWithString:[NSString stringWithFormat:@"%@",[self adjustScaleValue:i*self.itemDataScale]] textColor:DataTextColor fontSize:DataTextFont backgroundColor:[UIColor clearColor] frame:textFrame alignmentMode:kCAAlignmentCenter];
+        CATextLayer *text = [self getTextLayerWithString:[NSString stringWithFormat:@"%@",[self adjustScaleValue:i*self.itemDataScale]] textColor:self.dataTextColor fontSize:DataTextFont backgroundColor:[UIColor clearColor] frame:textFrame alignmentMode:kCAAlignmentCenter];
         [self.containerView.layer addSublayer:text];
     }
 }

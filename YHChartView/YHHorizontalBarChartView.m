@@ -497,7 +497,7 @@
                                    self.bounds.size.height - TextHeight, self.zoomedItemAxis, TextHeight);
         }
         CATextLayer *text = [self getTextLayerWithString:self.AxisArray[i]
-                                               textColor:AxisTextColor
+                                               textColor:self.dataTextColor
                                                 fontSize:AxistTextFont
                                          backgroundColor:[UIColor clearColor]
                                                    frame:textFrame
@@ -526,7 +526,7 @@
         NSString *str =
             [NSString stringWithFormat:@"-%@", [self adjustScaleValue:(self.dataNegativeSegmentNum - i) * self.itemDataScale]];
         CATextLayer *text = [self getTextLayerWithString:str
-                                               textColor:DataTextColor
+                                               textColor:self.dataTextColor
                                                 fontSize:DataTextFont
                                          backgroundColor:[UIColor clearColor]
                                                    frame:textFrame
@@ -539,7 +539,7 @@
             TextWidth, BottomEdge);
         NSString *str = [NSString stringWithFormat:@"%@", [self adjustScaleValue:i * self.itemDataScale]];
         CATextLayer *text = [self getTextLayerWithString:str
-                                               textColor:DataTextColor
+                                               textColor:self.dataTextColor
                                                 fontSize:DataTextFont
                                          backgroundColor:[UIColor clearColor]
                                                    frame:textFrame

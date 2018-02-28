@@ -73,6 +73,8 @@
     }
     _referenceLineWidth = [dict objectForKey:@"referenceLineWidth"] ? [[dict objectForKey:@"referenceLineWidth"] floatValue] : ReferenceLineWidth;
     _referenceLineColor = [dict objectForKey:@"referenceLineColor"] ? [UIColor hexChangeFloat:[dict objectForKey:@"referenceLineColor"]] : AxisScaleColor;
+    _axisTextColor = [dict objectForKey:@"axisTextColor"] ? [UIColor hexChangeFloat:[dict objectForKey:@"axisTextColor"]] : AxisTextColor;
+    _dataTextColor = [dict objectForKey:@"dataTextColor"] ? [UIColor hexChangeFloat:[dict objectForKey:@"dataTextColor"]] : DataTextColor;
     NSDictionary *styleDict = [dict objectForKey:@"styles"];
     [self dealStyleDict:styleDict];
 }

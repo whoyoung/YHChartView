@@ -29,6 +29,8 @@
                            @"valueInterval": @"3",
                            @"referenceLineWidth": @2,
                            @"referenceLineColor": @"dddddd",
+                           @"axisTextColor": @"000000",
+                           @"dataTextColor": @"000000",
                            @"styles": @{
                                    @"barStyle": @{
                                    @"minBarWidth":@"5",

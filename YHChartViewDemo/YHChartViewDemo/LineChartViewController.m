@@ -28,10 +28,13 @@
                            @"valueInterval": @"3",
                            @"referenceLineWidth": @2,
                            @"referenceLineColor": @"dddddd",
+                           @"axisTextColor": @"000000",
+                           @"dataTextColor": @"000000",
                            @"styles": @{
                                    @"lineStyle": @{
                                            @"lineWidth":@"1",
-                                           @"showAxisDashLine":@YES
+                                           @"showAxisDashLine":@YES,
+                                           @"circleBorderWidth":@2
                                            }
                                    }
                            };
