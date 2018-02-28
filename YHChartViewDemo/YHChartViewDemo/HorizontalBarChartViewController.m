@@ -25,7 +25,7 @@
                            @"groupDimension":@"成交人",
                            @"axisTitle":@"星期",
                            @"dataTitle":@"成交量",
-                           @"stack":@YES, 
+                           @"stack":@NO, 
                            @"valueInterval": @"3",
                            @"referenceLineWidth": @2,
                            @"referenceLineColor": @"dddddd",
