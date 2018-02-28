@@ -9,7 +9,9 @@
 #import "YHLineChartView.h"
 
 @interface YHLineChartView()
-
+@property (nonatomic, assign) CGFloat lineWidth;
+@property (nonatomic, assign) CGFloat circleRadius;
+@property (nonatomic, assign) CGFloat circleBorderWidth;
 @end
 
 @implementation YHLineChartView
@@ -21,6 +23,15 @@
     self.showAxisHardLine = [lineStyle objectForKey:@"showAxisHardLine"] ? [[lineStyle objectForKey:@"showAxisHardLine"] boolValue] : NO;
     self.showDataDashLine = [lineStyle objectForKey:@"showDataDashLine"] ? [[lineStyle objectForKey:@"showDataDashLine"] boolValue] : NO;
     self.showDataHardLine = [lineStyle objectForKey:@"showDataHardLine"] ? [[lineStyle objectForKey:@"showDataHardLine"] boolValue] : YES;
+    self.lineWidth =
+    [lineStyle objectForKey:@"lineWidth"] ? [[lineStyle objectForKey:@"lineWidth"] floatValue] : 0.5;
+    self.circleBorderWidth =
+    [lineStyle objectForKey:@"circleBorderWidth"] ? [[lineStyle objectForKey:@"circleBorderWidth"] floatValue] : 0.5;
+    self.circleRadius =
+    [lineStyle objectForKey:@"circleRadius"] ? [[lineStyle objectForKey:@"circleRadius"] floatValue] : 4;
+    if (self.circleBorderWidth > self.circleRadius) {
+        self.circleBorderWidth = self.circleRadius;
+    }
 }
 
 - (CGSize)gestureScrollContentSize {
@@ -153,7 +164,7 @@
             }
         }
         yValueLayer.path = yValueBezier.CGPath;
-        yValueLayer.lineWidth = 1;
+        yValueLayer.lineWidth = self.lineWidth;
         yValueLayer.strokeColor = [[UIColor hexChangeFloat:self.itemColors[i]] CGColor];
         yValueLayer.fillColor = [[UIColor clearColor] CGColor];
         [subContainerV.layer addSublayer:yValueLayer];
@@ -167,13 +178,25 @@
     for (NSUInteger index = 0; index < circlePoints.count; index++) {
         CAShapeLayer *shaperLayer = [CAShapeLayer layer];
         UIBezierPath *bezierP = [UIBezierPath bezierPathWithArcCenter:CGPointFromString(circlePoints[index])
-                                                               radius:2
+                                                               radius:self.circleRadius
                                                            startAngle:0
                                                              endAngle:2 * M_PI
                                                             clockwise:YES];
+        
         shaperLayer.path = bezierP.CGPath;
         shaperLayer.fillColor = color;
         [parentV.layer addSublayer:shaperLayer];
+        
+        CAShapeLayer *centerLayer = [CAShapeLayer layer];
+        UIBezierPath *centerBezierP = [UIBezierPath bezierPathWithArcCenter:CGPointFromString(circlePoints[index])
+                                                               radius:self.circleRadius-self.circleBorderWidth
+                                                           startAngle:0
+                                                             endAngle:2 * M_PI
+                                                            clockwise:YES];
+        
+        centerLayer.path = centerBezierP.CGPath;
+        centerLayer.fillColor = [UIColor whiteColor].CGColor;
+        [parentV.layer addSublayer:centerLayer];
     }
 }
 
