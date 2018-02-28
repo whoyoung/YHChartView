@@ -145,15 +145,11 @@
             if (![values[j] respondsToSelector:@selector(floatValue)]) continue;
             CGFloat yPoint = zeroY - [self verifyDataValue:values[j]] * self.dataItemUnitScale;
             CGPoint p = CGPointMake(j*self.zoomedItemAxis-offsetX, yPoint);
+            [circlePoints addObject:NSStringFromCGPoint(p)];
             if (j == self.beginGroupIndex || ![values[j-1] respondsToSelector:@selector(floatValue)]) {
                 [yValueBezier moveToPoint:p];
             } else {
                 [yValueBezier addLineToPoint:p];
-            }
-            if (j < self.endGroupIndex && [values[j + 1] respondsToSelector:@selector(floatValue)]) {
-                [circlePoints addObject:NSStringFromCGPoint(p)];
-            } else if (j > self.beginGroupIndex && [values[j - 1] respondsToSelector:@selector(floatValue)]) {
-                [circlePoints addObject:NSStringFromCGPoint(p)];
             }
         }
         yValueLayer.path = yValueBezier.CGPath;
