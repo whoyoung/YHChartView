@@ -344,6 +344,7 @@
 }
 
 - (CGFloat)dataItemUnitScale {
+    if (self.itemDataScale == 0) return 0;
     return ChartHeight / (self.itemDataScale * (self.dataPostiveSegmentNum + self.dataNegativeSegmentNum));
 }
 

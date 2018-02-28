@@ -434,7 +434,7 @@
 - (void)calculateDataSegment {
     if (self.minDataValue >= 0) {
         _dataPostiveSegmentNum = self.valueInterval;
-        if (self.maxDataValue < 1) {
+        if (self.maxDataValue <= 1) {
             _dataPostiveSegmentNum = 1;
         }
         _dataNegativeSegmentNum = 0;
@@ -442,20 +442,20 @@
     } else if (self.maxDataValue <= 0) {
         _dataPostiveSegmentNum = 0;
         _dataNegativeSegmentNum = self.valueInterval;
-        if (fabs(self.minDataValue) < 1) {
+        if (fabs(self.minDataValue) <= 1) {
             _dataNegativeSegmentNum = 1;
         }
         self.itemDataScale = ceil([self absoluteMaxValue:self.minDataValue] / _dataNegativeSegmentNum);
     } else if (self.maxDataValue >= fabs(self.minDataValue)) {
         _dataPostiveSegmentNum = self.valueInterval;
-        if (self.maxDataValue < 1) {
+        if (self.maxDataValue <= 1) {
             _dataPostiveSegmentNum = 1;
         }
         self.itemDataScale = ceil([self absoluteMaxValue:self.maxDataValue] / _dataPostiveSegmentNum);
         _dataNegativeSegmentNum = ceil(fabs(self.minDataValue) / self.itemDataScale);
     } else {
         _dataNegativeSegmentNum = self.valueInterval;
-        if (fabs(self.minDataValue) < 1) {
+        if (fabs(self.minDataValue) <= 1) {
             _dataNegativeSegmentNum = 1;
         }
         self.itemDataScale = ceil([self absoluteMaxValue:self.minDataValue] / _dataNegativeSegmentNum);
@@ -464,7 +464,7 @@
 }
 - (NSUInteger)absoluteMaxValue:(CGFloat)value {
     CGFloat maxNum = fabs(value);
-    NSString *str = [NSString stringWithFormat:@"%.0f", floorf(maxNum)];
+    NSString *str = [NSString stringWithFormat:@"%.0f", ceilf(maxNum)];
     NSUInteger tenCube = 1;
     if (str.length > 2) {
         tenCube = pow(10, str.length - 2);

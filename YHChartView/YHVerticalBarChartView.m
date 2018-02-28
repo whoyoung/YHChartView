@@ -548,6 +548,7 @@
     return self.dataNegativeSegmentNum * [self axisUnitScale];
 }
 - (CGFloat)dataItemUnitScale {
+    if (self.itemDataScale == 0) return 0;
     return ChartWidth / (self.itemDataScale * (self.dataPostiveSegmentNum + self.dataNegativeSegmentNum));
 }
 - (void)adjustScale:(CGRect)origionFrame newFrame:(CGRect)newFrame {
