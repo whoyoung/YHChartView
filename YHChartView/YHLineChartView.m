@@ -203,8 +203,8 @@
         [xScaleBezier addLineToPoint:CGPointMake(LeftEdge + self.zoomedItemAxis*i - offsetX, self.bounds.size.height-BottomEdge+5)];
     }
     xScaleLayer.path = xScaleBezier.CGPath;
-    xScaleLayer.lineWidth = ReferenceLineWidth;
-    xScaleLayer.strokeColor = AxisScaleColor.CGColor;
+    xScaleLayer.lineWidth = self.referenceLineWidth;
+    xScaleLayer.strokeColor = self.referenceLineColor.CGColor;
     xScaleLayer.fillColor = [UIColor clearColor].CGColor;
     [self.containerView.layer addSublayer:xScaleLayer];
     
@@ -220,8 +220,8 @@
         if (self.showAxisDashLine) {
             [dashLineLayer setLineDashPattern:[NSArray arrayWithObjects:[NSNumber numberWithInt:5], [NSNumber numberWithInt:5], nil]];
         }
-        dashLineLayer.lineWidth = ReferenceLineWidth;
-        dashLineLayer.strokeColor = AxisScaleColor.CGColor;
+        dashLineLayer.lineWidth = self.referenceLineWidth;
+        dashLineLayer.strokeColor = self.referenceLineColor.CGColor;
         dashLineLayer.fillColor = [UIColor clearColor].CGColor;
         [self.containerView.layer addSublayer:dashLineLayer];
     }
@@ -252,8 +252,8 @@
         }
         yScaleLayer.path = yScaleBezier.CGPath;
         yScaleLayer.backgroundColor = [UIColor blueColor].CGColor;
-        yScaleLayer.lineWidth = ReferenceLineWidth;
-        yScaleLayer.strokeColor = AxisScaleColor.CGColor;
+        yScaleLayer.lineWidth = self.referenceLineWidth;
+        yScaleLayer.strokeColor = self.referenceLineColor.CGColor;
         yScaleLayer.fillColor = [UIColor clearColor].CGColor;
         [self.containerView.layer addSublayer:yScaleLayer];
     }
@@ -269,8 +269,8 @@
         if (self.showDataDashLine) {
             [dashLineLayer setLineDashPattern:[NSArray arrayWithObjects:[NSNumber numberWithInt:5], [NSNumber numberWithInt:5], nil]];
         }
-        dashLineLayer.lineWidth = ReferenceLineWidth;
-        dashLineLayer.strokeColor = AxisScaleColor.CGColor;
+        dashLineLayer.lineWidth = self.referenceLineWidth;
+        dashLineLayer.strokeColor = self.referenceLineColor.CGColor;
         dashLineLayer.fillColor = [UIColor clearColor].CGColor;
         [self.containerView.layer addSublayer:dashLineLayer];
     }

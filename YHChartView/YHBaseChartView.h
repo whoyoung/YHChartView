@@ -69,6 +69,8 @@ YHTapPointRatioInItemMake(CGFloat x, CGFloat y) {
 @property (nonatomic, assign, readonly) BOOL hadTapped;
 @property (nonatomic, assign, readonly) NSUInteger tappedGroup;
 @property (nonatomic, assign, readonly) NSUInteger tappedItem;
+@property (nonatomic, assign, readonly) CGFloat referenceLineWidth;
+@property (nonatomic, strong, readonly) UIColor *referenceLineColor;
 
 - (void)redraw;
 - (void)compareBeginAndEndItemValue:(NSUInteger)beginItem endItem:(NSUInteger)endItem isBeginGroup:(BOOL)isBeginGroup;

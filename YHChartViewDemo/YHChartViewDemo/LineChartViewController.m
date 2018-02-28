@@ -18,17 +18,20 @@
     NSDictionary *dict = @{
                            @"axis":@[@"Mon",@"Tues",@"Wed",@"Thu",@"Fri",@"Sat",@"Sun"],
                            @"datas":@[
-                                   @[[NSNull null],@"40.2",@"11190.3",[NSNull null],@"10.5",@"380.6",@"-2220.7"],
-                                   @[@"10.5",@"125.6",@"-670.7",@"91.9",@"510.12",@"220.13",@"-770.14"]
+                                   @[@"9883.6",@"580.2",@"980.3",@"-3330.4",@"1340.5",@"330.6",@"-170.7"],
+                                   @[@"2222",@"12533.6",@"-158.7",@"91.9",@"1066.12",@"250.13",@"-6033.14"]
                                    ],
                            @"groupMembers":@[@"zhang",@"yang"],
                            @"groupDimension":@"成交人",
                            @"axisTitle":@"星期",
                            @"dataTitle":@"成交量",
                            @"valueInterval": @"3",
+                           @"referenceLineWidth": @2,
+                           @"referenceLineColor": @"dddddd",
                            @"styles": @{
                                    @"lineStyle": @{
-                                           @"lineWidth":@"1"
+                                           @"lineWidth":@"1",
+                                           @"showAxisDashLine":@YES
                                            }
                                    }
                            };

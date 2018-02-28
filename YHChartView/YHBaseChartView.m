@@ -71,6 +71,8 @@
     if (self.valueInterval == 0) {
         _valueInterval = 3;
     }
+    _referenceLineWidth = [dict objectForKey:@"referenceLineWidth"] ? [[dict objectForKey:@"referenceLineWidth"] floatValue] : ReferenceLineWidth;
+    _referenceLineColor = [dict objectForKey:@"referenceLineColor"] ? [UIColor hexChangeFloat:[dict objectForKey:@"referenceLineColor"]] : AxisScaleColor;
     NSDictionary *styleDict = [dict objectForKey:@"styles"];
     [self dealStyleDict:styleDict];
 }

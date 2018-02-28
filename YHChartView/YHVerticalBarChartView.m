@@ -470,8 +470,8 @@
     [yScaleBezier moveToPoint:CGPointMake(LeftEdge, TopEdge)];
     [yScaleBezier addLineToPoint:CGPointMake(LeftEdge, self.bounds.size.height-BottomEdge)];
     yScaleLayer.path = yScaleBezier.CGPath;
-    yScaleLayer.lineWidth = ReferenceLineWidth;
-    yScaleLayer.strokeColor = AxisScaleColor.CGColor;
+    yScaleLayer.lineWidth = self.referenceLineWidth;
+    yScaleLayer.strokeColor = self.referenceLineColor.CGColor;
     yScaleLayer.fillColor = [UIColor clearColor].CGColor;
     [self.containerView.layer addSublayer:yScaleLayer];
 }
@@ -499,8 +499,8 @@
         [xScaleBezier addLineToPoint:CGPointMake(LeftEdge+i*[self axisUnitScale], self.bounds.size.height-BottomEdge+5)];
     }
     xScaleLayer.path = xScaleBezier.CGPath;
-    xScaleLayer.lineWidth = ReferenceLineWidth;
-    xScaleLayer.strokeColor = AxisScaleColor.CGColor;
+    xScaleLayer.lineWidth = self.referenceLineWidth;
+    xScaleLayer.strokeColor = self.referenceLineColor.CGColor;
     xScaleLayer.fillColor = [UIColor clearColor].CGColor;
     [self.containerView.layer addSublayer:xScaleLayer];
     
@@ -515,8 +515,8 @@
         if (self.showDataDashLine) {
             [dashLineLayer setLineDashPattern:[NSArray arrayWithObjects:[NSNumber numberWithInt:5], [NSNumber numberWithInt:5], nil]];
         }
-        dashLineLayer.lineWidth = ReferenceLineWidth;
-        dashLineLayer.strokeColor = AxisScaleColor.CGColor;
+        dashLineLayer.lineWidth = self.referenceLineWidth;
+        dashLineLayer.strokeColor = self.referenceLineColor.CGColor;
         dashLineLayer.fillColor = [UIColor clearColor].CGColor;
         [self.containerView.layer addSublayer:dashLineLayer];
     }
