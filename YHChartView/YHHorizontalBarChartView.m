@@ -358,7 +358,7 @@
             CGFloat offsetX = self.gestureScroll.contentOffset.x;
             for (NSUInteger i = self.beginGroupIndex; i <= self.endGroupIndex; i++) {
                 CAShapeLayer *yValueLayer = [CAShapeLayer layer];
-                CGFloat dataV = [self verifyDataValue:array[i]];
+                CGFloat dataV = [self verifyDataValue:array[i]] * self.animateFactor;
                 CGFloat yPoint = self.zeroLine - dataV * self.dataItemUnitScale;
                 if (dataV < 0) {
                     yPoint = self.zeroLine;
@@ -380,7 +380,7 @@
                 CGFloat positiveY = self.zeroLine, negativeY = self.zeroLine, yPoint = self.zeroLine;
                 for (NSUInteger j = 0; j < self.Datas.count; j++) {
                     NSArray *array = self.Datas[j];
-                    CGFloat dataV = [self verifyDataValue:array[i]];
+                    CGFloat dataV = [self verifyDataValue:array[i]] * self.animateFactor;
                     CAShapeLayer *yValueLayer = [CAShapeLayer layer];
                     if (dataV >= 0) {
                         positiveY -= dataV * self.dataItemUnitScale;
@@ -431,7 +431,7 @@
             for (NSUInteger i = self.beginGroupIndex + 1; i < self.endGroupIndex; i++) {
                 for (NSUInteger j = 0; j < self.Datas.count; j++) {
                     NSArray *array = self.Datas[j];
-                    CGFloat dataV = [self verifyDataValue:array[i]];
+                    CGFloat dataV = [self verifyDataValue:array[i]] * self.animateFactor;
                     CAShapeLayer *yValueLayer = [CAShapeLayer layer];
                     CGFloat yPoint = self.zeroLine - dataV * self.dataItemUnitScale;
                     if (dataV < 0) {
@@ -465,6 +465,7 @@
         NSArray *array = self.Datas[i];
         CAShapeLayer *yValueLayer = [CAShapeLayer layer];
         CGFloat itemValue = isBegin ? [self verifyDataValue:array[self.beginGroupIndex]] : [self verifyDataValue:array[self.endGroupIndex]];
+        itemValue *= self.animateFactor;
         CGFloat yPoint = self.zeroLine - itemValue * self.dataItemUnitScale;
         if (itemValue < 0) {
             yPoint = self.zeroLine;

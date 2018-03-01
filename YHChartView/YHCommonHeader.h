@@ -19,7 +19,7 @@ static const float AxistTextFont = 9;
 static const float DataTextFont = 8;
 static const float TipTextFont = 9;
 static const float ReferenceLineWidth = 0.5;
-
+static const float LoadAnimationTime = 0.5;
 #define ChartWidth (self.bounds.size.width - LeftEdge - RightEdge)
 #define ChartHeight (self.bounds.size.height - TopEdge - BottomEdge)
 #define AxisTextColor [UIColor hexChangeFloat:@"8899A6"]

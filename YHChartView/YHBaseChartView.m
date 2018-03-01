@@ -8,7 +8,9 @@
 #import "YHBaseChartView.h"
 
 @interface YHBaseChartView () <UIScrollViewDelegate>
-
+@property (nonatomic, strong) NSTimer *timer;
+@property (nonatomic, assign) BOOL showLoadAnimation;
+@property (nonatomic, assign) CGFloat loadAnimationTime;
 @end
 
 @implementation YHBaseChartView
@@ -77,6 +79,9 @@
     _dataTextColor = [dict objectForKey:@"dataTextColor"] ? [UIColor hexChangeFloat:[dict objectForKey:@"dataTextColor"]] : DataTextColor;
     _axisTextFontSize = [dict objectForKey:@"axisTextFontSize"] ? [[dict objectForKey:@"axisTextFontSize"] floatValue] : AxistTextFont;
     _dataTextFontSize = [dict objectForKey:@"dataTextFontSize"] ? [[dict objectForKey:@"dataTextFontSize"] floatValue] : DataTextFont;
+    _showLoadAnimation = [[dict objectForKey:@"showLoadAnimation"] boolValue];
+    _loadAnimationTime = [dict objectForKey:@"loadAnimationTime"] ? [[dict objectForKey:@"loadAnimationTime"] floatValue] : LoadAnimationTime;
+    if (_loadAnimationTime < 0.1) _loadAnimationTime = 0.1;
     NSDictionary *styleDict = [dict objectForKey:@"styles"];
     [self dealStyleDict:styleDict];
 }
@@ -104,6 +109,21 @@
     [self addGestureScroll];
     self.gestureScroll.contentSize = [self gestureScrollContentSize];
     if (!_containerView) {
+        if (_showLoadAnimation) {
+            _timer = [NSTimer timerWithTimeInterval:0.1 target:self selector:@selector(updateDraw) userInfo:nil repeats:YES];
+            [[NSRunLoop currentRunLoop] addTimer:_timer forMode:NSRunLoopCommonModes];
+        } else {
+            _animateFactor = 1;
+            [self redraw];
+        }
+    }
+}
+- (void)updateDraw {
+    _animateFactor += 0.1/self.loadAnimationTime;
+    if (_animateFactor > 1) {
+        [_timer invalidate];
+        _timer = nil;
+    } else {
         [self redraw];
     }
 }

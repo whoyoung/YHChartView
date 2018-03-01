@@ -343,7 +343,7 @@
             for (NSUInteger i=self.beginGroupIndex; i<=self.endGroupIndex; i++) {
                 CAShapeLayer *xValueLayer = [CAShapeLayer layer];
                 CGFloat xPoint = self.zeroLine;
-                CGFloat dataV = [self verifyDataValue:array[i]];
+                CGFloat dataV = [self verifyDataValue:array[i]] * self.animateFactor;
                 if (dataV < 0) {
                     xPoint = self.zeroLine + dataV * self.dataItemUnitScale;
                 }
@@ -362,7 +362,7 @@
                 CGFloat positiveX = self.zeroLine, negativeX = self.zeroLine, xPoint = self.zeroLine;
                 for (NSUInteger j=0; j<self.Datas.count; j++) {
                     NSArray *array = self.Datas[j];
-                    CGFloat dataV = [self verifyDataValue:array[i]];
+                    CGFloat dataV = [self verifyDataValue:array[i]] * self.animateFactor;
                     CAShapeLayer *xValueLayer = [CAShapeLayer layer];
                     if (dataV < 0) {
                         negativeX += dataV * self.dataItemUnitScale;
@@ -405,7 +405,7 @@
             for (NSUInteger i=self.beginGroupIndex+1; i<self.endGroupIndex; i++) {
                 for (NSUInteger j=0; j<self.Datas.count; j++) {
                     NSArray *array = self.Datas[j];
-                    CGFloat dataV = [self verifyDataValue:array[i]];
+                    CGFloat dataV = [self verifyDataValue:array[i]] * self.animateFactor;
                     CAShapeLayer *xValueLayer = [CAShapeLayer layer];
                     
                     CGFloat xPoint = self.zeroLine;
@@ -434,6 +434,7 @@
         NSArray *array = self.Datas[i];
         CAShapeLayer *xValueLayer = [CAShapeLayer layer];
         CGFloat itemValue = isBegin ? [self verifyDataValue:array[self.beginGroupIndex]] :  [self verifyDataValue:array[self.endGroupIndex]];
+        itemValue *=  self.animateFactor;
         CGFloat xPoint = self.zeroLine;
         if (itemValue < 0) {
             xPoint = self.zeroLine + itemValue * self.dataItemUnitScale;

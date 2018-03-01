@@ -25,12 +25,13 @@
                            @"groupDimension":@"成交人",
                            @"axisTitle":@"星期",
                            @"dataTitle":@"成交量",
-                           @"stack":@NO, 
                            @"valueInterval": @"3",
                            @"referenceLineWidth": @2,
                            @"referenceLineColor": @"dddddd",
                            @"axisTextColor": @"000000",
                            @"dataTextColor": @"000000",
+                           @"showLoadAnimation": @YES,
+                           @"loadAnimationTime": @0.8,
                            @"styles": @{
                                    @"barStyle": @{
                                    @"minBarWidth":@"5",

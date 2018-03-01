@@ -76,6 +76,7 @@ YHTapPointRatioInItemMake(CGFloat x, CGFloat y) {
 @property (nonatomic, assign, readonly) CGFloat axisTextFontSize;
 @property (nonatomic, assign, readonly) CGFloat dataTextFontSize;
 
+@property (nonatomic, assign, readonly) CGFloat animateFactor;
 
 - (void)redraw;
 - (void)compareBeginAndEndItemValue:(NSUInteger)beginItem endItem:(NSUInteger)endItem isBeginGroup:(BOOL)isBeginGroup;

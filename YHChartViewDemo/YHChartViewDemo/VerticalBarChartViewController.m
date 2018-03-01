@@ -31,6 +31,8 @@
                            @"referenceLineColor": @"dddddd",
                            @"axisTextColor": @"000000",
                            @"dataTextColor": @"000000",
+                           @"showLoadAnimation": @YES,
+                           @"loadAnimationTime": @0.8,
                            @"styles": @{
                                    @"barStyle": @{
                                            @"minBarWidth":@"5",
