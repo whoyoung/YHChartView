@@ -32,7 +32,7 @@ Group Horizontal Bar Chart <br>
 Group Vertical Bar Chart <br>
 ![line](./Gif/GroupV.gif) <br><br>
 ## Change logs
-###version 0.3.1
+### version 0.3.1
 1. 增加参考线宽及参考线颜色属性(add property: referenceLineWidth, referenceLineColor) <br>
 2. fix crash bug: when dividend equal to 0, result is NaN. <br>
 3. change rule, which draw circle point in LineChart <br>
