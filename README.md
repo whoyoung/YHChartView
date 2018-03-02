@@ -1,5 +1,5 @@
 # YHChartView
-Charts that support zoom, drag, and rotation, including vertical bar, horizontal bar, and line chart.
+Charts that support zoom, drag, rotation, animation, including vertical bar, horizontal bar, and line chart.
 
 ## Cocoapods support
 Podfile:
@@ -32,6 +32,10 @@ Group Horizontal Bar Chart <br>
 Group Vertical Bar Chart <br>
 ![line](./Gif/GroupV.gif) <br><br>
 ## Change logs
+
+### version 0.3.2
+1. 增加首次加载动画功能(add animation when load chart firstly) <br>
+
 ### version 0.3.1
 1. 增加参考线宽及参考线颜色属性(add property: referenceLineWidth, referenceLineColor) <br>
 2. fix crash bug: when dividend equal to 0, result is NaN. <br>
