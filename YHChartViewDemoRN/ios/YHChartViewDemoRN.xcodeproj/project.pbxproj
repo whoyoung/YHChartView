@@ -35,6 +35,16 @@
 		2D02E4C91E0B4AEC006451C7 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DAD3EA31DF850E9000B6D8A /* libReact.a */; };
 		2DCD954D1E0B4F2C00145EB5 /* YHChartViewDemoRNTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* YHChartViewDemoRNTests.m */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
+		77BE09DD2047AD06009712CC /* XSYLineChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BE09D92047AD05009712CC /* XSYLineChartView.m */; };
+		77BE09DE2047AD06009712CC /* LineChartViewIOSManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BE09DB2047AD05009712CC /* LineChartViewIOSManager.m */; };
+		77BE09EF2047AE87009712CC /* YHBaseChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BE09E02047AE87009712CC /* YHBaseChartView.m */; };
+		77BE09F02047AE87009712CC /* YHLineChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BE09E42047AE87009712CC /* YHLineChartView.m */; };
+		77BE09F12047AE87009712CC /* YHVerticalBarChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BE09E52047AE87009712CC /* YHVerticalBarChartView.m */; };
+		77BE09F22047AE87009712CC /* YHHorizontalBarChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BE09E62047AE87009712CC /* YHHorizontalBarChartView.m */; };
+		77BE09F32047AE87009712CC /* NSString+YHCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BE09E72047AE87009712CC /* NSString+YHCategory.m */; };
+		77BE09F42047AE87009712CC /* UIColor+YHCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BE09E92047AE87009712CC /* UIColor+YHCategory.m */; };
+		77BE09F92047CFEE009712CC /* XSYBarChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BE09F72047CFEE009712CC /* XSYBarChartView.m */; };
+		77BE09FA2047CFEE009712CC /* BarChartViewIOSManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BE09F82047CFEE009712CC /* BarChartViewIOSManager.m */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 /* End PBXBuildFile section */
 
@@ -253,6 +263,29 @@
 		2D02E47B1E0B4A5D006451C7 /* YHChartViewDemoRN-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "YHChartViewDemoRN-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* YHChartViewDemoRN-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "YHChartViewDemoRN-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
+		77BE09D92047AD05009712CC /* XSYLineChartView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XSYLineChartView.m; sourceTree = "<group>"; };
+		77BE09DA2047AD05009712CC /* LineChartViewIOSManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LineChartViewIOSManager.h; sourceTree = "<group>"; };
+		77BE09DB2047AD05009712CC /* LineChartViewIOSManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LineChartViewIOSManager.m; sourceTree = "<group>"; };
+		77BE09DC2047AD06009712CC /* XSYLineChartView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XSYLineChartView.h; sourceTree = "<group>"; };
+		77BE09E02047AE87009712CC /* YHBaseChartView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YHBaseChartView.m; sourceTree = "<group>"; };
+		77BE09E12047AE87009712CC /* YHBaseChartMethodProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YHBaseChartMethodProtocol.h; sourceTree = "<group>"; };
+		77BE09E22047AE87009712CC /* UIColor+YHCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+YHCategory.h"; sourceTree = "<group>"; };
+		77BE09E32047AE87009712CC /* YHCommonHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YHCommonHeader.h; sourceTree = "<group>"; };
+		77BE09E42047AE87009712CC /* YHLineChartView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YHLineChartView.m; sourceTree = "<group>"; };
+		77BE09E52047AE87009712CC /* YHVerticalBarChartView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YHVerticalBarChartView.m; sourceTree = "<group>"; };
+		77BE09E62047AE87009712CC /* YHHorizontalBarChartView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YHHorizontalBarChartView.m; sourceTree = "<group>"; };
+		77BE09E72047AE87009712CC /* NSString+YHCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+YHCategory.m"; sourceTree = "<group>"; };
+		77BE09E82047AE87009712CC /* YHCommonChartViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YHCommonChartViewDelegate.h; sourceTree = "<group>"; };
+		77BE09E92047AE87009712CC /* UIColor+YHCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+YHCategory.m"; sourceTree = "<group>"; };
+		77BE09EA2047AE87009712CC /* YHBaseChartView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YHBaseChartView.h; sourceTree = "<group>"; };
+		77BE09EB2047AE87009712CC /* YHVerticalBarChartView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YHVerticalBarChartView.h; sourceTree = "<group>"; };
+		77BE09EC2047AE87009712CC /* YHLineChartView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YHLineChartView.h; sourceTree = "<group>"; };
+		77BE09ED2047AE87009712CC /* NSString+YHCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+YHCategory.h"; sourceTree = "<group>"; };
+		77BE09EE2047AE87009712CC /* YHHorizontalBarChartView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YHHorizontalBarChartView.h; sourceTree = "<group>"; };
+		77BE09F52047CFED009712CC /* BarChartViewIOSManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BarChartViewIOSManager.h; sourceTree = "<group>"; };
+		77BE09F62047CFEE009712CC /* XSYBarChartView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XSYBarChartView.h; sourceTree = "<group>"; };
+		77BE09F72047CFEE009712CC /* XSYBarChartView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XSYBarChartView.m; sourceTree = "<group>"; };
+		77BE09F82047CFEE009712CC /* BarChartViewIOSManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BarChartViewIOSManager.m; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -389,6 +422,8 @@
 		13B07FAE1A68108700A75B9A /* YHChartViewDemoRN */ = {
 			isa = PBXGroup;
 			children = (
+				77BE09DF2047AE87009712CC /* YHChartView */,
+				77BE09BF2047ACDE009712CC /* BIChartModule */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -422,6 +457,43 @@
 				5E9157351DD0AC6500FF2AA8 /* libRCTAnimation.a */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		77BE09BF2047ACDE009712CC /* BIChartModule */ = {
+			isa = PBXGroup;
+			children = (
+				77BE09F52047CFED009712CC /* BarChartViewIOSManager.h */,
+				77BE09F82047CFEE009712CC /* BarChartViewIOSManager.m */,
+				77BE09F62047CFEE009712CC /* XSYBarChartView.h */,
+				77BE09F72047CFEE009712CC /* XSYBarChartView.m */,
+				77BE09DA2047AD05009712CC /* LineChartViewIOSManager.h */,
+				77BE09DB2047AD05009712CC /* LineChartViewIOSManager.m */,
+				77BE09DC2047AD06009712CC /* XSYLineChartView.h */,
+				77BE09D92047AD05009712CC /* XSYLineChartView.m */,
+			);
+			path = BIChartModule;
+			sourceTree = "<group>";
+		};
+		77BE09DF2047AE87009712CC /* YHChartView */ = {
+			isa = PBXGroup;
+			children = (
+				77BE09E02047AE87009712CC /* YHBaseChartView.m */,
+				77BE09E12047AE87009712CC /* YHBaseChartMethodProtocol.h */,
+				77BE09E22047AE87009712CC /* UIColor+YHCategory.h */,
+				77BE09E32047AE87009712CC /* YHCommonHeader.h */,
+				77BE09E42047AE87009712CC /* YHLineChartView.m */,
+				77BE09E52047AE87009712CC /* YHVerticalBarChartView.m */,
+				77BE09E62047AE87009712CC /* YHHorizontalBarChartView.m */,
+				77BE09E72047AE87009712CC /* NSString+YHCategory.m */,
+				77BE09E82047AE87009712CC /* YHCommonChartViewDelegate.h */,
+				77BE09E92047AE87009712CC /* UIColor+YHCategory.m */,
+				77BE09EA2047AE87009712CC /* YHBaseChartView.h */,
+				77BE09EB2047AE87009712CC /* YHVerticalBarChartView.h */,
+				77BE09EC2047AE87009712CC /* YHLineChartView.h */,
+				77BE09ED2047AE87009712CC /* NSString+YHCategory.h */,
+				77BE09EE2047AE87009712CC /* YHHorizontalBarChartView.h */,
+			);
+			path = YHChartView;
 			sourceTree = "<group>";
 		};
 		78C398B11ACF4ADC00677621 /* Products */ = {
@@ -905,8 +977,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				77BE09DD2047AD06009712CC /* XSYLineChartView.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
+				77BE09F42047AE87009712CC /* UIColor+YHCategory.m in Sources */,
+				77BE09F32047AE87009712CC /* NSString+YHCategory.m in Sources */,
+				77BE09F22047AE87009712CC /* YHHorizontalBarChartView.m in Sources */,
+				77BE09F02047AE87009712CC /* YHLineChartView.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				77BE09FA2047CFEE009712CC /* BarChartViewIOSManager.m in Sources */,
+				77BE09F92047CFEE009712CC /* XSYBarChartView.m in Sources */,
+				77BE09F12047AE87009712CC /* YHVerticalBarChartView.m in Sources */,
+				77BE09EF2047AE87009712CC /* YHBaseChartView.m in Sources */,
+				77BE09DE2047AD06009712CC /* LineChartViewIOSManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

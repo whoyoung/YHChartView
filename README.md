@@ -2,22 +2,17 @@
 Charts that support zoom, drag, rotation, animation, including vertical bar, horizontal bar, and line chart. React Native avaliable.
 
 ## Cocoapods support
-Objective-C Project: Podfile
+Podfile
 
 ```
 pod 'YHChartView'
-```
-React Native Project: Podfile
-
-```
-pod 'YHChartView/RN'
 ```
 
 ## Manual install
 ```
 * download respository<br>
 * Objective-C Project: copy 'YHChartView' to your project <br>
-* React Native Project: copy 'YHChartView' & 'BIChartModule' to your project <br>
+* React Native Project: copy 'YHChartView' & 'BIChartModule' (directory: YHChartViewDemoRN/ios/BIChartModule) to your project <br>
 ```
 ## Run Objective-C Demo
 1. open YHChartViewDemo <br> 
@@ -27,8 +22,7 @@ pod 'YHChartView/RN'
 2. run command: npm install <br>
 3. run command: npm start <br>
 4. run command: open ios <br>
-5. run command: pod install <br>
-5. run YHChartViewDemo.xcworkspace used by XCode <br>
+5. run YHChartViewDemo.xcodeproj used by XCode <br>
 ## Demo
 Line Chart <br>
 ![line](./Gif/line.gif) <br><br>
@@ -41,7 +35,8 @@ Group Horizontal Bar Chart <br>
 Group Vertical Bar Chart <br>
 ![line](./Gif/GroupV.gif) <br><br>
 ## Change logs
-
+### version 0.3.4
+1. 废弃version 0.3.3的变更,因为RN代码，单独校验不通过 <br>
 ### version 0.3.3
 1. 增加subspec,用于原生和React Native工程 <br>
 ### version 0.3.2

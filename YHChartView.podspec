@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |s|
   s.name         = "YHChartView"
-  s.version      = "0.3.3"
+  s.version      = "0.3.4"
   s.summary      = "Charts that support zoom, drag, rotation, animation, including vertical bar, horizontal bar, and line chart. React Native avaliable."
   s.description  = <<-DESC
 ***
@@ -19,15 +19,7 @@ Pod::Spec.new do |s|
   s.platform     = :ios
   s.source       = { :git => "https://github.com/whoyoung/YHChartView", :tag => "#{s.version}" }
 
-  s.default_subspec  = "OC"
+  s.source_files         = "YHChartView/*.{h,m}"
   s.requires_arc = true
-
-  s.subspec "OC" do |ss|
-   ss.source_files         = "YHChartView/*.{h,m}"
-  end
-
-  s.subspec "RN" do |ss|
-   ss.source_files         = "YHChartView/*.{h,m}", "BIChartModule/*.{h,m}"
-  end
 
 end
