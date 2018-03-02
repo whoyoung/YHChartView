@@ -336,14 +336,15 @@
     UIView *subContainerV = [[UIView alloc] initWithFrame:CGRectMake(LeftEdge, TopEdge, ChartWidth, ChartHeight)];
     subContainerV.layer.masksToBounds = YES;
     [self.containerView addSubview:subContainerV];
+    NSUInteger drawNum = lroundf(self.endGroupIndex * self.dataNumFactor);
     switch (self.chartType) {
         case BarChartTypeSingle: {
             NSArray *array = self.Datas[0];
             CGFloat offsetY = self.gestureScroll.contentOffset.y;
-            for (NSUInteger i=self.beginGroupIndex; i<=self.endGroupIndex; i++) {
+            for (NSUInteger i=self.beginGroupIndex; i<=drawNum; i++) {
                 CAShapeLayer *xValueLayer = [CAShapeLayer layer];
                 CGFloat xPoint = self.zeroLine;
-                CGFloat dataV = [self verifyDataValue:array[i]] * self.animateFactor;
+                CGFloat dataV = [self verifyDataValue:array[i]] * self.dataValueFactor;
                 if (dataV < 0) {
                     xPoint = self.zeroLine + dataV * self.dataItemUnitScale;
                 }
@@ -358,11 +359,11 @@
             break;
         case BarChartTypeStack: {
             CGFloat offsetY = self.gestureScroll.contentOffset.y;
-            for (NSUInteger i=self.beginGroupIndex; i<=self.endGroupIndex; i++) {
+            for (NSUInteger i=self.beginGroupIndex; i<=drawNum; i++) {
                 CGFloat positiveX = self.zeroLine, negativeX = self.zeroLine, xPoint = self.zeroLine;
                 for (NSUInteger j=0; j<self.Datas.count; j++) {
                     NSArray *array = self.Datas[j];
-                    CGFloat dataV = [self verifyDataValue:array[i]] * self.animateFactor;
+                    CGFloat dataV = [self verifyDataValue:array[i]] * self.dataValueFactor;
                     CAShapeLayer *xValueLayer = [CAShapeLayer layer];
                     if (dataV < 0) {
                         negativeX += dataV * self.dataItemUnitScale;
@@ -400,12 +401,11 @@
             }
             
             [self drawBeginAndEndItemLayer:self.beginItemIndex rightIndex:self.Datas.count-1 isBegin:YES containerView:subContainerV];
-            [self drawBeginAndEndItemLayer:0 rightIndex:rightLoopIndex isBegin:NO containerView:subContainerV];
             
-            for (NSUInteger i=self.beginGroupIndex+1; i<self.endGroupIndex; i++) {
+            for (NSUInteger i=self.beginGroupIndex+1; i<drawNum; i++) {
                 for (NSUInteger j=0; j<self.Datas.count; j++) {
                     NSArray *array = self.Datas[j];
-                    CGFloat dataV = [self verifyDataValue:array[i]] * self.animateFactor;
+                    CGFloat dataV = [self verifyDataValue:array[i]] * self.dataValueFactor;
                     CAShapeLayer *xValueLayer = [CAShapeLayer layer];
                     
                     CGFloat xPoint = self.zeroLine;
@@ -419,6 +419,9 @@
                     xValueLayer.fillColor = [[UIColor hexChangeFloat:self.itemColors[j]] CGColor];
                     [subContainerV.layer addSublayer:xValueLayer];
                 }
+            }
+            if(drawNum == self.endGroupIndex) {
+                [self drawBeginAndEndItemLayer:0 rightIndex:rightLoopIndex isBegin:NO containerView:subContainerV];
             }
         }
             break;
@@ -434,7 +437,7 @@
         NSArray *array = self.Datas[i];
         CAShapeLayer *xValueLayer = [CAShapeLayer layer];
         CGFloat itemValue = isBegin ? [self verifyDataValue:array[self.beginGroupIndex]] :  [self verifyDataValue:array[self.endGroupIndex]];
-        itemValue *=  self.animateFactor;
+        itemValue *=  self.dataValueFactor;
         CGFloat xPoint = self.zeroLine;
         if (itemValue < 0) {
             xPoint = self.zeroLine + itemValue * self.dataItemUnitScale;
