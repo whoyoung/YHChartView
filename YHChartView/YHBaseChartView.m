@@ -8,9 +8,8 @@
 #import "YHBaseChartView.h"
 
 @interface YHBaseChartView () <UIScrollViewDelegate>
+@property (nonatomic, assign, readonly) BOOL isDataError;
 @property (nonatomic, strong) NSTimer *timer;
-@property (nonatomic, assign) BOOL showLoadAnimation;
-@property (nonatomic, assign) CGFloat loadAnimationTime;
 @end
 
 @implementation YHBaseChartView

@@ -41,7 +41,6 @@ YHTapPointRatioInItemMake(CGFloat x, CGFloat y) {
 @property (nonatomic, assign, readonly) NSUInteger dataNegativeSegmentNum;
 @property (nonatomic, assign, readonly) CGFloat dataItemUnitScale;
 @property (nonatomic, assign, readonly) CGFloat zoomedItemAxis;
-@property (nonatomic, assign, readonly) BOOL isDataError;
 @property (nonatomic, assign, readonly) CGFloat zeroLine;
 
 @property (nonatomic, assign) CGFloat minItemWidth;
@@ -77,6 +76,8 @@ YHTapPointRatioInItemMake(CGFloat x, CGFloat y) {
 @property (nonatomic, assign, readonly) CGFloat dataTextFontSize;
 
 @property (nonatomic, assign, readonly) CGFloat animateFactor;
+@property (nonatomic, assign, readonly) BOOL showLoadAnimation;
+@property (nonatomic, assign, readonly) CGFloat loadAnimationTime;
 
 - (void)redraw;
 - (void)compareBeginAndEndItemValue:(NSUInteger)beginItem endItem:(NSUInteger)endItem isBeginGroup:(BOOL)isBeginGroup;
