@@ -33,7 +33,7 @@
                            @"axisTextFontSize":@10,
                            @"showLoadAnimation": @YES,
                            @"loadAnimationTime": @0.8,
-                           @"animationType": @"2",
+                           @"animationType": @(YHAnimationTypeChangeValueAndNum),
                            @"styles": @{
                                    @"lineStyle": @{
                                            @"lineWidth":@"1",

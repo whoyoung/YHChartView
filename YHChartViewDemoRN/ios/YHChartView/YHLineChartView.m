@@ -143,6 +143,7 @@
     UIView *subContainerV = [[UIView alloc] initWithFrame:CGRectMake(LeftEdge, TopEdge, ChartWidth, ChartHeight)];
     subContainerV.layer.masksToBounds = YES;
     [self.containerView addSubview:subContainerV];
+    NSUInteger drawNum = lroundf(self.endGroupIndex * self.dataNumFactor);
     for (NSUInteger i=0;i<self.Datas.count;i++) {
         NSArray *values = self.Datas[i];
         CAShapeLayer *yValueLayer = [CAShapeLayer layer];
@@ -152,9 +153,9 @@
 
         NSMutableArray *circlePoints = [NSMutableArray array];
         
-        for (NSUInteger j=self.beginGroupIndex; j<self.endGroupIndex+1; j++) {
+        for (NSUInteger j=self.beginGroupIndex; j<drawNum+1; j++) {
             if (![values[j] respondsToSelector:@selector(floatValue)]) continue;
-            CGFloat yPoint = zeroY - [self verifyDataValue:values[j]] * self.dataItemUnitScale;
+            CGFloat yPoint = zeroY - [self verifyDataValue:values[j]] * self.dataItemUnitScale * self.dataValueFactor;
             CGPoint p = CGPointMake(j*self.zoomedItemAxis-offsetX, yPoint);
             [circlePoints addObject:NSStringFromCGPoint(p)];
             if (j == self.beginGroupIndex || ![values[j-1] respondsToSelector:@selector(floatValue)]) {

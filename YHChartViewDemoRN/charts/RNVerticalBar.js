@@ -23,6 +23,9 @@ const dict = {
   "axisTextColor": "000000",
   "dataTextColor": "000000",
   "axisTextFontSize":10,
+  "showLoadAnimation": true,
+  "loadAnimationTime": 0.8,
+  "animationType": 2,
   "styles": {
     "barStyle": {
     "minBarWidth":"5",

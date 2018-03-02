@@ -8,7 +8,8 @@
 #import "YHBaseChartView.h"
 
 @interface YHBaseChartView () <UIScrollViewDelegate>
-
+@property (nonatomic, assign, readonly) BOOL isDataError;
+@property (nonatomic, strong) NSTimer *timer;
 @end
 
 @implementation YHBaseChartView
@@ -77,6 +78,10 @@
     _dataTextColor = [dict objectForKey:@"dataTextColor"] ? [UIColor hexChangeFloat:[dict objectForKey:@"dataTextColor"]] : DataTextColor;
     _axisTextFontSize = [dict objectForKey:@"axisTextFontSize"] ? [[dict objectForKey:@"axisTextFontSize"] floatValue] : AxistTextFont;
     _dataTextFontSize = [dict objectForKey:@"dataTextFontSize"] ? [[dict objectForKey:@"dataTextFontSize"] floatValue] : DataTextFont;
+    _showLoadAnimation = [[dict objectForKey:@"showLoadAnimation"] boolValue];
+    _loadAnimationTime = [dict objectForKey:@"loadAnimationTime"] ? [[dict objectForKey:@"loadAnimationTime"] floatValue] : LoadAnimationTime;
+    if (_loadAnimationTime < 0.1) _loadAnimationTime = 0.1;
+    _animationType = [[dict objectForKey:@"animationType"] integerValue];
     NSDictionary *styleDict = [dict objectForKey:@"styles"];
     [self dealStyleDict:styleDict];
 }
@@ -104,6 +109,39 @@
     [self addGestureScroll];
     self.gestureScroll.contentSize = [self gestureScrollContentSize];
     if (!_containerView) {
+        _dataNumFactor = 1;
+        _dataValueFactor = 1;
+        if (_showLoadAnimation) {
+            if (_animationType == YHAnimationTypeChangeNum) {
+                _dataNumFactor = 0;
+            } else if (_animationType == YHAnimationTypeChangeValueAndNum) {
+                _dataNumFactor = 0;
+                _dataValueFactor = 0;
+            } else {
+                _dataValueFactor = 0;
+            }
+            _timer = [NSTimer timerWithTimeInterval:0.1 target:self selector:@selector(updateDraw) userInfo:nil repeats:YES];
+            [[NSRunLoop currentRunLoop] addTimer:_timer forMode:NSRunLoopCommonModes];
+        } else {
+            [self redraw];
+        }
+    }
+}
+- (void)updateDraw {
+    if (_animationType == YHAnimationTypeChangeNum) {
+        _dataNumFactor += 0.1/self.loadAnimationTime;
+    } else if (_animationType == YHAnimationTypeChangeValueAndNum) {
+        _dataValueFactor += 0.1/self.loadAnimationTime;
+        _dataNumFactor += 0.1/self.loadAnimationTime;
+    } else {
+        _dataValueFactor += 0.1/self.loadAnimationTime;
+    }
+    if (_dataNumFactor > 1 || _dataValueFactor > 1) {
+        _dataNumFactor = 1;
+        _dataValueFactor = 1;
+        [_timer invalidate];
+        _timer = nil;
+    } else {
         [self redraw];
     }
 }

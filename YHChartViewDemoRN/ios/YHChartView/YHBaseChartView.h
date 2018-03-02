@@ -11,6 +11,8 @@
 
 typedef NS_ENUM(NSUInteger, BarChartType) { BarChartTypeSingle = 0, BarChartTypeGroup = 1, BarChartTypeStack = 2 };
 
+typedef NS_ENUM(NSUInteger, YHAnimationType) { YHAnimationTypeChangeValue = 0, YHAnimationTypeChangeNum = 1, YHAnimationTypeChangeValueAndNum = 2 };
+
 typedef struct YHTapPointRatioInItem {
     CGFloat xRatio;
     CGFloat yRatio;
@@ -41,7 +43,6 @@ YHTapPointRatioInItemMake(CGFloat x, CGFloat y) {
 @property (nonatomic, assign, readonly) NSUInteger dataNegativeSegmentNum;
 @property (nonatomic, assign, readonly) CGFloat dataItemUnitScale;
 @property (nonatomic, assign, readonly) CGFloat zoomedItemAxis;
-@property (nonatomic, assign, readonly) BOOL isDataError;
 @property (nonatomic, assign, readonly) CGFloat zeroLine;
 
 @property (nonatomic, assign) CGFloat minItemWidth;
@@ -76,6 +77,11 @@ YHTapPointRatioInItemMake(CGFloat x, CGFloat y) {
 @property (nonatomic, assign, readonly) CGFloat axisTextFontSize;
 @property (nonatomic, assign, readonly) CGFloat dataTextFontSize;
 
+@property (nonatomic, assign, readonly) BOOL showLoadAnimation;
+@property (nonatomic, assign, readonly) CGFloat loadAnimationTime;
+@property (nonatomic, assign, readonly) CGFloat dataNumFactor;
+@property (nonatomic, assign, readonly) CGFloat dataValueFactor;
+@property (nonatomic, assign, readonly) YHAnimationType animationType;
 
 - (void)redraw;
 - (void)compareBeginAndEndItemValue:(NSUInteger)beginItem endItem:(NSUInteger)endItem isBeginGroup:(BOOL)isBeginGroup;

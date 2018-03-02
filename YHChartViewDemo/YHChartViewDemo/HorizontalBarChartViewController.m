@@ -32,7 +32,7 @@
                            @"dataTextColor": @"000000",
                            @"showLoadAnimation": @YES,
                            @"loadAnimationTime": @0.8,
-                           @"animationType": @"2",
+                           @"animationType": @(YHAnimationTypeChangeValueAndNum),
                            @"styles": @{
                                    @"barStyle": @{
                                    @"minBarWidth":@"5",
