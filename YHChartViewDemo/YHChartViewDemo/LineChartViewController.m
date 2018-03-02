@@ -31,6 +31,8 @@
                            @"axisTextColor": @"000000",
                            @"dataTextColor": @"000000",
                            @"axisTextFontSize":@10,
+                           @"showLoadAnimation": @YES,
+                           @"loadAnimationTime": @0.8,
                            @"styles": @{
                                    @"lineStyle": @{
                                            @"lineWidth":@"1",

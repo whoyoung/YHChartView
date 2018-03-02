@@ -120,6 +120,7 @@
 - (void)updateDraw {
     _animateFactor += 0.1/self.loadAnimationTime;
     if (_animateFactor > 1) {
+        _animateFactor = 1;
         [_timer invalidate];
         _timer = nil;
     } else {
