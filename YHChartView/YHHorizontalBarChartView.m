@@ -515,7 +515,7 @@
     CAShapeLayer *xScaleLayer = [CAShapeLayer layer];
     UIBezierPath *xScaleBezier = [UIBezierPath bezierPath];
     [xScaleBezier moveToPoint:CGPointMake(LeftEdge, self.bounds.size.height - BottomEdge)];
-    [xScaleBezier addLineToPoint:CGPointMake(self.bounds.size.width, self.bounds.size.height - BottomEdge)];
+    [xScaleBezier addLineToPoint:CGPointMake(self.bounds.size.width-RightEdge, self.bounds.size.height - BottomEdge)];
     xScaleLayer.path = xScaleBezier.CGPath;
     xScaleLayer.lineWidth = self.referenceLineWidth;
     xScaleLayer.strokeColor = self.referenceLineColor.CGColor;
@@ -576,7 +576,7 @@
         for (NSUInteger i = 0; i < self.dataNegativeSegmentNum + self.dataPostiveSegmentNum; i++) {
             if (i == self.dataPostiveSegmentNum) continue;
             [dashLineBezier moveToPoint:CGPointMake(LeftEdge, TopEdge + i * [self axisUnitScale])];
-            [dashLineBezier addLineToPoint:CGPointMake(self.bounds.size.width, TopEdge + i * [self axisUnitScale])];
+            [dashLineBezier addLineToPoint:CGPointMake(self.bounds.size.width-RightEdge, TopEdge + i * [self axisUnitScale])];
         }
         dashLineLayer.path = dashLineBezier.CGPath;
         if (self.showDataDashLine) {
@@ -591,7 +591,7 @@
         CAShapeLayer *zeroLineLayer = [CAShapeLayer layer];
         UIBezierPath *zeroLineBezier = [UIBezierPath bezierPath];
         [zeroLineBezier moveToPoint:CGPointMake(LeftEdge, TopEdge + self.dataPostiveSegmentNum * [self axisUnitScale])];
-        [zeroLineBezier addLineToPoint:CGPointMake(self.bounds.size.width, TopEdge + self.dataPostiveSegmentNum * [self axisUnitScale])];
+        [zeroLineBezier addLineToPoint:CGPointMake(self.bounds.size.width-RightEdge, TopEdge + self.dataPostiveSegmentNum * [self axisUnitScale])];
         zeroLineLayer.lineWidth = self.referenceLineWidth*2;
         zeroLineLayer.strokeColor = ZeroLineColor.CGColor;
         zeroLineLayer.path = zeroLineBezier.CGPath;
