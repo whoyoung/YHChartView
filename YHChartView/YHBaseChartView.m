@@ -232,14 +232,14 @@
     NSString *dataStr = [dataDict objectForKey:@"dataStr"];
     
     CGFloat tipTextH = 11;
-    CGFloat tipH = 10 + 2 * tipTextH + 5;
+    CGFloat tipH = TipViewPadding*2 + 2 * tipTextH + 5;
     CGFloat tipMaxW = [axisStr measureTextWidth:[UIFont systemFontOfSize:9]];
     tipMaxW = MAX(tipMaxW, [dataStr measureTextWidth:[UIFont systemFontOfSize:9]]);
     if (groupStr.length) {
         tipMaxW = MAX(tipMaxW, [groupStr measureTextWidth:[UIFont systemFontOfSize:9]]);
         tipH += tipTextH;
     }
-    tipMaxW += 10;
+    tipMaxW += TipViewPadding*2;
 
     NSUInteger arrowP = 2; //箭头在中间位置
     CGPoint tempP = [self adjustTipViewLocation:group item:item];
@@ -276,7 +276,7 @@
     } else {
         rectPath = [UIBezierPath bezierPathWithRect:CGRectMake(0, 0, tipMaxW, tipH - 5)];
     }
-    CGSize cornerRadii = CGSizeMake(5, 5);
+    CGSize cornerRadii = CGSizeMake(3, 3);
     CGRect topRect = CGRectMake(0, 0, tipMaxW, tipH - 5);
     CGRect bottomRect = CGRectMake(0, 5, tipMaxW, tipH - 5);
     switch (arrowP) {
@@ -343,12 +343,12 @@
     rectLayer.fillColor = [UIColor hexChangeFloat:@"0D2940"].CGColor;
     [tipView.layer addSublayer:rectLayer];
 
-    CGFloat startY = 5;
+    CGFloat startY = TipViewPadding;
     if (arrowP > 10) {
-        startY = 10;
+        startY += 5;
     }
     if (groupStr.length) {
-        CGRect textFrame = CGRectMake(5, startY, tipMaxW - 10, tipTextH);
+        CGRect textFrame = CGRectMake(TipViewPadding, startY, tipMaxW - 10, tipTextH);
         CATextLayer *text = [self getTextLayerWithString:groupStr
                                                textColor:TipTextColor
                                                 fontSize:TipTextFont
@@ -362,14 +362,14 @@
                                                textColor:TipTextColor
                                                 fontSize:TipTextFont
                                          backgroundColor:[UIColor clearColor]
-                                                   frame:CGRectMake(5, startY, tipMaxW - 10, tipTextH)
+                                                   frame:CGRectMake(TipViewPadding, startY, tipMaxW - 10, tipTextH)
                                            alignmentMode:kCAAlignmentLeft];
     [tipView.layer addSublayer:axisText];
     CATextLayer *dataText = [self getTextLayerWithString:dataStr
                                                textColor:TipTextColor
                                                 fontSize:TipTextFont
                                          backgroundColor:[UIColor clearColor]
-                                                   frame:CGRectMake(5, startY + tipTextH, tipMaxW - 10, tipTextH)
+                                                   frame:CGRectMake(TipViewPadding, startY + tipTextH, tipMaxW - 10, tipTextH)
                                            alignmentMode:kCAAlignmentLeft];
     [tipView.layer addSublayer:dataText];
 }

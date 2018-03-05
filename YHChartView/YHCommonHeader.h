@@ -16,16 +16,18 @@ static const float BottomEdge = 20;
 static const float TextHeight = 11;
 static const float TextWidth = 45;
 static const float AxistTextFont = 9;
-static const float DataTextFont = 8;
+static const float DataTextFont = 9;
 static const float TipTextFont = 9;
 static const float ReferenceLineWidth = 0.5;
 static const float LoadAnimationTime = 0.5;
 static const float BarAlpha = 0.9;
+static const float TipViewPadding = 10;
+
 #define ChartWidth (self.bounds.size.width - LeftEdge - RightEdge)
 #define ChartHeight (self.bounds.size.height - TopEdge - BottomEdge)
-#define AxisTextColor [UIColor hexChangeFloat:@"8899A6"]
+#define AxisTextColor [UIColor hexChangeFloat:@"8C8C8C"]
 #define AxisScaleColor [UIColor hexChangeFloat:@"E8E8E8"]
-#define DataTextColor [UIColor hexChangeFloat:@"8FA1B2"]
+#define DataTextColor [UIColor hexChangeFloat:@"8C8C8C"]
 #define TipTextColor [UIColor whiteColor]
 #define ZeroLineColor [UIColor hexChangeFloat:@"D9D9D9"]
 
