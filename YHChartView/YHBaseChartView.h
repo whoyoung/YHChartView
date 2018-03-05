@@ -46,7 +46,7 @@ YHTapPointRatioInItemMake(CGFloat x, CGFloat y) {
 @property (nonatomic, assign, readonly) CGFloat zeroLine;
 
 @property (nonatomic, assign) CGFloat minItemWidth;
-@property (nonatomic, assign) CGFloat groupSpace;
+@property (nonatomic, assign, readonly) CGFloat groupSpace;
 @property (nonatomic, assign) BOOL showDataDashLine;
 @property (nonatomic, assign) BOOL showDataHardLine;
 @property (nonatomic, assign) BOOL showAxisDashLine;
@@ -82,6 +82,7 @@ YHTapPointRatioInItemMake(CGFloat x, CGFloat y) {
 @property (nonatomic, assign, readonly) CGFloat dataNumFactor;
 @property (nonatomic, assign, readonly) CGFloat dataValueFactor;
 @property (nonatomic, assign, readonly) YHAnimationType animationType;
+@property (nonatomic, assign) CGFloat groupSpaceDivideBarWidth;
 
 - (void)redraw;
 - (void)compareBeginAndEndItemValue:(NSUInteger)beginItem endItem:(NSUInteger)endItem isBeginGroup:(BOOL)isBeginGroup;

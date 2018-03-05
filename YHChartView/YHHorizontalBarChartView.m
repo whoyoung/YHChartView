@@ -16,9 +16,8 @@
 
 - (void)dealStyleDict:(NSDictionary *)styleDict {
     NSDictionary *barStyle = [styleDict objectForKey:@"barStyle"];
-    self.minItemWidth =
-    [barStyle objectForKey:@"minItemWidth"] ? [[barStyle objectForKey:@"minItemWidth"] floatValue] : 20;
-    self.groupSpace = [barStyle objectForKey:@"groupSpace"] ? [[barStyle objectForKey:@"groupSpace"] floatValue] : 5;
+    self.minItemWidth = [barStyle objectForKey:@"minItemWidth"] ? [[barStyle objectForKey:@"minItemWidth"] floatValue] : 20;
+    self.groupSpaceDivideBarWidth = [barStyle objectForKey:@"groupSpaceDivideBarWidth"] ? [[barStyle objectForKey:@"groupSpaceDivideBarWidth"] floatValue] : 0.25;
     self.showAxisDashLine = [barStyle objectForKey:@"showAxisDashLine"] ? [[barStyle objectForKey:@"showAxisDashLine"] boolValue] : NO;
     self.showAxisHardLine = [barStyle objectForKey:@"showAxisHardLine"] ? [[barStyle objectForKey:@"showAxisHardLine"] boolValue] : NO;
     self.showDataDashLine = [barStyle objectForKey:@"showDataDashLine"] ? [[barStyle objectForKey:@"showDataDashLine"] boolValue] : NO;
@@ -593,12 +592,11 @@
     if (self.itemAxisScale == 0) {
         if (self.chartType == BarChartTypeGroup) {
             CGFloat w =
-                (ChartWidth - [self.Datas[0] count] * self.groupSpace) / [self.Datas[0] count] / self.Datas.count;
+                ChartWidth / [self.Datas[0] count] / (self.Datas.count + self.groupSpaceDivideBarWidth);
             self.itemAxisScale = w > self.minItemWidth ? w : self.minItemWidth;
         } else {
-            self.itemAxisScale = (ChartWidth / [self.Datas[0] count] - self.groupSpace) > self.minItemWidth
-                                 ? (ChartWidth / [self.Datas[0] count] - self.groupSpace)
-                                 : self.minItemWidth;
+            self.itemAxisScale = ChartWidth / [self.Datas[0] count] /(1+self.groupSpaceDivideBarWidth) > self.minItemWidth
+                                 ? ChartWidth / [self.Datas[0] count] / (1+self.groupSpaceDivideBarWidth) : self.minItemWidth;
         }
     }
     return self.itemAxisScale;

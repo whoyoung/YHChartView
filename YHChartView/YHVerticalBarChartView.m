@@ -20,7 +20,7 @@
     NSDictionary *barStyle = [styleDict objectForKey:@"barStyle"];
     self.minItemWidth =
     [barStyle objectForKey:@"minItemWidth"] ? [[barStyle objectForKey:@"minItemWidth"] floatValue] : 20;
-    self.groupSpace = [barStyle objectForKey:@"groupSpace"] ? [[barStyle objectForKey:@"groupSpace"] floatValue] : 5;
+    self.groupSpaceDivideBarWidth = [barStyle objectForKey:@"groupSpaceDivideBarWidth"] ? [[barStyle objectForKey:@"groupSpaceDivideBarWidth"] floatValue] : 0.25;
     self.showAxisDashLine = [barStyle objectForKey:@"showAxisDashLine"] ? [[barStyle objectForKey:@"showAxisDashLine"] boolValue] : NO;
     self.showAxisHardLine = [barStyle objectForKey:@"showAxisHardLine"] ? [[barStyle objectForKey:@"showAxisHardLine"] boolValue] : NO;
     self.showDataDashLine = [barStyle objectForKey:@"showDataDashLine"] ? [[barStyle objectForKey:@"showDataDashLine"] boolValue] : NO;
@@ -529,12 +529,14 @@
 - (CGFloat)calculateItemAxisScale {
     if (self.itemAxisScale == 0) {
         if (self.chartType == BarChartTypeGroup) {
-            CGFloat h = (ChartHeight-[self.Datas[0] count]*self.groupSpace)/[self.Datas[0] count]/self.Datas.count;
+            CGFloat h = ChartHeight/[self.Datas[0] count]/(self.Datas.count + self.groupSpaceDivideBarWidth);
             self.itemAxisScale = h > self.minItemWidth ? h : self.minItemWidth;
         } else {
-            self.itemAxisScale = (ChartHeight/[self.Datas[0] count] - self.groupSpace) > self.minItemWidth ? (ChartHeight/[self.Datas[0] count] - self.groupSpace) : self.minItemWidth;
+            CGFloat h = ChartHeight/[self.Datas[0] count] / (1+self.groupSpaceDivideBarWidth);
+            self.itemAxisScale = h > self.minItemWidth ? h : self.minItemWidth;
         }
     }
+    
     return self.itemAxisScale;
 }
 

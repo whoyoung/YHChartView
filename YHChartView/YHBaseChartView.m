@@ -87,7 +87,7 @@
 }
 - (void)dealStyleDict:(NSDictionary *)styleDict {
     _minItemWidth = 20;
-    _groupSpace = 5;
+    _groupSpaceDivideBarWidth = 0.25;
     self.showAxisDashLine = NO;
     self.showAxisHardLine = NO;
     self.showDataDashLine = NO;
@@ -616,5 +616,8 @@
         return [value floatValue];
     }
     return 0;
+}
+- (CGFloat)groupSpace {
+    return self.zoomedItemAxis * self.groupSpaceDivideBarWidth;
 }
 @end
