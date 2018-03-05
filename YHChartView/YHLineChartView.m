@@ -328,4 +328,10 @@
         self.oldPinScale *= (newFrame.size.width - LeftEdge - RightEdge) / [self.Datas[0] count] / self.Datas.count / self.itemAxisScale / self.oldPinScale;
     }
 }
+
+- (NSArray *)defaultColors {
+    return @[
+                @"4698EB", @"34C7C7", @"3BCC90", @"80C25D", @"FFA51F", @"F06260", @"886FE7"
+            ];
+}
 @end

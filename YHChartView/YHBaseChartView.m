@@ -56,10 +56,8 @@
     _groupDimension = [dict objectForKey:@"groupDimension"];
     _axisTitle = [dict objectForKey:@"axisTitle"];
     _dataTitle = [dict objectForKey:@"dataTitle"];
-    _itemColors = [dict objectForKey:@"colors"];
-    if (!self.itemColors) {
-        [self defaultColors];
-    }
+    NSArray *colors = [dict objectForKey:@"colors"];
+    [self dealItemColors:colors];
     BOOL isStack = [[dict objectForKey:@"stack"] boolValue];
     if (isStack) {
         _chartType = BarChartTypeStack;
@@ -589,16 +587,21 @@
     }
     return _newPinScale;
 }
-- (void)defaultColors {
-    NSArray *colors = @[
-        @"45abff", @"6be6c1", @"ffa51f", @"ffd64e", @"3fd183", @"6ea7c7", @"5b7cf4", @"00bfd5", @"8bc7ff", @"f48784",
-        @"d25537"
-    ];
+- (void)dealItemColors:(NSArray *)colors {
+    if (!colors || !colors.count) {
+        colors = [self defaultColors];
+    }
     NSMutableArray *tempColors = [NSMutableArray arrayWithCapacity:self.Datas.count];
     for (NSUInteger i = 0; i < self.Datas.count; i++) {
         [tempColors addObject:colors[i % colors.count]];
     }
     _itemColors = [tempColors copy];
+}
+- (NSArray *)defaultColors {
+    return @[
+                        @"4698EB", @"A3DFFF", @"34C7C7", @"96EBEB", @"3BCC90", @"A4EBCD", @"80C25D", @"BBE390", @"FFA51F", @"FCCC79", @"F06260", @"FD9E9C", @"886FE7", @"B9A7FE"
+    ];
+    
 }
 
 - (CGFloat)dataItemUnitScale {
