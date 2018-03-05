@@ -24,7 +24,7 @@
     self.showDataDashLine = [lineStyle objectForKey:@"showDataDashLine"] ? [[lineStyle objectForKey:@"showDataDashLine"] boolValue] : NO;
     self.showDataHardLine = [lineStyle objectForKey:@"showDataHardLine"] ? [[lineStyle objectForKey:@"showDataHardLine"] boolValue] : YES;
     self.lineWidth =
-    [lineStyle objectForKey:@"lineWidth"] ? [[lineStyle objectForKey:@"lineWidth"] floatValue] : 0.5;
+    [lineStyle objectForKey:@"lineWidth"] ? [[lineStyle objectForKey:@"lineWidth"] floatValue] : 1.5;
     self.circleBorderWidth =
     [lineStyle objectForKey:@"circleBorderWidth"] ? [[lineStyle objectForKey:@"circleBorderWidth"] floatValue] : 0.5;
     self.circleRadius =
