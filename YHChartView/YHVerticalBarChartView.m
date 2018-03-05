@@ -496,9 +496,6 @@
 - (void)addDataScaleLayer {
     CAShapeLayer *xScaleLayer = [CAShapeLayer layer];
     UIBezierPath *xScaleBezier = [UIBezierPath bezierPath];
-    [xScaleBezier moveToPoint:CGPointMake(LeftEdge, self.bounds.size.height-BottomEdge)];
-    [xScaleBezier addLineToPoint:CGPointMake(self.bounds.size.width, self.bounds.size.height-BottomEdge)];
-    
     for (NSUInteger i=0; i<=self.dataNegativeSegmentNum+self.dataPostiveSegmentNum+1; i++) {
         [xScaleBezier moveToPoint:CGPointMake(LeftEdge+i*[self axisUnitScale], self.bounds.size.height-BottomEdge)];
         [xScaleBezier addLineToPoint:CGPointMake(LeftEdge+i*[self axisUnitScale], self.bounds.size.height-BottomEdge+5)];
@@ -513,6 +510,7 @@
         CAShapeLayer *dashLineLayer = [CAShapeLayer layer];
         UIBezierPath *dashLineBezier = [UIBezierPath bezierPath];
         for (NSUInteger i=1; i<=self.dataNegativeSegmentNum+self.dataPostiveSegmentNum; i++) {
+            if (i == self.dataNegativeSegmentNum) continue;
             [dashLineBezier moveToPoint:CGPointMake(LeftEdge+i*[self axisUnitScale], self.bounds.size.height-BottomEdge)];
             [dashLineBezier addLineToPoint:CGPointMake(LeftEdge+i*[self axisUnitScale], TopEdge)];
         }
@@ -524,6 +522,19 @@
         dashLineLayer.strokeColor = self.referenceLineColor.CGColor;
         dashLineLayer.fillColor = [UIColor clearColor].CGColor;
         [self.containerView.layer addSublayer:dashLineLayer];
+        
+        CAShapeLayer *zeroLineLayer = [CAShapeLayer layer];
+        UIBezierPath *zeroLineBezier = [UIBezierPath bezierPath];
+        [zeroLineBezier moveToPoint:CGPointMake(LeftEdge+self.dataNegativeSegmentNum*[self axisUnitScale], self.bounds.size.height-BottomEdge)];
+        [zeroLineBezier addLineToPoint:CGPointMake(LeftEdge+self.dataNegativeSegmentNum*[self axisUnitScale], TopEdge)];
+        zeroLineLayer.lineWidth = self.referenceLineWidth*2;
+        zeroLineLayer.strokeColor = ZeroLineColor.CGColor;
+        zeroLineLayer.path = zeroLineBezier.CGPath;
+        if (self.showDataDashLine) {
+            [zeroLineLayer setLineDashPattern:[NSArray arrayWithObjects:[NSNumber numberWithInt:5], [NSNumber numberWithInt:5], nil]];
+        }
+        zeroLineLayer.fillColor = [UIColor clearColor].CGColor;
+        [self.containerView.layer addSublayer:zeroLineLayer];
     }
 }
 

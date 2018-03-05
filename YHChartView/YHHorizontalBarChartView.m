@@ -574,6 +574,7 @@
         CAShapeLayer *dashLineLayer = [CAShapeLayer layer];
         UIBezierPath *dashLineBezier = [UIBezierPath bezierPath];
         for (NSUInteger i = 0; i < self.dataNegativeSegmentNum + self.dataPostiveSegmentNum; i++) {
+            if (i == self.dataPostiveSegmentNum) continue;
             [dashLineBezier moveToPoint:CGPointMake(LeftEdge, TopEdge + i * [self axisUnitScale])];
             [dashLineBezier addLineToPoint:CGPointMake(self.bounds.size.width, TopEdge + i * [self axisUnitScale])];
         }
@@ -586,6 +587,19 @@
         dashLineLayer.strokeColor = self.referenceLineColor.CGColor;
         dashLineLayer.fillColor = [UIColor clearColor].CGColor;
         [self.containerView.layer addSublayer:dashLineLayer];
+        
+        CAShapeLayer *zeroLineLayer = [CAShapeLayer layer];
+        UIBezierPath *zeroLineBezier = [UIBezierPath bezierPath];
+        [zeroLineBezier moveToPoint:CGPointMake(LeftEdge, TopEdge + self.dataPostiveSegmentNum * [self axisUnitScale])];
+        [zeroLineBezier addLineToPoint:CGPointMake(self.bounds.size.width, TopEdge + self.dataPostiveSegmentNum * [self axisUnitScale])];
+        zeroLineLayer.lineWidth = self.referenceLineWidth*2;
+        zeroLineLayer.strokeColor = ZeroLineColor.CGColor;
+        zeroLineLayer.path = zeroLineBezier.CGPath;
+        if (self.showDataDashLine) {
+            [zeroLineLayer setLineDashPattern:[NSArray arrayWithObjects:[NSNumber numberWithInt:5], [NSNumber numberWithInt:5], nil]];
+        }
+        zeroLineLayer.fillColor = [UIColor clearColor].CGColor;
+        [self.containerView.layer addSublayer:zeroLineLayer];
     }
 }
 
