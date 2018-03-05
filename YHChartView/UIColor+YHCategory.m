@@ -9,6 +9,9 @@
 
 @implementation UIColor (YHCategory)
 + (UIColor *)hexChangeFloat:(NSString *)hexColor {
+    return [self hexChangeFloat:hexColor alpha:1];
+}
++ (UIColor *)hexChangeFloat:(NSString *)hexColor alpha:(CGFloat)alpha {
     if ([hexColor length] < 6) {
         return nil;
     }
@@ -34,6 +37,6 @@
     return [UIColor colorWithRed:(float)(redInt_/255.0f)
                            green:(float)(greenInt_/255.0f)
                             blue:(float)(blueInt_/255.0f)
-                           alpha:1.0f];
+                           alpha:alpha];
 }
 @end

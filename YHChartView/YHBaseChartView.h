@@ -82,7 +82,9 @@ YHTapPointRatioInItemMake(CGFloat x, CGFloat y) {
 @property (nonatomic, assign, readonly) CGFloat dataNumFactor;
 @property (nonatomic, assign, readonly) CGFloat dataValueFactor;
 @property (nonatomic, assign, readonly) YHAnimationType animationType;
+
 @property (nonatomic, assign) CGFloat groupSpaceDivideBarWidth;
+@property (nonatomic, assign) CGFloat barColorAlpha;
 
 - (void)redraw;
 - (void)compareBeginAndEndItemValue:(NSUInteger)beginItem endItem:(NSUInteger)endItem isBeginGroup:(BOOL)isBeginGroup;

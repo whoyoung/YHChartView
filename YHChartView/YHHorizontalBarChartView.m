@@ -22,6 +22,7 @@
     self.showAxisHardLine = [barStyle objectForKey:@"showAxisHardLine"] ? [[barStyle objectForKey:@"showAxisHardLine"] boolValue] : NO;
     self.showDataDashLine = [barStyle objectForKey:@"showDataDashLine"] ? [[barStyle objectForKey:@"showDataDashLine"] boolValue] : NO;
     self.showDataHardLine = [barStyle objectForKey:@"showDataHardLine"] ? [[barStyle objectForKey:@"showDataHardLine"] boolValue] : YES;
+    self.barColorAlpha = [barStyle objectForKey:@"barColorAlpha"] ? [[barStyle objectForKey:@"barColorAlpha"] floatValue] : BarAlpha;
 }
 
 - (CGSize)gestureScrollContentSize {
@@ -369,8 +370,8 @@
                                                                 fabs(dataV) * self.dataItemUnitScale)];
                 yValueLayer.path = yValueBezier.CGPath;
                 yValueLayer.lineWidth = 1;
-                yValueLayer.strokeColor = [[UIColor hexChangeFloat:self.itemColors[0]] CGColor];
-                yValueLayer.fillColor = [[UIColor hexChangeFloat:self.itemColors[0]] CGColor];
+                yValueLayer.strokeColor = [[UIColor hexChangeFloat:self.itemColors[0] alpha:self.barColorAlpha] CGColor];
+                yValueLayer.fillColor = [[UIColor hexChangeFloat:self.itemColors[0] alpha:self.barColorAlpha] CGColor];
                 [subContainerV.layer addSublayer:yValueLayer];
             }
         } break;
@@ -395,8 +396,8 @@
                                                       fabs(dataV) * self.dataItemUnitScale)];
                     yValueLayer.path = yValueBezier.CGPath;
                     yValueLayer.lineWidth = 1;
-                    yValueLayer.strokeColor = [[UIColor hexChangeFloat:self.itemColors[j]] CGColor];
-                    yValueLayer.fillColor = [[UIColor hexChangeFloat:self.itemColors[j]] CGColor];
+                    yValueLayer.strokeColor = [[UIColor hexChangeFloat:self.itemColors[j] alpha:self.barColorAlpha] CGColor];
+                    yValueLayer.fillColor = [[UIColor hexChangeFloat:self.itemColors[j] alpha:self.barColorAlpha] CGColor];
                     [subContainerV.layer addSublayer:yValueLayer];
 
                     if (dataV < 0) {
@@ -443,8 +444,8 @@
                                                       fabs(dataV) * self.dataItemUnitScale)];
                     yValueLayer.path = yValueBezier.CGPath;
                     yValueLayer.lineWidth = 1;
-                    yValueLayer.strokeColor = [[UIColor hexChangeFloat:self.itemColors[j]] CGColor];
-                    yValueLayer.fillColor = [[UIColor hexChangeFloat:self.itemColors[j]] CGColor];
+                    yValueLayer.strokeColor = [[UIColor hexChangeFloat:self.itemColors[j] alpha:self.barColorAlpha] CGColor];
+                    yValueLayer.fillColor = [[UIColor hexChangeFloat:self.itemColors[j] alpha:self.barColorAlpha] CGColor];
                     [subContainerV.layer addSublayer:yValueLayer];
                 }
             }
@@ -479,8 +480,8 @@
             bezierPathWithRect:CGRectMake(x, yPoint, self.zoomedItemAxis, fabs(itemValue) * self.dataItemUnitScale)];
         yValueLayer.path = yValueBezier.CGPath;
         yValueLayer.lineWidth = 1;
-        yValueLayer.strokeColor = [[UIColor hexChangeFloat:self.itemColors[i]] CGColor];
-        yValueLayer.fillColor = [[UIColor hexChangeFloat:self.itemColors[i]] CGColor];
+        yValueLayer.strokeColor = [[UIColor hexChangeFloat:self.itemColors[i] alpha:self.barColorAlpha] CGColor];
+        yValueLayer.fillColor = [[UIColor hexChangeFloat:self.itemColors[i] alpha:self.barColorAlpha] CGColor];
         [subContainerV.layer addSublayer:yValueLayer];
     }
 }
