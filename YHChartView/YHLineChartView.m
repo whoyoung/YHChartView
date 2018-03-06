@@ -89,11 +89,17 @@
     if ((tapP.x - group * self.zoomedItemAxis) > self.zoomedItemAxis/2.0 && group <  self.Datas[0].count - 1) {
         group += 1;
     }
+    for(NSUInteger i=0;i<self.Datas.count;) {
+        if ([self dataAtGroup:group item:i] != MAXFLOAT) {
+            item = i;
+            break;
+        }
+        if (i == self.Datas.count - 1) return nil;
+        i += 1;
+    }
     if (self.Datas.count > 1) {
         CGFloat actualY = self.zeroLine;
-        if ([self dataAtGroup:group item:item] != MAXFLOAT) {
-            actualY -= [self dataAtGroup:group item:0] * self.dataItemUnitScale;
-        }
+        actualY -= [self dataAtGroup:group item:0] * self.dataItemUnitScale;
         CGFloat minDistance = fabs(tapP.y - actualY);
         for (NSUInteger i=item+1; i<self.Datas.count; i++) {
             if ([self dataAtGroup:group item:i] == MAXFLOAT) continue;

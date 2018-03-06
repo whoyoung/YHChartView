@@ -204,6 +204,7 @@
 - (void)chartDidTapping:(UITapGestureRecognizer *)tapGesture {
     CGPoint tapP = [tapGesture locationInView:self.gestureScroll];
     NSDictionary *groupItemDict = [self tappedGroupAndItem:tapP];
+    if (!groupItemDict) return;
     _tappedGroup = [[groupItemDict objectForKey:@"group"] integerValue];
     _tappedItem = [[groupItemDict objectForKey:@"item"] integerValue];
     _hadTapped = YES;
