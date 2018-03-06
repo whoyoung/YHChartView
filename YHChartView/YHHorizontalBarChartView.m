@@ -103,13 +103,26 @@
         if (item > self.Datas.count - 1) {
             item = self.Datas.count - 1;
         }
+        if(![[self.Datas[item] objectAtIndex:group] respondsToSelector:@selector(floatValue)]) return nil;
     } else if (self.chartType == BarChartTypeSingle) {
         group = floorf(tapP.x / (self.zoomedItemAxis + self.groupSpace));
         item = 0;
+        if(![[self.Datas[item] objectAtIndex:group] respondsToSelector:@selector(floatValue)]) return nil;
     } else { // BarChartTypeStack
         group = floorf(tapP.x / (self.zoomedItemAxis + self.groupSpace));
+        
+        for(NSUInteger i=0;i<self.Datas.count;) {
+            if ([[self.Datas[i] objectAtIndex:group] respondsToSelector:@selector(floatValue)]) {
+                item = i;
+                break;
+            }
+            if (i == self.Datas.count - 1) return nil;
+            i += 1;
+        }
+        
         CGFloat tempY = self.zeroLine;
-        for (NSUInteger i = 0; i < self.Datas.count; i++) {
+        for (NSUInteger i = item; i < self.Datas.count; i++) {
+            if (![[self.Datas[i] objectAtIndex:group] respondsToSelector:@selector(floatValue)]) continue;
             CGFloat h = [self dataAtGroup:group item:i] * self.dataItemUnitScale;
             if (tapP.y > self.zeroLine) {
                 if (h < 0) {

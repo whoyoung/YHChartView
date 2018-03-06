@@ -99,7 +99,7 @@
     }
     if (self.Datas.count > 1) {
         CGFloat actualY = self.zeroLine;
-        actualY -= [self dataAtGroup:group item:0] * self.dataItemUnitScale;
+        actualY -= [self dataAtGroup:group item:item] * self.dataItemUnitScale;
         CGFloat minDistance = fabs(tapP.y - actualY);
         for (NSUInteger i=item+1; i<self.Datas.count; i++) {
             if ([self dataAtGroup:group item:i] == MAXFLOAT) continue;
