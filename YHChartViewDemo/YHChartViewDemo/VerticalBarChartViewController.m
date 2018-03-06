@@ -18,14 +18,14 @@
     NSDictionary *dict = @{
                            @"axis":@[@"Mon",@"Tues",@"Wed",@"Thu",@"Fri",@"Sat",@"Sun"],
                            @"datas":@[
-                                   @[@"9883.6",@"580.2",@"980.3",@"-3330.4",@"1340.5",@"330.6",@"-170.7"],
-                                   @[@"2222",@"12533.6",@"-158.7",@"91.9",@"1066.12",@"250.13",@"-6033.14"]
+                                   @[@"9883.6",[NSNull null],@"980.3",@"-3330.4",@"1340.5",@"330.6",[NSNull null]],
+                                   @[@"2222",@"12533.6",[NSNull null],@"91.9",@"1066.12",@"250.13",@"-6033.14"]
                                    ],
                            @"groupMembers":@[@"zhang",@"yang"],
                            @"groupDimension":@"成交人",
                            @"axisTitle":@"星期",
                            @"dataTitle":@"成交量",
-                           @"stack":@NO,
+                           @"stack":@YES,
                            @"valueInterval": @"3",
                            @"referenceLineWidth": @2,
                            @"referenceLineColor": @"dddddd",
