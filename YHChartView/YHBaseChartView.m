@@ -80,6 +80,7 @@
     _loadAnimationTime = [dict objectForKey:@"loadAnimationTime"] ? [[dict objectForKey:@"loadAnimationTime"] floatValue] : LoadAnimationTime;
     if (_loadAnimationTime < 0.1) _loadAnimationTime = 0.1;
     _animationType = [[dict objectForKey:@"animationType"] integerValue];
+    _showTipViewArrow = [[dict objectForKey:@"showTipViewArrow"] boolValue];
     NSDictionary *styleDict = [dict objectForKey:@"styles"];
     [self dealStyleDict:styleDict];
 }
@@ -232,7 +233,8 @@
     NSString *dataStr = [dataDict objectForKey:@"dataStr"];
     
     CGFloat tipTextH = 11;
-    CGFloat tipH = TipViewPadding*2 + 2 * tipTextH + 5;
+    CGFloat arrowH = self.showTipViewArrow ? 5 : 0;
+    CGFloat tipH = TipViewPadding*2 + 2 * tipTextH + arrowH;
     CGFloat tipMaxW = [axisStr measureTextWidth:[UIFont systemFontOfSize:9]];
     tipMaxW = MAX(tipMaxW, [dataStr measureTextWidth:[UIFont systemFontOfSize:9]]);
     if (groupStr.length) {
@@ -270,81 +272,86 @@
     [self.gestureScroll addSubview:tipView];
 
     CAShapeLayer *rectLayer = [CAShapeLayer layer];
-    UIBezierPath *rectPath;
-    if (arrowP > 10) {
-        rectPath = [UIBezierPath bezierPathWithRect:CGRectMake(0, 5, tipMaxW, tipH - 5)];
-    } else {
-        rectPath = [UIBezierPath bezierPathWithRect:CGRectMake(0, 0, tipMaxW, tipH - 5)];
-    }
     CGSize cornerRadii = CGSizeMake(3, 3);
-    CGRect topRect = CGRectMake(0, 0, tipMaxW, tipH - 5);
-    CGRect bottomRect = CGRectMake(0, 5, tipMaxW, tipH - 5);
-    switch (arrowP) {
-        case 1: { //左下箭头
-            rectPath = [UIBezierPath
-                bezierPathWithRoundedRect:topRect
-                        byRoundingCorners:UIRectCornerTopLeft | UIRectCornerTopRight | UIRectCornerBottomRight
-                              cornerRadii:cornerRadii];
-            [self drawArrow:rectPath
-                     startP:CGPointMake(0, tipH - 5)
-                    middleP:CGPointMake(0, tipH)
-                       endP:CGPointMake(2.5, tipH - 5)];
-        } break;
-        case 2: { //中下箭头
-            rectPath = [UIBezierPath bezierPathWithRoundedRect:topRect
-                                             byRoundingCorners:UIRectCornerAllCorners
-                                                   cornerRadii:cornerRadii];
-            [self drawArrow:rectPath
-                     startP:CGPointMake(tipMaxW / 2 - 2.5, tipH - 5)
-                    middleP:CGPointMake(tipMaxW / 2, tipH)
-                       endP:CGPointMake(tipMaxW / 2 + 2.5, tipH - 5)];
-        } break;
-        case 3: { //右下箭头
-            rectPath = [UIBezierPath
-                bezierPathWithRoundedRect:topRect
-                        byRoundingCorners:UIRectCornerTopLeft | UIRectCornerTopRight | UIRectCornerBottomLeft
-                              cornerRadii:cornerRadii];
-            [self drawArrow:rectPath
-                     startP:CGPointMake(tipMaxW - 2.5, tipH - 5)
-                    middleP:CGPointMake(tipMaxW, tipH)
-                       endP:CGPointMake(tipMaxW, tipH - 5)];
-        } break;
-        case 11: { //左上箭头
-            rectPath = [UIBezierPath
-                bezierPathWithRoundedRect:bottomRect
-                        byRoundingCorners:UIRectCornerBottomLeft | UIRectCornerTopRight | UIRectCornerBottomRight
-                              cornerRadii:cornerRadii];
-            [self drawArrow:rectPath startP:CGPointMake(0, 5) middleP:CGPointMake(0, 0) endP:CGPointMake(2.5, 5)];
-        } break;
-        case 12: { //中上箭头
-            rectPath = [UIBezierPath bezierPathWithRoundedRect:bottomRect
-                                             byRoundingCorners:UIRectCornerAllCorners
-                                                   cornerRadii:cornerRadii];
-            [self drawArrow:rectPath
-                     startP:CGPointMake(tipMaxW / 2 - 2.5, 5)
-                    middleP:CGPointMake(tipMaxW / 2, 0)
-                       endP:CGPointMake(tipMaxW / 2 + 2.5, 5)];
-        } break;
-        case 13: { //右上箭头
-            rectPath = [UIBezierPath
-                bezierPathWithRoundedRect:bottomRect
-                        byRoundingCorners:UIRectCornerTopLeft | UIRectCornerBottomLeft | UIRectCornerBottomRight
-                              cornerRadii:cornerRadii];
-            [self drawArrow:rectPath
-                     startP:CGPointMake(tipMaxW - 2.5, 5)
-                    middleP:CGPointMake(tipMaxW, 0)
-                       endP:CGPointMake(tipMaxW, 5)];
-        } break;
-
-        default:
-            break;
+    UIBezierPath *rectPath;
+    if (self.showTipViewArrow) {
+        if (arrowP > 10) {
+            rectPath = [UIBezierPath bezierPathWithRect:CGRectMake(0, 5, tipMaxW, tipH - 5)];
+        } else {
+            rectPath = [UIBezierPath bezierPathWithRect:CGRectMake(0, 0, tipMaxW, tipH - 5)];
+        }
+        CGRect topRect = CGRectMake(0, 0, tipMaxW, tipH - 5);
+        CGRect bottomRect = CGRectMake(0, 5, tipMaxW, tipH - 5);
+        switch (arrowP) {
+            case 1: { //左下箭头
+                rectPath = [UIBezierPath
+                            bezierPathWithRoundedRect:topRect
+                            byRoundingCorners:UIRectCornerTopLeft | UIRectCornerTopRight | UIRectCornerBottomRight
+                            cornerRadii:cornerRadii];
+                [self drawArrow:rectPath
+                         startP:CGPointMake(0, tipH - 5)
+                        middleP:CGPointMake(0, tipH)
+                           endP:CGPointMake(2.5, tipH - 5)];
+            } break;
+            case 2: { //中下箭头
+                rectPath = [UIBezierPath bezierPathWithRoundedRect:topRect
+                                                 byRoundingCorners:UIRectCornerAllCorners
+                                                       cornerRadii:cornerRadii];
+                [self drawArrow:rectPath
+                         startP:CGPointMake(tipMaxW / 2 - 2.5, tipH - 5)
+                        middleP:CGPointMake(tipMaxW / 2, tipH)
+                           endP:CGPointMake(tipMaxW / 2 + 2.5, tipH - 5)];
+            } break;
+            case 3: { //右下箭头
+                rectPath = [UIBezierPath
+                            bezierPathWithRoundedRect:topRect
+                            byRoundingCorners:UIRectCornerTopLeft | UIRectCornerTopRight | UIRectCornerBottomLeft
+                            cornerRadii:cornerRadii];
+                [self drawArrow:rectPath
+                         startP:CGPointMake(tipMaxW - 2.5, tipH - 5)
+                        middleP:CGPointMake(tipMaxW, tipH)
+                           endP:CGPointMake(tipMaxW, tipH - 5)];
+            } break;
+            case 11: { //左上箭头
+                rectPath = [UIBezierPath
+                            bezierPathWithRoundedRect:bottomRect
+                            byRoundingCorners:UIRectCornerBottomLeft | UIRectCornerTopRight | UIRectCornerBottomRight
+                            cornerRadii:cornerRadii];
+                [self drawArrow:rectPath startP:CGPointMake(0, 5) middleP:CGPointMake(0, 0) endP:CGPointMake(2.5, 5)];
+            } break;
+            case 12: { //中上箭头
+                rectPath = [UIBezierPath bezierPathWithRoundedRect:bottomRect
+                                                 byRoundingCorners:UIRectCornerAllCorners
+                                                       cornerRadii:cornerRadii];
+                [self drawArrow:rectPath
+                         startP:CGPointMake(tipMaxW / 2 - 2.5, 5)
+                        middleP:CGPointMake(tipMaxW / 2, 0)
+                           endP:CGPointMake(tipMaxW / 2 + 2.5, 5)];
+            } break;
+            case 13: { //右上箭头
+                rectPath = [UIBezierPath
+                            bezierPathWithRoundedRect:bottomRect
+                            byRoundingCorners:UIRectCornerTopLeft | UIRectCornerBottomLeft | UIRectCornerBottomRight
+                            cornerRadii:cornerRadii];
+                [self drawArrow:rectPath
+                         startP:CGPointMake(tipMaxW - 2.5, 5)
+                        middleP:CGPointMake(tipMaxW, 0)
+                           endP:CGPointMake(tipMaxW, 5)];
+            } break;
+                
+            default:
+                break;
+        }
+    } else {
+        rectPath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, tipMaxW, tipH) cornerRadius:cornerRadii.width];
     }
+    
     rectLayer.path = rectPath.CGPath;
     rectLayer.fillColor = [UIColor hexChangeFloat:@"0D2940"].CGColor;
     [tipView.layer addSublayer:rectLayer];
 
     CGFloat startY = TipViewPadding;
-    if (arrowP > 10) {
+    if (arrowP > 10 && self.showTipViewArrow) {
         startY += 5;
     }
     if (groupStr.length) {

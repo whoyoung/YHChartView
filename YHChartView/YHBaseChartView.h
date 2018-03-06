@@ -89,6 +89,8 @@ YHTapPointRatioInItemMake(CGFloat x, CGFloat y) {
 @property (nonatomic, assign) CGFloat separateLineDivideGroupSpace;
 @property (nonatomic, assign) CGFloat seperateLineWidth;
 
+@property (nonatomic, assign, readonly) BOOL showTipViewArrow;
+
 - (void)redraw;
 - (void)compareBeginAndEndItemValue:(NSUInteger)beginItem endItem:(NSUInteger)endItem isBeginGroup:(BOOL)isBeginGroup;
 - (void)campareMaxAndMinValue:(NSUInteger)leftIndex rightIndex:(NSUInteger)rightIndex;
