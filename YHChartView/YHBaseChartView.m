@@ -513,7 +513,6 @@
 }
 - (void)drawDataPoint {
 }
-
 - (void)addAxisLayer {
 }
 - (void)addAxisScaleLayer {

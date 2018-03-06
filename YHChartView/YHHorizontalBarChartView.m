@@ -23,6 +23,9 @@
     self.showDataDashLine = [barStyle objectForKey:@"showDataDashLine"] ? [[barStyle objectForKey:@"showDataDashLine"] boolValue] : NO;
     self.showDataHardLine = [barStyle objectForKey:@"showDataHardLine"] ? [[barStyle objectForKey:@"showDataHardLine"] boolValue] : YES;
     self.barColorAlpha = [barStyle objectForKey:@"barColorAlpha"] ? [[barStyle objectForKey:@"barColorAlpha"] floatValue] : BarAlpha;
+    self.showBarGroupSeparateLine = [barStyle objectForKey:@"showBarGroupSeparateLine"] ? [[barStyle objectForKey:@"showBarGroupSeparateLine"] boolValue] : YES;
+    self.separateLineDivideGroupSpace = [barStyle objectForKey:@"separateLineDivideGroupSpace"] ? [[barStyle objectForKey:@"separateLineDivideGroupSpace"] floatValue] : 0.2;
+    self.seperateLineWidth = [barStyle objectForKey:@"seperateLineWidth"] ? [[barStyle objectForKey:@"seperateLineWidth"] floatValue] : 1;
 }
 
 - (CGSize)gestureScrollContentSize {
@@ -351,7 +354,11 @@
 - (void)drawDataPoint {
     UIView *subContainerV = [[UIView alloc] initWithFrame:CGRectMake(LeftEdge, TopEdge, ChartWidth, ChartHeight)];
     subContainerV.layer.masksToBounds = YES;
+    subContainerV.tag = 102;
     [self.containerView addSubview:subContainerV];
+    
+    [self drawGroupSeparateLine];
+    
     NSUInteger drawNum = lroundf(self.endGroupIndex * self.dataNumFactor);
     switch (self.chartType) {
         case BarChartTypeSingle: {
@@ -646,4 +653,26 @@
         }
     }
 }
+
+- (void)drawGroupSeparateLine {
+    if (self.showBarGroupSeparateLine && self.chartType == BarChartTypeGroup && self.seperateLineWidth/self.groupSpace <= self.separateLineDivideGroupSpace) {
+        UIView *subContainer = [self.containerView viewWithTag:102];
+        CGFloat groupWidth = self.groupSpace + self.Datas.count * self.zoomedItemAxis;
+        CGFloat offsetX = self.gestureScroll.contentOffset.x;
+        for (NSUInteger i=self.beginGroupIndex; i<self.endGroupIndex; i++) {
+            CAShapeLayer *separateLine = [CAShapeLayer layer];
+            UIBezierPath *bezier = [UIBezierPath bezierPath];
+            CGFloat x = (i+1)*groupWidth-self.groupSpace/2.0-self.seperateLineWidth/2.0 - offsetX;
+            [bezier moveToPoint:CGPointMake(x, 0)];
+            [bezier addLineToPoint:CGPointMake(x, ChartHeight)];
+            separateLine.lineWidth = self.seperateLineWidth;
+            separateLine.fillColor = self.referenceLineColor.CGColor;
+            separateLine.strokeColor = self.referenceLineColor.CGColor;
+            separateLine.path = bezier.CGPath;
+            [separateLine setLineDashPattern:[NSArray arrayWithObjects:[NSNumber numberWithInt:5],[NSNumber numberWithInt:5], nil]];
+            [subContainer.layer addSublayer:separateLine];
+        }
+    }
+}
+
 @end

@@ -85,6 +85,9 @@ YHTapPointRatioInItemMake(CGFloat x, CGFloat y) {
 
 @property (nonatomic, assign) CGFloat groupSpaceDivideBarWidth;
 @property (nonatomic, assign) CGFloat barColorAlpha;
+@property (nonatomic, assign) BOOL showBarGroupSeparateLine;
+@property (nonatomic, assign) CGFloat separateLineDivideGroupSpace;
+@property (nonatomic, assign) CGFloat seperateLineWidth;
 
 - (void)redraw;
 - (void)compareBeginAndEndItemValue:(NSUInteger)beginItem endItem:(NSUInteger)endItem isBeginGroup:(BOOL)isBeginGroup;
