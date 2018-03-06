@@ -29,4 +29,5 @@
 
 @optional
 - (void)adjustScale:(CGRect)origionFrame newFrame:(CGRect)newFrame;
+- (void)updateSelectedGroup:(NSUInteger)group item:(NSUInteger)item;
 @end

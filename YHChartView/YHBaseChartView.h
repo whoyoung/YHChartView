@@ -108,4 +108,5 @@ YHTapPointRatioInItemMake(CGFloat x, CGFloat y) {
 - (CGFloat)dataAtGroup:(NSUInteger)group item:(NSUInteger)item;
 - (CGFloat)verifyDataValue:(id)value;
 - (NSArray *)defaultColors;
+- (NSString *)layerTag:(NSUInteger)group item:(NSUInteger)item;
 @end

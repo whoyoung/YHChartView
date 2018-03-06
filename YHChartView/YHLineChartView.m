@@ -12,6 +12,8 @@
 @property (nonatomic, assign) CGFloat lineWidth;
 @property (nonatomic, assign) CGFloat circleRadius;
 @property (nonatomic, assign) CGFloat circleBorderWidth;
+@property (nonatomic, assign) BOOL showSelectedSubLine;
+@property (nonatomic, copy) NSString *subLineColor;
 @end
 
 @implementation YHLineChartView
@@ -32,6 +34,8 @@
     if (self.circleBorderWidth > self.circleRadius) {
         self.circleBorderWidth = self.circleRadius;
     }
+    self.showSelectedSubLine = [lineStyle objectForKey:@"showSelectedSubLine"] ? [[lineStyle objectForKey:@"showSelectedSubLine"] boolValue] : YES;
+    self.subLineColor = [lineStyle objectForKey:@"subLineColor"] ? [lineStyle objectForKey:@"subLineColor"] : @"cccccc";
 }
 
 - (CGSize)gestureScrollContentSize {
@@ -148,6 +152,7 @@
 - (void)drawDataPoint {
     UIView *subContainerV = [[UIView alloc] initWithFrame:CGRectMake(LeftEdge, TopEdge, ChartWidth, ChartHeight)];
     subContainerV.layer.masksToBounds = YES;
+    subContainerV.tag = 102;
     [self.containerView addSubview:subContainerV];
     NSUInteger drawNum = lroundf(self.endGroupIndex * self.dataNumFactor);
     for (NSUInteger i=0;i<self.Datas.count;i++) {
@@ -156,7 +161,7 @@
         UIBezierPath *yValueBezier = [UIBezierPath bezierPath];
         CGFloat offsetX = self.gestureScroll.contentOffset.x;
         CGFloat zeroY = self.dataPostiveSegmentNum * [self axisUnitScale];
-
+        yValueLayer.name = [self layerTag:0 item:i];
         NSMutableArray *circlePoints = [NSMutableArray array];
         
         for (NSUInteger j=self.beginGroupIndex; j<drawNum+1; j++) {
@@ -168,6 +173,7 @@
             } else {
                 [yValueBezier addLineToPoint:p];
             }
+            
             if (j > self.beginGroupIndex && j < drawNum) {
                 if (![values[j-1] respondsToSelector:@selector(floatValue)] && ![values[j+1] respondsToSelector:@selector(floatValue)]) {
                     [circlePoints addObject:NSStringFromCGPoint(p)];
@@ -366,4 +372,59 @@
                 @"4698EB", @"34C7C7", @"3BCC90", @"80C25D", @"FFA51F", @"F06260", @"886FE7"
             ];
 }
+- (void)updateSelectedGroup:(NSUInteger)group item:(NSUInteger)item {
+    UIView *subContainer = [self.containerView viewWithTag:102];
+    NSArray *subLayers = subContainer.layer.sublayers;
+    for (NSUInteger i=subLayers.count-1;i>0;i--) {
+        CALayer *layer = subLayers[i];
+        if ([layer isKindOfClass:[CAShapeLayer class]] && ([layer.name isEqualToString:@"borderCircle"] || [layer.name isEqualToString:@"centerCircle"] || [layer.name isEqualToString:@"subline"])) {
+            [layer removeFromSuperlayer];
+        }
+    }
+    
+    CGFloat offsetX = self.gestureScroll.contentOffset.x;
+    CGFloat zeroY = self.dataPostiveSegmentNum * [self axisUnitScale];
+    CGFloat yPoint = zeroY - [self dataAtGroup:group item:item] * self.dataItemUnitScale * self.dataValueFactor;
+    CGPoint p = CGPointMake(group*self.zoomedItemAxis-offsetX, yPoint);
+    [self selectedSublineLayers:NSStringFromCGPoint(p) circleColor:self.subLineColor parentView:subContainer];
+}
+
+- (void)selectedSublineLayers:(NSString *)pointString circleColor:(NSString *)hexColor parentView:(UIView *)parentV {
+    CGPoint selectedP = CGPointFromString(pointString);
+    CAShapeLayer *shaperLayer = [CAShapeLayer layer];
+    UIBezierPath *bezierP = [UIBezierPath bezierPathWithArcCenter:selectedP
+                                                           radius:self.circleRadius
+                                                       startAngle:0
+                                                         endAngle:2 * M_PI
+                                                        clockwise:YES];
+    
+    shaperLayer.path = bezierP.CGPath;
+    shaperLayer.fillColor = [UIColor hexChangeFloat:hexColor alpha:0.3].CGColor;
+    shaperLayer.name = @"borderCircle";
+    [parentV.layer addSublayer:shaperLayer];
+    
+    CAShapeLayer *centerLayer = [CAShapeLayer layer];
+    UIBezierPath *centerBezierP = [UIBezierPath bezierPathWithArcCenter:selectedP
+                                                                 radius:self.circleRadius-self.circleBorderWidth
+                                                             startAngle:0
+                                                               endAngle:2 * M_PI
+                                                              clockwise:YES];
+    
+    centerLayer.path = centerBezierP.CGPath;
+    centerLayer.fillColor = [UIColor hexChangeFloat:hexColor].CGColor;
+    centerLayer.name = @"centerCircle";
+    [parentV.layer addSublayer:centerLayer];
+    
+    CAShapeLayer *sublineLayer = [CAShapeLayer layer];
+    UIBezierPath *sublineBezierP = [UIBezierPath bezierPath];
+    [sublineBezierP moveToPoint:CGPointMake(selectedP.x, 0)];
+    [sublineBezierP addLineToPoint:CGPointMake(selectedP.x, ChartHeight)];
+    sublineLayer.path = sublineBezierP.CGPath;
+    sublineLayer.lineWidth = 0.5;
+    sublineLayer.strokeColor = [UIColor hexChangeFloat:self.subLineColor].CGColor;
+    sublineLayer.fillColor = [UIColor hexChangeFloat:self.subLineColor].CGColor;
+    sublineLayer.name = @"subline";
+    [parentV.layer addSublayer:sublineLayer];
+}
+
 @end

@@ -198,6 +198,7 @@
     [self addDataScaleLayer];
     [self drawDataPoint];
     if (self.hadTapped) {
+        [self updateSelectedGroup:_tappedGroup item:_tappedItem];
         [self updateTipLayer:self.tappedGroup item:self.tappedItem];
     }
 }
@@ -209,7 +210,7 @@
     _tappedItem = [[groupItemDict objectForKey:@"item"] integerValue];
     _hadTapped = YES;
     [self saveTapPointRatio:tapP group:_tappedGroup item:_tappedItem];
-
+    [self updateSelectedGroup:_tappedGroup item:_tappedItem];
     [self updateTipLayer:_tappedGroup item:_tappedItem];
     if (self.delegate && [self.delegate respondsToSelector:@selector(didTapChart:group:item:)]) {
         [self.delegate didTapChart:self group:_tappedGroup item:_tappedItem];
@@ -225,6 +226,9 @@
 - (NSDictionary *)tappedGroupAndItem:(CGPoint)tapP {
     NSUInteger group = 0, item = 0;
     return @{ @"group": @(group), @"item": @(item) };
+}
+- (void)updateSelectedGroup:(NSUInteger)group item:(NSUInteger)item {
+    
 }
 - (void)updateTipLayer:(NSUInteger)group item:(NSUInteger)item {
     [self removeTipView];
@@ -629,5 +633,8 @@
 }
 - (CGFloat)groupSpace {
     return self.zoomedItemAxis * self.groupSpaceDivideBarWidth;
+}
+- (NSString *)layerTag:(NSUInteger)group item:(NSUInteger)item {
+    return [NSString stringWithFormat:@"group%ld_item%ld",group,item];
 }
 @end

@@ -369,7 +369,6 @@
     subContainerV.layer.masksToBounds = YES;
     subContainerV.tag = 102;
     [self.containerView addSubview:subContainerV];
-    
     [self drawGroupSeparateLine];
     
     NSUInteger drawNum = lroundf(self.endGroupIndex * self.dataNumFactor);
@@ -392,6 +391,7 @@
                 yValueLayer.lineWidth = 1;
                 yValueLayer.strokeColor = [[UIColor hexChangeFloat:self.itemColors[0] alpha:self.barColorAlpha] CGColor];
                 yValueLayer.fillColor = [[UIColor hexChangeFloat:self.itemColors[0] alpha:self.barColorAlpha] CGColor];
+                yValueLayer.name = [self layerTag:i item:0];
                 [subContainerV.layer addSublayer:yValueLayer];
             }
         } break;
@@ -418,6 +418,7 @@
                     yValueLayer.lineWidth = 1;
                     yValueLayer.strokeColor = [[UIColor hexChangeFloat:self.itemColors[j] alpha:self.barColorAlpha] CGColor];
                     yValueLayer.fillColor = [[UIColor hexChangeFloat:self.itemColors[j] alpha:self.barColorAlpha] CGColor];
+                    yValueLayer.name = [self layerTag:i item:j];
                     [subContainerV.layer addSublayer:yValueLayer];
 
                     if (dataV < 0) {
@@ -466,6 +467,7 @@
                     yValueLayer.lineWidth = 1;
                     yValueLayer.strokeColor = [[UIColor hexChangeFloat:self.itemColors[j] alpha:self.barColorAlpha] CGColor];
                     yValueLayer.fillColor = [[UIColor hexChangeFloat:self.itemColors[j] alpha:self.barColorAlpha] CGColor];
+                    yValueLayer.name = [self layerTag:i item:j];
                     [subContainerV.layer addSublayer:yValueLayer];
                 }
             }
@@ -502,6 +504,7 @@
         yValueLayer.lineWidth = 1;
         yValueLayer.strokeColor = [[UIColor hexChangeFloat:self.itemColors[i] alpha:self.barColorAlpha] CGColor];
         yValueLayer.fillColor = [[UIColor hexChangeFloat:self.itemColors[i] alpha:self.barColorAlpha] CGColor];
+        yValueLayer.name = [self layerTag:leftIndex item:i];
         [subContainerV.layer addSublayer:yValueLayer];
     }
 }
@@ -684,6 +687,19 @@
             separateLine.path = bezier.CGPath;
             [separateLine setLineDashPattern:[NSArray arrayWithObjects:[NSNumber numberWithInt:5],[NSNumber numberWithInt:5], nil]];
             [subContainer.layer addSublayer:separateLine];
+        }
+    }
+}
+- (void)updateSelectedGroup:(NSUInteger)group item:(NSUInteger)item {
+    UIView *subContainer = [self.containerView viewWithTag:102];
+    NSArray *subLayers = subContainer.layer.sublayers;
+    for (CALayer *layer in subLayers) {
+        if ([layer.name isEqualToString:[self layerTag:group item:item]]) {
+            CAShapeLayer *shapeLayer = (CAShapeLayer *)layer;
+            shapeLayer.fillColor = [UIColor redColor].CGColor;
+        } else if ([layer isKindOfClass:[CAShapeLayer class]]) {
+            CAShapeLayer *shapeLayer = (CAShapeLayer *)layer;
+            shapeLayer.fillColor = shapeLayer.strokeColor;
         }
     }
 }
