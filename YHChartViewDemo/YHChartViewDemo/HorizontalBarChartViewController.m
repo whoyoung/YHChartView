@@ -33,7 +33,7 @@
                            @"showLoadAnimation": @YES,
                            @"loadAnimationTime": @0.8,
                            @"animationType": @(YHAnimationTypeChangeValueAndNum),
-                           @"stack": @YES,
+                           @"stack": @NO,
                            @"styles": @{
                                    @"barStyle": @{
                                    @"minBarWidth":@"5",

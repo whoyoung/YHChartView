@@ -693,13 +693,19 @@
 - (void)updateSelectedGroup:(NSUInteger)group item:(NSUInteger)item {
     UIView *subContainer = [self.containerView viewWithTag:102];
     NSArray *subLayers = subContainer.layer.sublayers;
-    for (CALayer *layer in subLayers) {
+    for (NSUInteger i=subLayers.count;i>0;i--) {
+        CALayer *layer = subLayers[i-1];
         if ([layer.name isEqualToString:[self layerTag:group item:item]]) {
             CAShapeLayer *shapeLayer = (CAShapeLayer *)layer;
-            shapeLayer.fillColor = [UIColor redColor].CGColor;
-        } else if ([layer isKindOfClass:[CAShapeLayer class]]) {
-            CAShapeLayer *shapeLayer = (CAShapeLayer *)layer;
-            shapeLayer.fillColor = shapeLayer.strokeColor;
+            
+            CAShapeLayer *maskLayer = [CAShapeLayer layer];
+            maskLayer.path = shapeLayer.path;
+            maskLayer.lineWidth = shapeLayer.lineWidth;
+            maskLayer.fillColor = [UIColor hexChangeFloat:@"808080" alpha:0.6].CGColor;
+            maskLayer.name = @"mask";
+            [subContainer.layer addSublayer:maskLayer];
+        } else if ([layer isKindOfClass:[CAShapeLayer class]] && [layer.name isEqualToString:@"mask"]) {
+            [layer removeFromSuperlayer];
         }
     }
 }
