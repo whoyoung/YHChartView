@@ -9,7 +9,7 @@
 
 @protocol YHBaseChartMethodProtocol <NSObject>
 @required
-- (id)initWithFrame:(CGRect)frame configure:(NSDictionary *)configureDict;
+- (id)initWithFrame:(CGRect)frame configure:(NSDictionary *)configureDict; //必须实现的初始化方法
 
 - (void)dealStyleDict:(NSDictionary *)styleDict;
 - (CGSize)gestureScrollContentSize;

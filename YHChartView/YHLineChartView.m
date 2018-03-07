@@ -226,7 +226,7 @@
 }
 
 - (void)addAxisLayer {
-    if ([self shoulHideAxisText]) return;
+    if ([self shouldHideAxisText]) return;
     CGFloat offsetX = self.gestureScroll.contentOffset.x;
     for (NSUInteger i=self.beginGroupIndex; i<=self.endGroupIndex; i++) {
         if (self.zoomedItemAxis*i-offsetX < 0) continue;
@@ -350,7 +350,7 @@
     return self.dataPostiveSegmentNum * [self axisUnitScale];
 }
 - (CGFloat)dataItemUnitScale {
-    if (self.itemDataScale == 0) return 0;
+    if (self.itemDataScale == 0) return 0; //为了防止0作为被除数
     return ChartHeight / (self.itemDataScale * (self.dataPostiveSegmentNum + self.dataNegativeSegmentNum));
 }
 - (CGFloat)dataAtGroup:(NSUInteger)group item:(NSUInteger)item {

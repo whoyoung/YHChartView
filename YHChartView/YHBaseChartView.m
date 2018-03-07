@@ -640,7 +640,7 @@
 - (NSString *)layerTag:(NSUInteger)group item:(NSUInteger)item {
     return [NSString stringWithFormat:@"group%ld_item%ld",group,item];
 }
-- (BOOL)shoulHideAxisText {
+- (BOOL)shouldHideAxisText {
     if (self.zoomedItemAxis < self.minWidthHideAxisText) return YES;
     return NO;
 }

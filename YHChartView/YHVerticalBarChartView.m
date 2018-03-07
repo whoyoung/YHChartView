@@ -10,7 +10,6 @@
 
 @interface YHVerticalBarChartView()
 @property (nonatomic, assign) CGFloat scrollContentSizeHeight;
-@property (nonatomic, assign) CGFloat pinCenterToTopDistance;
 
 @end
 
@@ -39,7 +38,7 @@
     switch (pinGesture.state) {
         case UIGestureRecognizerStateBegan: {
             CGPoint pinCenterContainer = [pinGesture locationInView:self.containerView];
-            self.pinCenterToTopDistance = pinCenterContainer.x - TopEdge;
+            self.pinCenterToLeftDistance = pinCenterContainer.x - TopEdge;
             CGPoint pinCenterScrollView = [pinGesture locationInView:self.gestureScroll];
             self.pinCenterRatio = pinCenterScrollView.y/self.gestureScroll.contentSize.height;
         }
@@ -80,7 +79,7 @@
 }
 - (void)adjustScroll {
     self.gestureScroll.contentSize = CGSizeMake(ChartWidth, self.scrollContentSizeHeight);
-    CGFloat offsetY = self.gestureScroll.contentSize.height * self.pinCenterRatio - self.pinCenterToTopDistance;
+    CGFloat offsetY = self.gestureScroll.contentSize.height * self.pinCenterRatio - self.pinCenterToLeftDistance;
     if (offsetY < 0) {
         offsetY = 0;
     }
@@ -480,7 +479,7 @@
 }
 
 - (void)addAxisLayer {
-    if ([self shoulHideAxisText]) return;
+    if ([self shouldHideAxisText]) return;
     CGFloat offsetY = self.gestureScroll.contentOffset.y;
     for (NSUInteger i=self.beginGroupIndex; i<=self.endGroupIndex; i++) {
         CGRect textFrame;
@@ -520,17 +519,19 @@
 }
 
 - (void)addDataScaleLayer {
-    CAShapeLayer *xScaleLayer = [CAShapeLayer layer];
-    UIBezierPath *xScaleBezier = [UIBezierPath bezierPath];
-    for (NSUInteger i=0; i<=self.dataNegativeSegmentNum+self.dataPostiveSegmentNum+1; i++) {
-        [xScaleBezier moveToPoint:CGPointMake(LeftEdge+i*[self axisUnitScale], self.bounds.size.height-BottomEdge)];
-        [xScaleBezier addLineToPoint:CGPointMake(LeftEdge+i*[self axisUnitScale], self.bounds.size.height-BottomEdge+5)];
+    if(self.showDataEdgeLine) {
+        CAShapeLayer *xScaleLayer = [CAShapeLayer layer];
+        UIBezierPath *xScaleBezier = [UIBezierPath bezierPath];
+        for (NSUInteger i=0; i<=self.dataNegativeSegmentNum+self.dataPostiveSegmentNum+1; i++) {
+            [xScaleBezier moveToPoint:CGPointMake(LeftEdge+i*[self axisUnitScale], self.bounds.size.height-BottomEdge)];
+            [xScaleBezier addLineToPoint:CGPointMake(LeftEdge+i*[self axisUnitScale], self.bounds.size.height-BottomEdge+5)];
+        }
+        xScaleLayer.path = xScaleBezier.CGPath;
+        xScaleLayer.lineWidth = self.referenceLineWidth;
+        xScaleLayer.strokeColor = self.referenceLineColor.CGColor;
+        xScaleLayer.fillColor = [UIColor clearColor].CGColor;
+        [self.containerView.layer addSublayer:xScaleLayer];
     }
-    xScaleLayer.path = xScaleBezier.CGPath;
-    xScaleLayer.lineWidth = self.referenceLineWidth;
-    xScaleLayer.strokeColor = self.referenceLineColor.CGColor;
-    xScaleLayer.fillColor = [UIColor clearColor].CGColor;
-    [self.containerView.layer addSublayer:xScaleLayer];
     
     if (self.showDataDashLine || self.showDataHardLine) {
         CAShapeLayer *dashLineLayer = [CAShapeLayer layer];
@@ -650,7 +651,7 @@
         }
     }
 }
-- (BOOL)shoulHideAxisText {
+- (BOOL)shouldHideAxisText {
     if (self.chartType == BarChartTypeGroup) {
         if (self.Datas.count * self.zoomedItemAxis < self.minWidthHideAxisText) return YES;
         return NO;

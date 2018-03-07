@@ -510,7 +510,7 @@
 }
 
 - (void)addAxisLayer {
-    if ([self shoulHideAxisText]) return;
+    if ([self shouldHideAxisText]) return;
     CGFloat offsetX = self.gestureScroll.contentOffset.x;
     for (NSUInteger i = self.beginGroupIndex; i <= self.endGroupIndex; i++) {
         CGRect textFrame;
@@ -710,7 +710,7 @@
         }
     }
 }
-- (BOOL)shoulHideAxisText {
+- (BOOL)shouldHideAxisText {
     if (self.chartType == BarChartTypeGroup) {
         if (self.Datas.count * self.zoomedItemAxis < self.minWidthHideAxisText) return YES;
         return NO;

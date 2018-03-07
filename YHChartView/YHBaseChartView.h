@@ -9,9 +9,19 @@
 #import "YHCommonChartViewDelegate.h"
 #import "YHCommonHeader.h"
 
-typedef NS_ENUM(NSUInteger, BarChartType) { BarChartTypeSingle = 0, BarChartTypeGroup = 1, BarChartTypeStack = 2 };
+typedef NS_ENUM(NSUInteger, BarChartType) {
+    BarChartTypeSingle = 0, //单柱状图
+    BarChartTypeGroup = 1, //分组柱状图
+    BarChartTypeStack = 2 //堆叠图
+    
+};
 
-typedef NS_ENUM(NSUInteger, YHAnimationType) { YHAnimationTypeChangeValue = 0, YHAnimationTypeChangeNum = 1, YHAnimationTypeChangeValueAndNum = 2 };
+typedef NS_ENUM(NSUInteger, YHAnimationType) {
+    YHAnimationTypeChangeValue = 0, //数据轴延展
+    YHAnimationTypeChangeNum = 1, //标题轴延展
+    YHAnimationTypeChangeValueAndNum = 2 //数据轴和标题轴同步延展
+    
+};
 
 typedef struct YHTapPointRatioInItem {
     CGFloat xRatio;
@@ -26,89 +36,89 @@ YHTapPointRatioInItemMake(CGFloat x, CGFloat y) {
 @interface YHBaseChartView : UIView <YHBaseChartMethodProtocol>
 
 @property (nonatomic, weak) id<YHCommonChartViewDelegate> delegate;
-@property (nonatomic, weak) UIScrollView *gestureScroll;
-@property (nonatomic, strong, readonly) UIView *containerView;
+@property (nonatomic, weak) UIScrollView *gestureScroll; //置于chartView的最顶层，用于处理滚动、缩放、点击事件
+@property (nonatomic, strong, readonly) UIView *containerView; //绘图区域
 
-@property (nonatomic, strong, readonly) NSMutableArray<NSString *> *AxisArray;
-@property (nonatomic, strong, readonly) NSArray<NSArray *> *Datas;
-@property (nonatomic, strong, readonly) NSArray *groupMembers;
-@property (nonatomic, copy, readonly) NSString *groupDimension;
-@property (nonatomic, copy, readonly) NSString *axisTitle;
-@property (nonatomic, copy, readonly) NSString *dataTitle;
-@property (nonatomic, strong, readonly) NSArray *itemColors;
-@property (nonatomic, assign, readonly) BarChartType chartType;
-@property (nonatomic, assign, readonly) NSUInteger valueInterval;
+@property (nonatomic, strong, readonly) NSMutableArray<NSString *> *AxisArray; //坐标轴标题数组
+@property (nonatomic, strong, readonly) NSArray<NSArray *> *Datas; //坐标轴数据数组，是一个二维数组
+@property (nonatomic, strong, readonly) NSArray *groupMembers; //分组成员
+@property (nonatomic, copy, readonly) NSString *groupDimension; //分组维度，用于点击弹窗视图的信息展示
+@property (nonatomic, copy, readonly) NSString *axisTitle; //标题轴的标题，用于点击弹窗视图的信息展示
+@property (nonatomic, copy, readonly) NSString *dataTitle; //数据轴的标题，用于点击弹窗视图的信息展示
+@property (nonatomic, strong, readonly) NSArray *itemColors; //用于区分分组内成员的颜色数组
+@property (nonatomic, assign, readonly) BarChartType chartType; //用于柱状图，柱状图类型：单柱状图、分组柱状图、堆叠图
+@property (nonatomic, assign, readonly) NSUInteger valueInterval; //坐标轴正轴或负轴刻度线的最大条数
 
-@property (nonatomic, assign, readonly) NSUInteger dataPostiveSegmentNum;
-@property (nonatomic, assign, readonly) NSUInteger dataNegativeSegmentNum;
+@property (nonatomic, assign, readonly) NSUInteger dataPostiveSegmentNum; //坐标轴正轴刻度线条数
+@property (nonatomic, assign, readonly) NSUInteger dataNegativeSegmentNum; //坐标轴负轴刻度线条数
 @property (nonatomic, assign, readonly) CGFloat dataItemUnitScale;
-@property (nonatomic, assign, readonly) CGFloat zoomedItemAxis;
-@property (nonatomic, assign, readonly) CGFloat zeroLine;
+@property (nonatomic, assign, readonly) CGFloat zoomedItemAxis; //
+@property (nonatomic, assign, readonly) CGFloat zeroLine; //
 
-@property (nonatomic, assign) CGFloat minItemWidth;
-@property (nonatomic, assign, readonly) CGFloat groupSpace;
-@property (nonatomic, assign) BOOL showDataDashLine;
-@property (nonatomic, assign) BOOL showDataHardLine;
-@property (nonatomic, assign) BOOL showAxisDashLine;
-@property (nonatomic, assign) BOOL showAxisHardLine;
-@property (nonatomic, assign) BOOL showDataEdgeLine;
+@property (nonatomic, assign) CGFloat minItemWidth; //以柱状图为例：每个柱子的宽度小于minItemWidth时，便不可继续缩小
+@property (nonatomic, assign, readonly) CGFloat groupSpace; //用于柱状图，每组柱子间的间距
+@property (nonatomic, assign) BOOL showDataDashLine; //显示数据轴实线刻度线
+@property (nonatomic, assign) BOOL showDataHardLine; //显示数据轴虚线刻度线
+@property (nonatomic, assign) BOOL showAxisDashLine; //显示标题轴实线分组线
+@property (nonatomic, assign) BOOL showAxisHardLine; //显示标题轴虚线分组线
+@property (nonatomic, assign) BOOL showDataEdgeLine; //显示数据轴最边沿的短刻度线
 
-@property (nonatomic, assign) NSInteger beginGroupIndex;
-@property (nonatomic, assign) NSInteger endGroupIndex;
-@property (nonatomic, assign) NSInteger beginItemIndex;
-@property (nonatomic, assign) NSInteger endItemIndex;
-@property (nonatomic, assign) CGFloat itemAxisScale;
-@property (nonatomic, assign) NSUInteger itemDataScale;
-@property (nonatomic, assign) CGFloat maxDataValue;
-@property (nonatomic, assign) CGFloat minDataValue;
+@property (nonatomic, assign) NSInteger beginGroupIndex; //视图中显示的第一个分组的index
+@property (nonatomic, assign) NSInteger endGroupIndex; //视图中显示的最后一个分组的index
+@property (nonatomic, assign) NSInteger beginItemIndex; //beginGroupIndex中显示的第一个item的index
+@property (nonatomic, assign) NSInteger endItemIndex; //endGroupIndex中显示的最后一个item的index
+@property (nonatomic, assign) CGFloat itemAxisScale; //
+@property (nonatomic, assign) NSUInteger itemDataScale; //
+@property (nonatomic, assign) CGFloat maxDataValue; //数值数组中的最大值
+@property (nonatomic, assign) CGFloat minDataValue; //数值数组中的最小值
 
-@property (nonatomic, assign) CGFloat oldPinScale;
-@property (nonatomic, assign) CGFloat newPinScale;
-@property (nonatomic, assign) CGFloat pinCenterToLeftDistance;
-@property (nonatomic, assign) CGFloat pinCenterRatio;
-@property (nonatomic, assign) YHTapPointRatioInItem pointRatio;
-@property (nonatomic, assign) BOOL hadTapped;
-@property (nonatomic, assign, readonly) NSUInteger tappedGroup;
-@property (nonatomic, assign, readonly) NSUInteger tappedItem;
-@property (nonatomic, assign, readonly) CGFloat referenceLineWidth;
-@property (nonatomic, strong, readonly) UIColor *referenceLineColor;
-@property (nonatomic, strong, readonly) UIColor *axisTextColor;
-@property (nonatomic, strong, readonly) UIColor *dataTextColor;
-@property (nonatomic, assign, readonly) CGFloat axisTextFontSize;
-@property (nonatomic, assign, readonly) CGFloat dataTextFontSize;
+@property (nonatomic, assign) CGFloat oldPinScale; //上一次缩放的倍率
+@property (nonatomic, assign) CGFloat newPinScale; //在上一次缩放倍率的基础上，再次缩放的倍率
+@property (nonatomic, assign) CGFloat pinCenterToLeftDistance; //缩放中心点距数据轴左边沿的距离
+@property (nonatomic, assign) CGFloat pinCenterRatio; //缩放中心点在gestureScroll.contentSize中的比例
+@property (nonatomic, assign) YHTapPointRatioInItem pointRatio; //点击的点在选中的item中的相对位置比例
+@property (nonatomic, assign) BOOL hadTapped; //用于判断是否需要清除选中状态
+@property (nonatomic, assign, readonly) NSUInteger tappedGroup; //点击的点所在的group
+@property (nonatomic, assign, readonly) NSUInteger tappedItem; //点击的点所在的item
+@property (nonatomic, assign, readonly) CGFloat referenceLineWidth; //各种辅助线的宽度
+@property (nonatomic, strong, readonly) UIColor *referenceLineColor; //各种辅助线的颜色
+@property (nonatomic, strong, readonly) UIColor *axisTextColor; //标题轴文字的颜色
+@property (nonatomic, strong, readonly) UIColor *dataTextColor; //数据轴文字的颜色
+@property (nonatomic, assign, readonly) CGFloat axisTextFontSize; //标题轴文字的大小
+@property (nonatomic, assign, readonly) CGFloat dataTextFontSize; //数据轴文字的大小
 
-@property (nonatomic, assign, readonly) BOOL showLoadAnimation;
-@property (nonatomic, assign, readonly) CGFloat loadAnimationTime;
-@property (nonatomic, assign, readonly) CGFloat dataNumFactor;
-@property (nonatomic, assign, readonly) CGFloat dataValueFactor;
-@property (nonatomic, assign, readonly) YHAnimationType animationType;
+@property (nonatomic, assign, readonly) BOOL showLoadAnimation; //显示首次加载视图动画
+@property (nonatomic, assign, readonly) CGFloat loadAnimationTime; //首次加载视图动画
+@property (nonatomic, assign, readonly) CGFloat dataNumFactor; //标题轴延展动画因子
+@property (nonatomic, assign, readonly) CGFloat dataValueFactor; //数据轴延展动画因子
+@property (nonatomic, assign, readonly) YHAnimationType animationType; //加载动画类型：数据轴延展、标题轴延展、数据轴和标题轴同步延展
 
-@property (nonatomic, assign) CGFloat groupSpaceDivideBarWidth;
-@property (nonatomic, assign) CGFloat barColorAlpha;
-@property (nonatomic, assign) BOOL showBarGroupSeparateLine;
-@property (nonatomic, assign) CGFloat separateLineDivideGroupSpace;
-@property (nonatomic, assign) CGFloat seperateLineWidth;
+@property (nonatomic, assign) CGFloat groupSpaceDivideBarWidth; //用于柱状图，groupSpace与BarWidth的比例
+@property (nonatomic, assign) CGFloat barColorAlpha; //用于柱状图，柱子颜色透明度
+@property (nonatomic, assign) BOOL showBarGroupSeparateLine; //用于柱状图，显示两组柱子间的分割线
+@property (nonatomic, assign) CGFloat separateLineDivideGroupSpace; //用于柱状图，若 分割线宽度/GroupSpace > separateLineDivideGroupSpace ，则不绘制分割线
+@property (nonatomic, assign) CGFloat seperateLineWidth; //用于柱状图，分割线宽度
 
-@property (nonatomic, assign, readonly) BOOL showTipViewArrow;
-@property (nonatomic, assign, readonly) CGFloat minWidthHideAxisText;
+@property (nonatomic, assign, readonly) BOOL showTipViewArrow; //显示tipview的箭头
+@property (nonatomic, assign, readonly) CGFloat minWidthHideAxisText; //若 每组item的宽度 < minWidthHideAxisText, 则不绘制坐标轴文本
 
-- (void)redraw;
+- (void)redraw; //重新绘制
 - (void)compareBeginAndEndItemValue:(NSUInteger)beginItem endItem:(NSUInteger)endItem isBeginGroup:(BOOL)isBeginGroup;
 - (void)campareMaxAndMinValue:(NSUInteger)leftIndex rightIndex:(NSUInteger)rightIndex;
 - (void)findMaxAndMinValue:(NSUInteger)leftIndex rightIndex:(NSUInteger)rightIndex compareA:(NSArray *)compareA;
-- (NSString *)adjustScaleValue:(NSUInteger)scaleValue;
+- (NSString *)adjustScaleValue:(NSUInteger)scaleValue; //将数据转换成有单位的数据
 - (CATextLayer *)getTextLayerWithString:(NSString *)text
                               textColor:(UIColor *)textColor
                                fontSize:(NSInteger)fontSize
                         backgroundColor:(UIColor *)bgColor
                                   frame:(CGRect)frame
-                          alignmentMode:(NSString *)alignmentMode;
+                          alignmentMode:(NSString *)alignmentMode; //绘制文本
 - (CGFloat)zoomedItemAxis;
 - (void)removeTipView;
-- (void)updateChartFrame:(CGRect)frame;
+- (void)updateChartFrame:(CGRect)frame; //更新图标的frame，可用于屏幕旋转等情形
 - (CGFloat)dataAtGroup:(NSUInteger)group item:(NSUInteger)item;
 - (CGFloat)verifyDataValue:(id)value;
-- (NSArray *)defaultColors;
+- (NSArray *)defaultColors; //默认的分组内成员的颜色数组
 - (NSString *)layerTag:(NSUInteger)group item:(NSUInteger)item;
-- (BOOL)shoulHideAxisText;
+- (BOOL)shouldHideAxisText;
 @end
