@@ -35,6 +35,15 @@ Group Horizontal Bar Chart <br>
 Group Vertical Bar Chart <br>
 ![line](./Gif/GroupV.gif) <br><br>
 ## Change logs
+### version 0.3.5
+1. 柱状图两组之间的间隔与柱状图的宽度成正比 <br>
+2. 折线图样式调整 <br>
+3. 选中效果调整 <br>
+4. 分组柱状图增加分割线 <br>
+5. 空数据不可被选中 <br>
+6. 弹窗样式调整 <br>
+7. 标题轴文字区域太小时，不绘制文本 <br>
+8. 抽取一个柱状图基类出来；柱状图独有的属性放在柱状图基类中 <br>
 ### version 0.3.4
 1. 废弃version 0.3.3的变更,因为RN代码，单独校验不通过 <br>
 ### version 0.3.3

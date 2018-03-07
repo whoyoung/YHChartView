@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |s|
   s.name         = "YHChartView"
-  s.version      = "0.3.4"
+  s.version      = "0.3.5"
   s.summary      = "Charts that support zoom, drag, rotation, animation, including vertical bar, horizontal bar, and line chart. React Native avaliable."
   s.description  = <<-DESC
 ***
