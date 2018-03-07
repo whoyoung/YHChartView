@@ -354,7 +354,7 @@
     }
     
     rectLayer.path = rectPath.CGPath;
-    rectLayer.fillColor = [UIColor hexChangeFloat:@"0D2940"].CGColor;
+    rectLayer.fillColor = [UIColor hexChangeFloat:@"0D2940" alpha:0.65].CGColor;
     [tipView.layer addSublayer:rectLayer];
 
     CGFloat startY = TipViewPadding;
