@@ -174,12 +174,12 @@
                 [yValueBezier addLineToPoint:p];
             }
             
-            if (j > self.beginGroupIndex && j < drawNum) {
+            if (j > self.beginGroupIndex && j < self.endGroupIndex) {
                 if (![values[j-1] respondsToSelector:@selector(floatValue)] && ![values[j+1] respondsToSelector:@selector(floatValue)]) {
                     [circlePoints addObject:NSStringFromCGPoint(p)];
                 }
             } else if (j == self.beginGroupIndex) {
-                if (j < drawNum && ![values[j+1] respondsToSelector:@selector(floatValue)]) {
+                if (j < self.endGroupIndex && ![values[j+1] respondsToSelector:@selector(floatValue)]) {
                     [circlePoints addObject:NSStringFromCGPoint(p)];
                 }
             } else {
