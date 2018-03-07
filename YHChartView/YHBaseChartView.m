@@ -238,7 +238,7 @@
     NSString *dataStr = [dataDict objectForKey:@"dataStr"];
     
     CGFloat tipTextH = 11;
-    CGFloat arrowH = self.showTipViewArrow ? 5 : 0;
+    CGFloat arrowH = 5;
     CGFloat tipH = TipViewPadding*2 + 2 * tipTextH + arrowH;
     CGFloat tipMaxW = [axisStr measureTextWidth:[UIFont systemFontOfSize:9]];
     tipMaxW = MAX(tipMaxW, [dataStr measureTextWidth:[UIFont systemFontOfSize:9]]);
@@ -279,12 +279,14 @@
     CAShapeLayer *rectLayer = [CAShapeLayer layer];
     CGSize cornerRadii = CGSizeMake(3, 3);
     UIBezierPath *rectPath;
+    CGRect rectFrame;
+    if (arrowP > 10) {
+        rectFrame = CGRectMake(0, 5, tipMaxW, tipH - 5);
+    } else {
+        rectFrame = CGRectMake(0, 0, tipMaxW, tipH - 5);
+    }
     if (self.showTipViewArrow) {
-        if (arrowP > 10) {
-            rectPath = [UIBezierPath bezierPathWithRect:CGRectMake(0, 5, tipMaxW, tipH - 5)];
-        } else {
-            rectPath = [UIBezierPath bezierPathWithRect:CGRectMake(0, 0, tipMaxW, tipH - 5)];
-        }
+        rectPath = [UIBezierPath bezierPathWithRect:rectFrame];
         CGRect topRect = CGRectMake(0, 0, tipMaxW, tipH - 5);
         CGRect bottomRect = CGRectMake(0, 5, tipMaxW, tipH - 5);
         switch (arrowP) {
@@ -348,7 +350,7 @@
                 break;
         }
     } else {
-        rectPath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, tipMaxW, tipH) cornerRadius:cornerRadii.width];
+        rectPath = [UIBezierPath bezierPathWithRoundedRect:rectFrame cornerRadius:cornerRadii.width];
     }
     
     rectLayer.path = rectPath.CGPath;
@@ -356,7 +358,7 @@
     [tipView.layer addSublayer:rectLayer];
 
     CGFloat startY = TipViewPadding;
-    if (arrowP > 10 && self.showTipViewArrow) {
+    if (arrowP > 10) {
         startY += 5;
     }
     if (groupStr.length) {

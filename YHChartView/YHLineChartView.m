@@ -30,7 +30,7 @@
     self.circleBorderWidth =
     [lineStyle objectForKey:@"circleBorderWidth"] ? [[lineStyle objectForKey:@"circleBorderWidth"] floatValue] : 0.5;
     self.circleRadius =
-    [lineStyle objectForKey:@"circleRadius"] ? [[lineStyle objectForKey:@"circleRadius"] floatValue] : 4;
+    [lineStyle objectForKey:@"circleRadius"] ? [[lineStyle objectForKey:@"circleRadius"] floatValue] : 3;
     if (self.circleBorderWidth > self.circleRadius) {
         self.circleBorderWidth = self.circleRadius;
     }
@@ -386,7 +386,7 @@
     CGFloat zeroY = self.dataPostiveSegmentNum * [self axisUnitScale];
     CGFloat yPoint = zeroY - [self dataAtGroup:group item:item] * self.dataItemUnitScale * self.dataValueFactor;
     CGPoint p = CGPointMake(group*self.zoomedItemAxis-offsetX, yPoint);
-    [self selectedSublineLayers:NSStringFromCGPoint(p) circleColor:self.subLineColor parentView:subContainer];
+    [self selectedSublineLayers:NSStringFromCGPoint(p) circleColor:self.itemColors[item] parentView:subContainer];
 }
 
 - (void)selectedSublineLayers:(NSString *)pointString circleColor:(NSString *)hexColor parentView:(UIView *)parentV {
@@ -399,6 +399,7 @@
                                                         clockwise:YES];
     
     shaperLayer.path = bezierP.CGPath;
+    shaperLayer.strokeColor = [UIColor hexChangeFloat:hexColor alpha:0.3].CGColor;
     shaperLayer.fillColor = [UIColor hexChangeFloat:hexColor alpha:0.3].CGColor;
     shaperLayer.name = @"borderCircle";
     [parentV.layer addSublayer:shaperLayer];
@@ -411,20 +412,23 @@
                                                               clockwise:YES];
     
     centerLayer.path = centerBezierP.CGPath;
+    centerLayer.strokeColor = [UIColor hexChangeFloat:hexColor].CGColor;
     centerLayer.fillColor = [UIColor hexChangeFloat:hexColor].CGColor;
     centerLayer.name = @"centerCircle";
     [parentV.layer addSublayer:centerLayer];
     
-    CAShapeLayer *sublineLayer = [CAShapeLayer layer];
-    UIBezierPath *sublineBezierP = [UIBezierPath bezierPath];
-    [sublineBezierP moveToPoint:CGPointMake(selectedP.x, 0)];
-    [sublineBezierP addLineToPoint:CGPointMake(selectedP.x, ChartHeight)];
-    sublineLayer.path = sublineBezierP.CGPath;
-    sublineLayer.lineWidth = 0.5;
-    sublineLayer.strokeColor = [UIColor hexChangeFloat:self.subLineColor].CGColor;
-    sublineLayer.fillColor = [UIColor hexChangeFloat:self.subLineColor].CGColor;
-    sublineLayer.name = @"subline";
-    [parentV.layer addSublayer:sublineLayer];
+    if(self.showSelectedSubLine) {
+        CAShapeLayer *sublineLayer = [CAShapeLayer layer];
+        UIBezierPath *sublineBezierP = [UIBezierPath bezierPath];
+        [sublineBezierP moveToPoint:CGPointMake(selectedP.x, 0)];
+        [sublineBezierP addLineToPoint:CGPointMake(selectedP.x, ChartHeight)];
+        sublineLayer.path = sublineBezierP.CGPath;
+        sublineLayer.lineWidth = 0.5;
+        sublineLayer.strokeColor = [UIColor hexChangeFloat:self.subLineColor].CGColor;
+        sublineLayer.fillColor = [UIColor hexChangeFloat:self.subLineColor].CGColor;
+        sublineLayer.name = @"subline";
+        [parentV.layer addSublayer:sublineLayer];
+    }
 }
 
 @end
