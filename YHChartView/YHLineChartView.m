@@ -226,6 +226,7 @@
 }
 
 - (void)addAxisLayer {
+    if ([self shoulHideAxisText]) return;
     CGFloat offsetX = self.gestureScroll.contentOffset.x;
     for (NSUInteger i=self.beginGroupIndex; i<=self.endGroupIndex; i++) {
         if (self.zoomedItemAxis*i-offsetX < 0) continue;

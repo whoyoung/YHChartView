@@ -90,6 +90,7 @@ YHTapPointRatioInItemMake(CGFloat x, CGFloat y) {
 @property (nonatomic, assign) CGFloat seperateLineWidth;
 
 @property (nonatomic, assign, readonly) BOOL showTipViewArrow;
+@property (nonatomic, assign, readonly) CGFloat minWidthHideAxisText;
 
 - (void)redraw;
 - (void)compareBeginAndEndItemValue:(NSUInteger)beginItem endItem:(NSUInteger)endItem isBeginGroup:(BOOL)isBeginGroup;
@@ -109,4 +110,5 @@ YHTapPointRatioInItemMake(CGFloat x, CGFloat y) {
 - (CGFloat)verifyDataValue:(id)value;
 - (NSArray *)defaultColors;
 - (NSString *)layerTag:(NSUInteger)group item:(NSUInteger)item;
+- (BOOL)shoulHideAxisText;
 @end

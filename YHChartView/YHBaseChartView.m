@@ -81,6 +81,7 @@
     if (_loadAnimationTime < 0.1) _loadAnimationTime = 0.1;
     _animationType = [[dict objectForKey:@"animationType"] integerValue];
     _showTipViewArrow = [[dict objectForKey:@"showTipViewArrow"] boolValue];
+    _minWidthHideAxisText = [dict objectForKey:@"minWidthHideAxisText"] ? [[dict objectForKey:@"minWidthHideAxisText"] floatValue] : 40;
     NSDictionary *styleDict = [dict objectForKey:@"styles"];
     [self dealStyleDict:styleDict];
 }
@@ -638,5 +639,9 @@
 }
 - (NSString *)layerTag:(NSUInteger)group item:(NSUInteger)item {
     return [NSString stringWithFormat:@"group%ld_item%ld",group,item];
+}
+- (BOOL)shoulHideAxisText {
+    if (self.zoomedItemAxis < self.minWidthHideAxisText) return YES;
+    return NO;
 }
 @end

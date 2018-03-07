@@ -480,6 +480,7 @@
 }
 
 - (void)addAxisLayer {
+    if ([self shoulHideAxisText]) return;
     CGFloat offsetY = self.gestureScroll.contentOffset.y;
     for (NSUInteger i=self.beginGroupIndex; i<=self.endGroupIndex; i++) {
         CGRect textFrame;
@@ -647,6 +648,15 @@
         } else if ([layer isKindOfClass:[CAShapeLayer class]] && [layer.name isEqualToString:@"mask"]) {
             [layer removeFromSuperlayer];
         }
+    }
+}
+- (BOOL)shoulHideAxisText {
+    if (self.chartType == BarChartTypeGroup) {
+        if (self.Datas.count * self.zoomedItemAxis < self.minWidthHideAxisText) return YES;
+        return NO;
+    } else {
+        if (self.zoomedItemAxis < self.minWidthHideAxisText) return YES;
+        return NO;
     }
 }
 @end
