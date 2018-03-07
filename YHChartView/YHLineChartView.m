@@ -12,6 +12,7 @@
 @property (nonatomic, assign) CGFloat lineWidth;
 @property (nonatomic, assign) CGFloat circleRadius;
 @property (nonatomic, assign) CGFloat circleBorderWidth;
+@property (nonatomic, assign) CGFloat circleBorderColorAlpha;
 @property (nonatomic, assign) BOOL showSelectedSubLine;
 @property (nonatomic, copy) NSString *subLineColor;
 @end
@@ -23,7 +24,8 @@
     self.lineWidth =
     [lineStyle objectForKey:@"lineWidth"] ? [[lineStyle objectForKey:@"lineWidth"] floatValue] : 1.5;
     self.circleBorderWidth =
-    [lineStyle objectForKey:@"circleBorderWidth"] ? [[lineStyle objectForKey:@"circleBorderWidth"] floatValue] : 0.5;
+    [lineStyle objectForKey:@"circleBorderWidth"] ? [[lineStyle objectForKey:@"circleBorderWidth"] floatValue] : 3;
+    self.circleBorderColorAlpha = [lineStyle objectForKey:@"circleBorderColorAlpha"] ? [[lineStyle objectForKey:@"circleBorderColorAlpha"] floatValue] : 0.3;
     self.circleRadius =
     [lineStyle objectForKey:@"circleRadius"] ? [[lineStyle objectForKey:@"circleRadius"] floatValue] : 3;
     if (self.circleBorderWidth > self.circleRadius) {
@@ -198,7 +200,7 @@
     for (NSUInteger index = 0; index < circlePoints.count; index++) {
         CAShapeLayer *shaperLayer = [CAShapeLayer layer];
         UIBezierPath *bezierP = [UIBezierPath bezierPathWithArcCenter:CGPointFromString(circlePoints[index])
-                                                               radius:self.circleRadius
+                                                               radius:self.circleRadius+self.circleBorderWidth
                                                            startAngle:0
                                                              endAngle:2 * M_PI
                                                             clockwise:YES];
@@ -209,7 +211,7 @@
         
         CAShapeLayer *centerLayer = [CAShapeLayer layer];
         UIBezierPath *centerBezierP = [UIBezierPath bezierPathWithArcCenter:CGPointFromString(circlePoints[index])
-                                                               radius:self.circleRadius-self.circleBorderWidth
+                                                               radius:self.circleRadius
                                                            startAngle:0
                                                              endAngle:2 * M_PI
                                                             clockwise:YES];
@@ -387,31 +389,6 @@
 
 - (void)selectedSublineLayers:(NSString *)pointString circleColor:(NSString *)hexColor parentView:(UIView *)parentV {
     CGPoint selectedP = CGPointFromString(pointString);
-    CAShapeLayer *shaperLayer = [CAShapeLayer layer];
-    UIBezierPath *bezierP = [UIBezierPath bezierPathWithArcCenter:selectedP
-                                                           radius:self.circleRadius
-                                                       startAngle:0
-                                                         endAngle:2 * M_PI
-                                                        clockwise:YES];
-    
-    shaperLayer.path = bezierP.CGPath;
-    shaperLayer.strokeColor = [UIColor hexChangeFloat:hexColor alpha:0.3].CGColor;
-    shaperLayer.fillColor = [UIColor hexChangeFloat:hexColor alpha:0.3].CGColor;
-    shaperLayer.name = @"borderCircle";
-    [parentV.layer addSublayer:shaperLayer];
-    
-    CAShapeLayer *centerLayer = [CAShapeLayer layer];
-    UIBezierPath *centerBezierP = [UIBezierPath bezierPathWithArcCenter:selectedP
-                                                                 radius:self.circleRadius-self.circleBorderWidth
-                                                             startAngle:0
-                                                               endAngle:2 * M_PI
-                                                              clockwise:YES];
-    
-    centerLayer.path = centerBezierP.CGPath;
-    centerLayer.strokeColor = [UIColor hexChangeFloat:hexColor].CGColor;
-    centerLayer.fillColor = [UIColor hexChangeFloat:hexColor].CGColor;
-    centerLayer.name = @"centerCircle";
-    [parentV.layer addSublayer:centerLayer];
     
     if(self.showSelectedSubLine) {
         CAShapeLayer *sublineLayer = [CAShapeLayer layer];
@@ -425,6 +402,32 @@
         sublineLayer.name = @"subline";
         [parentV.layer addSublayer:sublineLayer];
     }
+    
+    CAShapeLayer *shaperLayer = [CAShapeLayer layer];
+    UIBezierPath *bezierP = [UIBezierPath bezierPathWithArcCenter:selectedP
+                                                           radius:self.circleRadius+self.circleBorderWidth
+                                                       startAngle:0
+                                                         endAngle:2 * M_PI
+                                                        clockwise:YES];
+    
+    shaperLayer.path = bezierP.CGPath;
+    shaperLayer.strokeColor = [UIColor hexChangeFloat:hexColor alpha:self.circleBorderColorAlpha].CGColor;
+    shaperLayer.fillColor = [UIColor hexChangeFloat:hexColor alpha:self.circleBorderColorAlpha].CGColor;
+    shaperLayer.name = @"borderCircle";
+    [parentV.layer addSublayer:shaperLayer];
+    
+    CAShapeLayer *centerLayer = [CAShapeLayer layer];
+    UIBezierPath *centerBezierP = [UIBezierPath bezierPathWithArcCenter:selectedP
+                                                                 radius:self.circleRadius
+                                                             startAngle:0
+                                                               endAngle:2 * M_PI
+                                                              clockwise:YES];
+    
+    centerLayer.path = centerBezierP.CGPath;
+    centerLayer.strokeColor = [UIColor hexChangeFloat:hexColor].CGColor;
+    centerLayer.fillColor = [UIColor hexChangeFloat:hexColor].CGColor;
+    centerLayer.name = @"centerCircle";
+    [parentV.layer addSublayer:centerLayer];
 }
 
 @end
