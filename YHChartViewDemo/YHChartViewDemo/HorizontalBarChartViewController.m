@@ -36,8 +36,6 @@
                            @"stack": @YES,
                            @"styles": @{
                                    @"barStyle": @{
-                                   @"minBarWidth":@"5",
-                                   @"barGroupSpace":@"5"
                                },
                                @"lineStyle": @{
                                    @"lineWidth":@"1"

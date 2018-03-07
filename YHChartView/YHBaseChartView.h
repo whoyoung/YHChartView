@@ -9,13 +9,6 @@
 #import "YHCommonChartViewDelegate.h"
 #import "YHCommonHeader.h"
 
-typedef NS_ENUM(NSUInteger, BarChartType) {
-    BarChartTypeSingle = 0, //单柱状图
-    BarChartTypeGroup = 1, //分组柱状图
-    BarChartTypeStack = 2 //堆叠图
-    
-};
-
 typedef NS_ENUM(NSUInteger, YHAnimationType) {
     YHAnimationTypeChangeValue = 0, //数据轴延展
     YHAnimationTypeChangeNum = 1, //标题轴延展
@@ -46,22 +39,20 @@ YHTapPointRatioInItemMake(CGFloat x, CGFloat y) {
 @property (nonatomic, copy, readonly) NSString *axisTitle; //标题轴的标题，用于点击弹窗视图的信息展示
 @property (nonatomic, copy, readonly) NSString *dataTitle; //数据轴的标题，用于点击弹窗视图的信息展示
 @property (nonatomic, strong, readonly) NSArray *itemColors; //用于区分分组内成员的颜色数组
-@property (nonatomic, assign, readonly) BarChartType chartType; //用于柱状图，柱状图类型：单柱状图、分组柱状图、堆叠图
 @property (nonatomic, assign, readonly) NSUInteger valueInterval; //坐标轴正轴或负轴刻度线的最大条数
 
 @property (nonatomic, assign, readonly) NSUInteger dataPostiveSegmentNum; //坐标轴正轴刻度线条数
 @property (nonatomic, assign, readonly) NSUInteger dataNegativeSegmentNum; //坐标轴负轴刻度线条数
 @property (nonatomic, assign, readonly) CGFloat dataItemUnitScale;
-@property (nonatomic, assign, readonly) CGFloat zoomedItemAxis; //
-@property (nonatomic, assign, readonly) CGFloat zeroLine; //
+@property (nonatomic, assign, readonly) CGFloat zoomedItemAxis;
+@property (nonatomic, assign, readonly) CGFloat zeroLine;
 
-@property (nonatomic, assign) CGFloat minItemWidth; //以柱状图为例：每个柱子的宽度小于minItemWidth时，便不可继续缩小
-@property (nonatomic, assign, readonly) CGFloat groupSpace; //用于柱状图，每组柱子间的间距
-@property (nonatomic, assign) BOOL showDataDashLine; //显示数据轴实线刻度线
-@property (nonatomic, assign) BOOL showDataHardLine; //显示数据轴虚线刻度线
-@property (nonatomic, assign) BOOL showAxisDashLine; //显示标题轴实线分组线
-@property (nonatomic, assign) BOOL showAxisHardLine; //显示标题轴虚线分组线
-@property (nonatomic, assign) BOOL showDataEdgeLine; //显示数据轴最边沿的短刻度线
+@property (nonatomic, assign, readonly) CGFloat minItemWidth; //以柱状图为例：每个柱子的宽度小于minItemWidth时，便不可继续缩小
+@property (nonatomic, assign, readonly) BOOL showDataDashLine; //显示数据轴实线刻度线
+@property (nonatomic, assign, readonly) BOOL showDataHardLine; //显示数据轴虚线刻度线
+@property (nonatomic, assign, readonly) BOOL showAxisDashLine; //显示标题轴实线分组线
+@property (nonatomic, assign, readonly) BOOL showAxisHardLine; //显示标题轴虚线分组线
+@property (nonatomic, assign, readonly) BOOL showDataEdgeLine; //显示数据轴最边沿的短刻度线
 
 @property (nonatomic, assign) NSInteger beginGroupIndex; //视图中显示的第一个分组的index
 @property (nonatomic, assign) NSInteger endGroupIndex; //视图中显示的最后一个分组的index
@@ -93,12 +84,6 @@ YHTapPointRatioInItemMake(CGFloat x, CGFloat y) {
 @property (nonatomic, assign, readonly) CGFloat dataValueFactor; //数据轴延展动画因子
 @property (nonatomic, assign, readonly) YHAnimationType animationType; //加载动画类型：数据轴延展、标题轴延展、数据轴和标题轴同步延展
 
-@property (nonatomic, assign) CGFloat groupSpaceDivideBarWidth; //用于柱状图，groupSpace与BarWidth的比例
-@property (nonatomic, assign) CGFloat barColorAlpha; //用于柱状图，柱子颜色透明度
-@property (nonatomic, assign) BOOL showBarGroupSeparateLine; //用于柱状图，显示两组柱子间的分割线
-@property (nonatomic, assign) CGFloat separateLineDivideGroupSpace; //用于柱状图，若 分割线宽度/GroupSpace > separateLineDivideGroupSpace ，则不绘制分割线
-@property (nonatomic, assign) CGFloat seperateLineWidth; //用于柱状图，分割线宽度
-
 @property (nonatomic, assign, readonly) BOOL showTipViewArrow; //显示tipview的箭头
 @property (nonatomic, assign, readonly) CGFloat minWidthHideAxisText; //若 每组item的宽度 < minWidthHideAxisText, 则不绘制坐标轴文本
 
@@ -121,4 +106,5 @@ YHTapPointRatioInItemMake(CGFloat x, CGFloat y) {
 - (NSArray *)defaultColors; //默认的分组内成员的颜色数组
 - (NSString *)layerTag:(NSUInteger)group item:(NSUInteger)item;
 - (BOOL)shouldHideAxisText;
+- (CGFloat)axisUnitScale;
 @end

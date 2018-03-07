@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "YHBaseChartView.h"
+#import "YHBaseBarChartView.h"
 
-@interface YHHorizontalBarChartView : YHBaseChartView
+@interface YHHorizontalBarChartView : YHBaseBarChartView
 @end

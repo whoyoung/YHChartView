@@ -23,6 +23,7 @@
 		77BE09B120464A7F009712CC /* YHVerticalBarChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BE09A420464A7E009712CC /* YHVerticalBarChartView.m */; };
 		77BE09B220464A7F009712CC /* UIColor+YHCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BE09A520464A7E009712CC /* UIColor+YHCategory.m */; };
 		77BE09B320464A7F009712CC /* YHHorizontalBarChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BE09A620464A7E009712CC /* YHHorizontalBarChartView.m */; };
+		77D89B1C204FCA1E009AA558 /* YHBaseBarChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 77D89B1B204FCA1E009AA558 /* YHBaseBarChartView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -59,6 +60,8 @@
 		77BE09AB20464A7E009712CC /* YHLineChartView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YHLineChartView.h; sourceTree = "<group>"; };
 		77BE09AC20464A7E009712CC /* UIColor+YHCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+YHCategory.h"; sourceTree = "<group>"; };
 		77BE09AD20464A7E009712CC /* YHHorizontalBarChartView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YHHorizontalBarChartView.h; sourceTree = "<group>"; };
+		77D89B1A204FCA1E009AA558 /* YHBaseBarChartView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YHBaseBarChartView.h; sourceTree = "<group>"; };
+		77D89B1B204FCA1E009AA558 /* YHBaseBarChartView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YHBaseBarChartView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -127,6 +130,8 @@
 				77BE099F20464A7E009712CC /* YHBaseChartView.m */,
 				77BE09AB20464A7E009712CC /* YHLineChartView.h */,
 				77BE09A320464A7E009712CC /* YHLineChartView.m */,
+				77D89B1A204FCA1E009AA558 /* YHBaseBarChartView.h */,
+				77D89B1B204FCA1E009AA558 /* YHBaseBarChartView.m */,
 				77BE09AA20464A7E009712CC /* YHVerticalBarChartView.h */,
 				77BE09A420464A7E009712CC /* YHVerticalBarChartView.m */,
 				77BE09AD20464A7E009712CC /* YHHorizontalBarChartView.h */,
@@ -211,6 +216,7 @@
 				77BE09B120464A7F009712CC /* YHVerticalBarChartView.m in Sources */,
 				77BE09AF20464A7F009712CC /* NSString+YHCategory.m in Sources */,
 				77BE099420464A0E009712CC /* BaseChartViewController.m in Sources */,
+				77D89B1C204FCA1E009AA558 /* YHBaseBarChartView.m in Sources */,
 				77BE099320464A0E009712CC /* HorizontalBarChartViewController.m in Sources */,
 				77BE09B220464A7F009712CC /* UIColor+YHCategory.m in Sources */,
 				77BE09B320464A7F009712CC /* YHHorizontalBarChartView.m in Sources */,

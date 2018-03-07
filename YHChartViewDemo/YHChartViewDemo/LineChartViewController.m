@@ -34,10 +34,10 @@
                            @"showLoadAnimation": @YES,
                            @"loadAnimationTime": @0.8,
                            @"animationType": @(YHAnimationTypeChangeValueAndNum),
+                           @"showAxisDashLine":@YES,
                            @"styles": @{
                                    @"lineStyle": @{
                                            @"lineWidth":@"1",
-                                           @"showAxisDashLine":@YES,
                                            @"circleBorderWidth":@2
                                            }
                                    }

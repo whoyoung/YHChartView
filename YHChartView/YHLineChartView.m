@@ -20,11 +20,6 @@
 
 - (void)dealStyleDict:(NSDictionary *)styleDict {
     NSDictionary *lineStyle = [styleDict objectForKey:@"lineStyle"];
-    self.minItemWidth = [lineStyle objectForKey:@"minItemWidth"] ? [[lineStyle objectForKey:@"minItemWidth"] floatValue] : 20;
-    self.showAxisDashLine = [lineStyle objectForKey:@"showAxisDashLine"] ? [[lineStyle objectForKey:@"showAxisDashLine"] boolValue] : NO;
-    self.showAxisHardLine = [lineStyle objectForKey:@"showAxisHardLine"] ? [[lineStyle objectForKey:@"showAxisHardLine"] boolValue] : NO;
-    self.showDataDashLine = [lineStyle objectForKey:@"showDataDashLine"] ? [[lineStyle objectForKey:@"showDataDashLine"] boolValue] : NO;
-    self.showDataHardLine = [lineStyle objectForKey:@"showDataHardLine"] ? [[lineStyle objectForKey:@"showDataHardLine"] boolValue] : YES;
     self.lineWidth =
     [lineStyle objectForKey:@"lineWidth"] ? [[lineStyle objectForKey:@"lineWidth"] floatValue] : 1.5;
     self.circleBorderWidth =

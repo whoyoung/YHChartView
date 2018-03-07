@@ -58,14 +58,6 @@
     _dataTitle = [dict objectForKey:@"dataTitle"];
     NSArray *colors = [dict objectForKey:@"colors"];
     [self dealItemColors:colors];
-    BOOL isStack = [[dict objectForKey:@"stack"] boolValue];
-    if (isStack) {
-        _chartType = BarChartTypeStack;
-    } else if (self.Datas.count > 1) {
-        _chartType = BarChartTypeGroup;
-    } else {
-        _chartType = BarChartTypeSingle;
-    }
     _valueInterval = [[dict objectForKey:@"valueInterval"] integerValue];
     if (self.valueInterval == 0) {
         _valueInterval = 3;
@@ -82,16 +74,17 @@
     _animationType = [[dict objectForKey:@"animationType"] integerValue];
     _showTipViewArrow = [[dict objectForKey:@"showTipViewArrow"] boolValue];
     _minWidthHideAxisText = [dict objectForKey:@"minWidthHideAxisText"] ? [[dict objectForKey:@"minWidthHideAxisText"] floatValue] : 40;
+    _minItemWidth = [dict objectForKey:@"minItemWidth"] ? [[dict objectForKey:@"minItemWidth"] floatValue] : 20;
+    _showAxisDashLine = [dict objectForKey:@"showAxisDashLine"] ? [[dict objectForKey:@"showAxisDashLine"] boolValue] : NO;
+    _showAxisHardLine = [dict objectForKey:@"showAxisHardLine"] ? [[dict objectForKey:@"showAxisHardLine"] boolValue] : NO;
+    _showDataDashLine = [dict objectForKey:@"showDataDashLine"] ? [[dict objectForKey:@"showDataDashLine"] boolValue] : NO;
+    _showDataHardLine = [dict objectForKey:@"showDataHardLine"] ? [[dict objectForKey:@"showDataHardLine"] boolValue] : YES;
+    
     NSDictionary *styleDict = [dict objectForKey:@"styles"];
     [self dealStyleDict:styleDict];
 }
 - (void)dealStyleDict:(NSDictionary *)styleDict {
-    _minItemWidth = 20;
-    _groupSpaceDivideBarWidth = 0.25;
-    self.showAxisDashLine = NO;
-    self.showAxisHardLine = NO;
-    self.showDataDashLine = NO;
-    self.showDataHardLine = YES;
+    
 }
 - (void)layoutSubviews {
     [super layoutSubviews];
@@ -634,14 +627,15 @@
     }
     return 0;
 }
-- (CGFloat)groupSpace {
-    return self.zoomedItemAxis * self.groupSpaceDivideBarWidth;
-}
+
 - (NSString *)layerTag:(NSUInteger)group item:(NSUInteger)item {
     return [NSString stringWithFormat:@"group%ld_item%ld",group,item];
 }
 - (BOOL)shouldHideAxisText {
     if (self.zoomedItemAxis < self.minWidthHideAxisText) return YES;
     return NO;
+}
+- (CGFloat)axisUnitScale {
+    return ChartHeight / (self.dataNegativeSegmentNum + self.dataPostiveSegmentNum);
 }
 @end
