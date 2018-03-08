@@ -279,7 +279,7 @@
                                                                 yPoint, self.zoomedItemAxis,
                                                                 fabs(dataV) * self.dataItemUnitScale)];
                 yValueLayer.path = yValueBezier.CGPath;
-                yValueLayer.lineWidth = 1;
+                yValueLayer.lineWidth = 0;
                 yValueLayer.strokeColor = [[UIColor hexChangeFloat:self.itemColors[0] alpha:self.barColorAlpha] CGColor];
                 yValueLayer.fillColor = [[UIColor hexChangeFloat:self.itemColors[0] alpha:self.barColorAlpha] CGColor];
                 yValueLayer.name = [self layerTag:i item:0];
@@ -306,7 +306,7 @@
                                                       self.zoomedItemAxis,
                                                       fabs(dataV) * self.dataItemUnitScale)];
                     yValueLayer.path = yValueBezier.CGPath;
-                    yValueLayer.lineWidth = 1;
+                    yValueLayer.lineWidth = 0;
                     yValueLayer.strokeColor = [[UIColor hexChangeFloat:self.itemColors[j] alpha:self.barColorAlpha] CGColor];
                     yValueLayer.fillColor = [[UIColor hexChangeFloat:self.itemColors[j] alpha:self.barColorAlpha] CGColor];
                     yValueLayer.name = [self layerTag:i item:j];
@@ -355,7 +355,7 @@
                                                       yPoint, self.zoomedItemAxis,
                                                       fabs(dataV) * self.dataItemUnitScale)];
                     yValueLayer.path = yValueBezier.CGPath;
-                    yValueLayer.lineWidth = 1;
+                    yValueLayer.lineWidth = 0;
                     yValueLayer.strokeColor = [[UIColor hexChangeFloat:self.itemColors[j] alpha:self.barColorAlpha] CGColor];
                     yValueLayer.fillColor = [[UIColor hexChangeFloat:self.itemColors[j] alpha:self.barColorAlpha] CGColor];
                     yValueLayer.name = [self layerTag:i item:j];
@@ -392,7 +392,7 @@
         UIBezierPath *yValueBezier = [UIBezierPath
             bezierPathWithRect:CGRectMake(x, yPoint, self.zoomedItemAxis, fabs(itemValue) * self.dataItemUnitScale)];
         yValueLayer.path = yValueBezier.CGPath;
-        yValueLayer.lineWidth = 1;
+        yValueLayer.lineWidth = 0;
         yValueLayer.strokeColor = [[UIColor hexChangeFloat:self.itemColors[i] alpha:self.barColorAlpha] CGColor];
         yValueLayer.fillColor = [[UIColor hexChangeFloat:self.itemColors[i] alpha:self.barColorAlpha] CGColor];
         yValueLayer.name = [self layerTag:leftIndex item:i];
