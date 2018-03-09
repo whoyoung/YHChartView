@@ -10,6 +10,9 @@
 @interface YHBaseChartView () <UIScrollViewDelegate>
 @property (nonatomic, assign, readonly) BOOL isDataError;
 @property (nonatomic, strong) NSTimer *timer;
+
+@property (nonatomic, assign) CGFloat tipViewBackgroundColorAlpha;
+@property (nonatomic, copy) NSString *tipViewBackgroundHexColor;
 @end
 
 @implementation YHBaseChartView
@@ -79,6 +82,8 @@
     _showAxisHardLine = [dict objectForKey:@"showAxisHardLine"] ? [[dict objectForKey:@"showAxisHardLine"] boolValue] : NO;
     _showDataDashLine = [dict objectForKey:@"showDataDashLine"] ? [[dict objectForKey:@"showDataDashLine"] boolValue] : NO;
     _showDataHardLine = [dict objectForKey:@"showDataHardLine"] ? [[dict objectForKey:@"showDataHardLine"] boolValue] : YES;
+    _tipViewBackgroundHexColor = [dict objectForKey:@"tipViewBackgroundHexColor"] ? [dict objectForKey:@"tipViewBackgroundHexColor"] : @"000000";
+    _tipViewBackgroundColorAlpha = [dict objectForKey:@"tipViewBackgroundColorAlpha"] ? [[dict objectForKey:@"tipViewBackgroundColorAlpha"] floatValue] : 0.65;
     
     NSDictionary *styleDict = [dict objectForKey:@"styles"];
     [self dealStyleDict:styleDict];
@@ -348,7 +353,7 @@
     }
     
     rectLayer.path = rectPath.CGPath;
-    rectLayer.fillColor = [UIColor hexChangeFloat:@"0D2940" alpha:0.65].CGColor;
+    rectLayer.fillColor = [UIColor hexChangeFloat:self.tipViewBackgroundHexColor alpha:self.tipViewBackgroundColorAlpha].CGColor;
     [tipView.layer addSublayer:rectLayer];
 
     CGFloat startY = TipViewPadding;
