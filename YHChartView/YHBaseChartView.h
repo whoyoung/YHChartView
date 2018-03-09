@@ -107,4 +107,5 @@ YHTapPointRatioInItemMake(CGFloat x, CGFloat y) {
 - (NSString *)layerTag:(NSUInteger)group item:(NSUInteger)item;
 - (BOOL)shouldHideAxisText;
 - (CGFloat)axisUnitScale;
++ (BOOL)respondsFloatValueSelector:(id)idValue;
 @end

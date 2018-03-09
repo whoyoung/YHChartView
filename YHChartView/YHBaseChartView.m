@@ -634,7 +634,7 @@
 }
 
 - (NSString *)layerTag:(NSUInteger)group item:(NSUInteger)item {
-    return [NSString stringWithFormat:@"group%ld_item%ld",group,item];
+    return [NSString stringWithFormat:@"group%ld_item%ld",(unsigned long)group,(unsigned long)item];
 }
 - (BOOL)shouldHideAxisText {
     if (self.zoomedItemAxis < self.minWidthHideAxisText) return YES;
@@ -642,5 +642,11 @@
 }
 - (CGFloat)axisUnitScale {
     return ChartHeight / (self.dataNegativeSegmentNum + self.dataPostiveSegmentNum);
+}
++ (BOOL)respondsFloatValueSelector:(id)idValue {
+    if ([idValue respondsToSelector:@selector(floatValue)]) {
+        return YES;
+    }
+    return NO;
 }
 @end

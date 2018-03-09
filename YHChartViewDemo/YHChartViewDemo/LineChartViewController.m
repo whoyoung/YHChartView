@@ -18,8 +18,8 @@
     NSDictionary *dict = @{
                            @"axis":@[@"Mon",@"Tues",@"Wed",@"Thu",@"Fri",@"Sat",@"Sun"],
                            @"datas":@[
-                                   @[@"9883.6",[NSNull null],@"980.3",@"-3330.4",@"1340.5",@"330.6",[NSNull null]],
-                                   @[[NSNull null],@"12533.6",@"-158.7",@"91.9",@"1066.12",[NSNull null],@"-6033.14"]
+                                   @[@"9883.6",@"98.3",@"980.3",@"-3330.4",@"1340.5",@"330.6",@"983"],
+                                   @[@"12533.6",[NSNull null],@"-158.7",[NSNull null],@"91.9",@"1066.12",@"-6033.14"]
                                    ],
                            @"groupMembers":@[@"zhang",@"yang"],
                            @"groupDimension":@"成交人",
@@ -38,7 +38,8 @@
                            @"styles": @{
                                    @"lineStyle": @{
                                            @"lineWidth":@"1",
-                                           @"circleBorderWidth":@2
+                                           @"circleBorderWidth":@2,
+                                           @"chartType": @1
                                            }
                                    }
                            };

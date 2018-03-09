@@ -7,7 +7,11 @@
 //
 
 #import "YHLineChartView.h"
-
+typedef NS_ENUM(NSUInteger, LineChartType) {
+    LineChartTypeStraight = 0, //直线
+    LineChartTypeCurve = 1 //曲线
+    
+};
 @interface YHLineChartView()
 @property (nonatomic, assign) CGFloat lineWidth;
 @property (nonatomic, assign) CGFloat circleRadius;
@@ -15,6 +19,7 @@
 @property (nonatomic, assign) CGFloat circleBorderColorAlpha;
 @property (nonatomic, assign) BOOL showSelectedSubLine;
 @property (nonatomic, copy) NSString *subLineColor;
+@property (nonatomic, assign) LineChartType chartType;
 @end
 
 @implementation YHLineChartView
@@ -33,6 +38,8 @@
     }
     self.showSelectedSubLine = [lineStyle objectForKey:@"showSelectedSubLine"] ? [[lineStyle objectForKey:@"showSelectedSubLine"] boolValue] : YES;
     self.subLineColor = [lineStyle objectForKey:@"subLineColor"] ? [lineStyle objectForKey:@"subLineColor"] : @"cccccc";
+    self.chartType =
+    [lineStyle objectForKey:@"chartType"] ? [[lineStyle objectForKey:@"chartType"] integerValue] : LineChartTypeStraight;
 }
 
 - (CGSize)gestureScrollContentSize {
@@ -159,18 +166,73 @@
         CGFloat offsetX = self.gestureScroll.contentOffset.x;
         CGFloat zeroY = self.dataPostiveSegmentNum * [self axisUnitScale];
         yValueLayer.name = [self layerTag:0 item:i];
-        NSMutableArray *circlePoints = [NSMutableArray array];
         
+        if(self.chartType == LineChartTypeCurve) {
+            for (NSInteger j=self.beginGroupIndex; j<drawNum; j++) {
+                if (![values[j] respondsToSelector:@selector(floatValue)]) continue;
+                
+                NSMutableArray *curveArray = [NSMutableArray arrayWithCapacity:0];
+                if (j > self.beginGroupIndex) {
+                    [curveArray addObject:values[j-1]];
+                } else {
+                    [curveArray addObject:@(ChartHeight/2.0).stringValue];
+                }
+                
+                [curveArray addObjectsFromArray:[values subarrayWithRange:NSMakeRange(j, 2)]];
+                
+                if (j+2 <= self.endGroupIndex) {
+                    [curveArray addObject:values[j+2]];
+                } else {
+                    [curveArray addObject:@(ChartHeight/2.0).stringValue];
+                }
+                
+                CGFloat yPoint = zeroY - [self verifyDataValue:curveArray[0]] * self.dataItemUnitScale * self.dataValueFactor;
+                CGPoint p = CGPointMake((j-1)*self.zoomedItemAxis-offsetX, yPoint);
+                if (j == self.beginGroupIndex || ![YHBaseChartView respondsFloatValueSelector:values[j-1]]) {
+                    if ([curveArray[1] respondsToSelector:@selector(floatValue)]) {
+                        CGFloat y1 = zeroY - [self verifyDataValue:curveArray[1]] * self.dataItemUnitScale * self.dataValueFactor;
+                        CGPoint p1 = CGPointMake(j*self.zoomedItemAxis-offsetX, y1);
+                        [yValueBezier moveToPoint:p1];
+                    }
+                }
+                if ([YHBaseChartView respondsFloatValueSelector:curveArray[1]] && [YHBaseChartView respondsFloatValueSelector:curveArray[2]]) {
+                    CGFloat y1 = zeroY - [self verifyDataValue:curveArray[1]] * self.dataItemUnitScale * self.dataValueFactor;
+                    CGPoint p1 = CGPointMake(j*self.zoomedItemAxis-offsetX, y1);
+                    CGFloat y2 = zeroY - [self verifyDataValue:curveArray[2]] * self.dataItemUnitScale * self.dataValueFactor;
+                    CGPoint p2 = CGPointMake((j+1)*self.zoomedItemAxis-offsetX, y2);
+                    CGFloat y3 = ChartHeight/2.0;
+                    if ([YHBaseChartView respondsFloatValueSelector:curveArray[3]]) {
+                        y3 = zeroY - [self verifyDataValue:curveArray[3]] * self.dataItemUnitScale * self.dataValueFactor;
+                    }
+                    CGPoint p3 = CGPointMake((j+2)*self.zoomedItemAxis-offsetX, y3);
+
+                    [self getControlPointx0:p.x andy0:p.y x1:p1.x andy1:p1.y x2:p2.x andy2:p2.y x3:p3.x andy3:p3.y path:yValueBezier];
+                }
+            }
+        } else {
+            for (NSUInteger j=self.beginGroupIndex; j<drawNum+1; j++) {
+                if (![values[j] respondsToSelector:@selector(floatValue)]) continue;
+                CGFloat yPoint = zeroY - [self verifyDataValue:values[j]] * self.dataItemUnitScale * self.dataValueFactor;
+                CGPoint p = CGPointMake(j*self.zoomedItemAxis-offsetX, yPoint);
+                if (j == self.beginGroupIndex || ![values[j-1] respondsToSelector:@selector(floatValue)]) {
+                    [yValueBezier moveToPoint:p];
+                } else {
+                    [yValueBezier addLineToPoint:p];
+                }
+            }
+        }
+        
+        yValueLayer.path = yValueBezier.CGPath;
+        yValueLayer.lineWidth = self.lineWidth;
+        yValueLayer.strokeColor = [[UIColor hexChangeFloat:self.itemColors[i]] CGColor];
+        yValueLayer.fillColor = [[UIColor clearColor] CGColor];
+        [subContainerV.layer addSublayer:yValueLayer];
+
+        NSMutableArray *circlePoints = [NSMutableArray array];
         for (NSUInteger j=self.beginGroupIndex; j<drawNum+1; j++) {
             if (![values[j] respondsToSelector:@selector(floatValue)]) continue;
             CGFloat yPoint = zeroY - [self verifyDataValue:values[j]] * self.dataItemUnitScale * self.dataValueFactor;
             CGPoint p = CGPointMake(j*self.zoomedItemAxis-offsetX, yPoint);
-            if (j == self.beginGroupIndex || ![values[j-1] respondsToSelector:@selector(floatValue)]) {
-                [yValueBezier moveToPoint:p];
-            } else {
-                [yValueBezier addLineToPoint:p];
-            }
-            
             if (j > self.beginGroupIndex && j < self.endGroupIndex) {
                 if (![values[j-1] respondsToSelector:@selector(floatValue)] && ![values[j+1] respondsToSelector:@selector(floatValue)]) {
                     [circlePoints addObject:NSStringFromCGPoint(p)];
@@ -185,16 +247,41 @@
                 }
             }
         }
-        yValueLayer.path = yValueBezier.CGPath;
-        yValueLayer.lineWidth = self.lineWidth;
-        yValueLayer.strokeColor = [[UIColor hexChangeFloat:self.itemColors[i]] CGColor];
-        yValueLayer.fillColor = [[UIColor clearColor] CGColor];
-        [subContainerV.layer addSublayer:yValueLayer];
-
         [self addCircleLayers:circlePoints
                   circleColor:[[UIColor hexChangeFloat:self.itemColors[i]] CGColor]
                    parentView:subContainerV];
     }
+}
+- (void)getControlPointx0:(CGFloat)x0 andy0:(CGFloat)y0
+                       x1:(CGFloat)x1 andy1:(CGFloat)y1
+                       x2:(CGFloat)x2 andy2:(CGFloat)y2
+                       x3:(CGFloat)x3 andy3:(CGFloat)y3
+                     path:(UIBezierPath*) path{
+    CGFloat smooth_value =0.6;
+    CGFloat ctrl1_x;
+    CGFloat ctrl1_y;
+    CGFloat ctrl2_x;
+    CGFloat ctrl2_y;
+    CGFloat xc1 = (x0 + x1) /2.0;
+    CGFloat yc1 = (y0 + y1) /2.0;
+    CGFloat xc2 = (x1 + x2) /2.0;
+    CGFloat yc2 = (y1 + y2) /2.0;
+    CGFloat xc3 = (x2 + x3) /2.0;
+    CGFloat yc3 = (y2 + y3) /2.0;
+    CGFloat len1 = sqrt((x1-x0) * (x1-x0) + (y1-y0) * (y1-y0));
+    CGFloat len2 = sqrt((x2-x1) * (x2-x1) + (y2-y1) * (y2-y1));
+    CGFloat len3 = sqrt((x3-x2) * (x3-x2) + (y3-y2) * (y3-y2));
+    CGFloat k1 = len1 / (len1 + len2);
+    CGFloat k2 = len2 / (len2 + len3);
+    CGFloat xm1 = xc1 + (xc2 - xc1) * k1;
+    CGFloat ym1 = yc1 + (yc2 - yc1) * k1;
+    CGFloat xm2 = xc2 + (xc3 - xc2) * k2;
+    CGFloat ym2 = yc2 + (yc3 - yc2) * k2;
+    ctrl1_x = xm1 + (xc2 - xm1) * smooth_value + x1 - xm1;
+    ctrl1_y = ym1 + (yc2 - ym1) * smooth_value + y1 - ym1;
+    ctrl2_x = xm2 + (xc2 - xm2) * smooth_value + x2 - xm2;
+    ctrl2_y = ym2 + (yc2 - ym2) * smooth_value + y2 - ym2;
+    [path addCurveToPoint:CGPointMake(x2, y2) controlPoint1:CGPointMake(ctrl1_x, ctrl1_y) controlPoint2:CGPointMake(ctrl2_x, ctrl2_y)];
 }
 - (void)addCircleLayers:(NSMutableArray *)circlePoints circleColor:(CGColorRef)color parentView:(UIView *)parentV {
     for (NSUInteger index = 0; index < circlePoints.count; index++) {
