@@ -167,7 +167,7 @@ typedef NS_ENUM(NSUInteger, LineChartType) {
         CGFloat zeroY = self.dataPostiveSegmentNum * [self axisUnitScale];
         yValueLayer.name = [self layerTag:0 item:i];
         
-        if(self.chartType == LineChartTypeCurve) {
+        if(self.chartType == LineChartTypeCurve) { //绘制曲线原理参考自：https://www.jianshu.com/p/c33081adce28
             for (NSInteger j=self.beginGroupIndex; j<drawNum; j++) {
                 if (![values[j] respondsToSelector:@selector(floatValue)]) continue;
                 

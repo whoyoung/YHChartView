@@ -100,7 +100,7 @@ YHTapPointRatioInItemMake(CGFloat x, CGFloat y) {
                           alignmentMode:(NSString *)alignmentMode; //绘制文本
 - (CGFloat)zoomedItemAxis;
 - (void)removeTipView;
-- (void)updateChartFrame:(CGRect)frame; //更新图标的frame，可用于屏幕旋转等情形
+- (void)updateChartFrame:(CGRect)frame; //更新图表的frame，可用于屏幕旋转等情形
 - (CGFloat)dataAtGroup:(NSUInteger)group item:(NSUInteger)item;
 - (CGFloat)verifyDataValue:(id)value;
 - (NSArray *)defaultColors; //默认的分组内成员的颜色数组

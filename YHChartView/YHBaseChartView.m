@@ -190,15 +190,15 @@
     [self insertSubview:_containerView belowSubview:_gestureScroll];
     [self findBeginAndEndIndex];
     [self calculateMaxAndMinValue];
-    [self calculateDataSegment];
+    [self calculateDataSegment]; //根据最大和最小值，决定正轴和负轴分别应该画几条分段线，并计算每条分段线的递进值
     [self addAxisLayer];
     [self addAxisScaleLayer];
     [self addDataLayer];
     [self addDataScaleLayer];
     [self drawDataPoint];
-    if (self.hadTapped) {
-        [self updateSelectedGroup:_tappedGroup item:_tappedItem];
-        [self updateTipLayer:self.tappedGroup item:self.tappedItem];
+    if (self.hadTapped) { //重绘目前选中的点
+        [self updateSelectedGroup:_tappedGroup item:_tappedItem]; //更新选中的点
+        [self updateTipLayer:self.tappedGroup item:self.tappedItem]; //更新提示框
     }
 }
 - (void)chartDidTapping:(UITapGestureRecognizer *)tapGesture {
