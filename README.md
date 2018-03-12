@@ -35,6 +35,9 @@ Group Horizontal Bar Chart <br>
 Group Vertical Bar Chart <br>
 ![line](./Gif/GroupV.gif) <br><br>
 ## Change logs
+### version 0.3.6
+1. 折线图增加曲线连接方式 <br>
+2. 折线图选中样式调整 <br>
 ### version 0.3.5
 1. 柱状图两组之间的间隔与柱状图的宽度成正比 <br>
 2. 折线图样式调整 <br>
