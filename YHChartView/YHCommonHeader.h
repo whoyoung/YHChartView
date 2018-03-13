@@ -26,10 +26,10 @@ static const float TipViewPadding = 10;
 #define ChartWidth (self.bounds.size.width - LeftEdge - RightEdge)
 #define ChartHeight (self.bounds.size.height - TopEdge - BottomEdge)
 #define AxisTextColor [UIColor hexChangeFloat:@"8C8C8C"]
-#define AxisScaleColor [UIColor hexChangeFloat:@"E8E8E8"]
+#define AxisScaleColor [UIColor hexChangeFloat:@"D9D9D9"]
 #define DataTextColor [UIColor hexChangeFloat:@"8C8C8C"]
 #define TipTextColor [UIColor whiteColor]
-#define ZeroLineColor [UIColor hexChangeFloat:@"D9D9D9"]
+#define ZeroLineColor [UIColor hexChangeFloat:@"CCCCCC"]
 
 #import "UIColor+YHCategory.h"
 #import "NSString+YHCategory.h"
