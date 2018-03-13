@@ -18,10 +18,11 @@
     NSDictionary *dict = @{
                            @"axis":@[@"Mon",@"Tues",@"Wed",@"Thu",@"Fri",@"Sat",@"Sun"],
                            @"datas":@[
-                                   @[@"9883.6",[NSNull null],@"980.3",@"-3330.4",@"1340.5",@"330.6",[NSNull null]],
-                                   @[@"2222",@"12533.6",[NSNull null],@"91.9",@"1066.12",@"250.13",@"-6033.14"]
+                                   @[@"9883.6",[NSNull null],@"980.3",@"-3330.4",[NSNull null],@"-330.6",[NSNull null]],
+                                   @[[NSNull null],@"2222",@"12533.6",[NSNull null],@"-91.9",@"-1066.12",@"633.14"],
+                                   @[@"333",@"3332",[NSNull null],@"-1066.12",@"-166.12",[NSNull null],@"-6033.14"]
                                    ],
-                           @"groupMembers":@[@"zhang",@"yang"],
+                           @"groupMembers":@[@"zhang",@"yang",@"li"],
                            @"groupDimension":@"成交人",
                            @"axisTitle":@"星期",
                            @"dataTitle":@"成交量",
@@ -36,6 +37,7 @@
                            @"animationType": @(YHAnimationTypeChangeValueAndNum),
                            @"styles": @{
                                    @"barStyle": @{
+                                           @"stack": @YES
                                            },
                                    @"lineStyle": @{
                                            @"lineWidth":@"1"

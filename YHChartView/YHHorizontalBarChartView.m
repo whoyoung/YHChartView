@@ -112,8 +112,8 @@
             CGFloat h = [self dataAtGroup:group item:i] * self.dataItemUnitScale;
             if (tapP.y > self.zeroLine) {
                 if (h < 0) {
+                    item = i;
                     if (tapP.y <= (tempY - h) || i == self.Datas.count - 1) {
-                        item = i;
                         break;
                     } else {
                         tempY -= h;
@@ -121,8 +121,8 @@
                 }
             } else {
                 if (h >= 0) {
+                    item = i;
                     if (tapP.y >= (tempY - h) || i == self.Datas.count - 1) {
-                        item = i;
                         break;
                     } else {
                         tempY -= h;
@@ -292,6 +292,7 @@
                 CGFloat positiveY = self.zeroLine, negativeY = self.zeroLine, yPoint = self.zeroLine;
                 for (NSUInteger j = 0; j < self.Datas.count; j++) {
                     NSArray *array = self.Datas[j];
+                    if (![YHBaseChartView respondsFloatValueSelector:array[i]]) continue;
                     CGFloat dataV = [self verifyDataValue:array[i]] * self.dataValueFactor;
                     CAShapeLayer *yValueLayer = [CAShapeLayer layer];
                     if (dataV >= 0) {
