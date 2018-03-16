@@ -233,7 +233,8 @@
 - (void)removeSelectedLayer {
     UIView *subContainer = [self.containerView viewWithTag:102];
     NSArray *subLayers = subContainer.layer.sublayers;
-    for (CALayer *layer in subLayers) {
+    for (NSUInteger i=subLayers.count-1;i>0;i--) {
+        CALayer *layer = subLayers[i];
         if ([layer isKindOfClass:[CAShapeLayer class]] && ([layer.name isEqualToString:@"borderCircle"] || [layer.name isEqualToString:@"centerCircle"] || [layer.name isEqualToString:@"subline"] || [layer.name isEqualToString:@"mask"])) {
             [layer removeFromSuperlayer];
         }
