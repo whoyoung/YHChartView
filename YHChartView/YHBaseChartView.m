@@ -205,12 +205,20 @@
     CGPoint tapP = [tapGesture locationInView:self.gestureScroll];
     NSDictionary *groupItemDict = [self tappedGroupAndItem:tapP];
     if (!groupItemDict) return;
+    if (_hadTapped && [[groupItemDict objectForKey:@"group"] integerValue] == _tappedGroup && [[groupItemDict objectForKey:@"item"] integerValue] == _tappedItem) {
+        _hadTapped = NO; //重复点击同一个时，取消选中
+        [self removeTipView];
+        [self removeSelectedLayer];
+    } else {
+        _hadTapped = YES;
+    }
     _tappedGroup = [[groupItemDict objectForKey:@"group"] integerValue];
     _tappedItem = [[groupItemDict objectForKey:@"item"] integerValue];
-    _hadTapped = YES;
-    [self saveTapPointRatio:tapP group:_tappedGroup item:_tappedItem];
-    [self updateSelectedGroup:_tappedGroup item:_tappedItem];
-    [self updateTipLayer:_tappedGroup item:_tappedItem];
+    if (_hadTapped) {
+        [self saveTapPointRatio:tapP group:_tappedGroup item:_tappedItem];
+        [self updateSelectedGroup:_tappedGroup item:_tappedItem];
+        [self updateTipLayer:_tappedGroup item:_tappedItem];
+    }
     if (self.delegate && [self.delegate respondsToSelector:@selector(didTapChart:group:item:)]) {
         [self.delegate didTapChart:self group:_tappedGroup item:_tappedItem];
     }
@@ -221,6 +229,15 @@
 - (void)removeTipView {
     UIView *existedV = [self.gestureScroll viewWithTag:101];
     [existedV removeFromSuperview];
+}
+- (void)removeSelectedLayer {
+    UIView *subContainer = [self.containerView viewWithTag:102];
+    NSArray *subLayers = subContainer.layer.sublayers;
+    for (CALayer *layer in subLayers) {
+        if ([layer isKindOfClass:[CAShapeLayer class]] && ([layer.name isEqualToString:@"borderCircle"] || [layer.name isEqualToString:@"centerCircle"] || [layer.name isEqualToString:@"subline"] || [layer.name isEqualToString:@"mask"])) {
+            [layer removeFromSuperlayer];
+        }
+    }
 }
 - (NSDictionary *)tappedGroupAndItem:(CGPoint)tapP {
     NSUInteger group = 0, item = 0;
