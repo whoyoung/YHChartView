@@ -35,6 +35,8 @@ Group Horizontal Bar Chart <br>
 Group Vertical Bar Chart <br>
 ![line](./Gif/GroupV.gif) <br><br>
 ## Change logs
+### version 0.3.8
+1. 重复点击同一个项，取消选中状态 <br>
 ### version 0.3.7
 1. 修改堆叠图的bug <br>
 ### version 0.3.6
