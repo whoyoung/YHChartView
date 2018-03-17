@@ -35,6 +35,8 @@ Group Horizontal Bar Chart <br>
 Group Vertical Bar Chart <br>
 ![line](./Gif/GroupV.gif) <br><br>
 ## Change logs
+### version 0.3.10
+1. 折线图可以设置起点 <br>
 ### version 0.3.9
 1. bug修复 <br>
 ### version 0.3.8
