@@ -45,6 +45,7 @@
 		77BE09F42047AE87009712CC /* UIColor+YHCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BE09E92047AE87009712CC /* UIColor+YHCategory.m */; };
 		77BE09F92047CFEE009712CC /* XSYBarChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BE09F72047CFEE009712CC /* XSYBarChartView.m */; };
 		77BE09FA2047CFEE009712CC /* BarChartViewIOSManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 77BE09F82047CFEE009712CC /* BarChartViewIOSManager.m */; };
+		77CC5845205CF66100C59880 /* YHBaseBarChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = 77CC582A205CF66000C59880 /* YHBaseBarChartView.m */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 /* End PBXBuildFile section */
 
@@ -286,6 +287,8 @@
 		77BE09F62047CFEE009712CC /* XSYBarChartView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XSYBarChartView.h; sourceTree = "<group>"; };
 		77BE09F72047CFEE009712CC /* XSYBarChartView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XSYBarChartView.m; sourceTree = "<group>"; };
 		77BE09F82047CFEE009712CC /* BarChartViewIOSManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BarChartViewIOSManager.m; sourceTree = "<group>"; };
+		77CC582A205CF66000C59880 /* YHBaseBarChartView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YHBaseBarChartView.m; sourceTree = "<group>"; };
+		77CC5844205CF66000C59880 /* YHBaseBarChartView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YHBaseBarChartView.h; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -477,6 +480,8 @@
 		77BE09DF2047AE87009712CC /* YHChartView */ = {
 			isa = PBXGroup;
 			children = (
+				77CC5844205CF66000C59880 /* YHBaseBarChartView.h */,
+				77CC582A205CF66000C59880 /* YHBaseBarChartView.m */,
 				77BE09E02047AE87009712CC /* YHBaseChartView.m */,
 				77BE09E12047AE87009712CC /* YHBaseChartMethodProtocol.h */,
 				77BE09E22047AE87009712CC /* UIColor+YHCategory.h */,
@@ -985,6 +990,7 @@
 				77BE09F02047AE87009712CC /* YHLineChartView.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				77BE09FA2047CFEE009712CC /* BarChartViewIOSManager.m in Sources */,
+				77CC5845205CF66100C59880 /* YHBaseBarChartView.m in Sources */,
 				77BE09F92047CFEE009712CC /* XSYBarChartView.m in Sources */,
 				77BE09F12047AE87009712CC /* YHVerticalBarChartView.m in Sources */,
 				77BE09EF2047AE87009712CC /* YHBaseChartView.m in Sources */,

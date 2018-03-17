@@ -9,4 +9,5 @@
 
 @interface UIColor (YHCategory)
 + (UIColor *)hexChangeFloat:(NSString *)hexColor;
++ (UIColor *)hexChangeFloat:(NSString *)hexColor alpha:(CGFloat)alpha;
 @end

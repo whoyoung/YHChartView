@@ -45,6 +45,7 @@
         self.chartView.hadTapped = NO;
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.chartView removeTipView];
+            [self.chartView removeSelectedLayer];
         });
     }
 }

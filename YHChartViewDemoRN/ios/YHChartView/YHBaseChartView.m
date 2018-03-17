@@ -10,6 +10,9 @@
 @interface YHBaseChartView () <UIScrollViewDelegate>
 @property (nonatomic, assign, readonly) BOOL isDataError;
 @property (nonatomic, strong) NSTimer *timer;
+
+@property (nonatomic, assign) CGFloat tipViewBackgroundColorAlpha;
+@property (nonatomic, copy) NSString *tipViewBackgroundHexColor;
 @end
 
 @implementation YHBaseChartView
@@ -56,18 +59,8 @@
     _groupDimension = [dict objectForKey:@"groupDimension"];
     _axisTitle = [dict objectForKey:@"axisTitle"];
     _dataTitle = [dict objectForKey:@"dataTitle"];
-    _itemColors = [dict objectForKey:@"colors"];
-    if (!self.itemColors) {
-        [self defaultColors];
-    }
-    BOOL isStack = [[dict objectForKey:@"stack"] boolValue];
-    if (isStack) {
-        _chartType = BarChartTypeStack;
-    } else if (self.Datas.count > 1) {
-        _chartType = BarChartTypeGroup;
-    } else {
-        _chartType = BarChartTypeSingle;
-    }
+    NSArray *colors = [dict objectForKey:@"colors"];
+    [self dealItemColors:colors];
     _valueInterval = [[dict objectForKey:@"valueInterval"] integerValue];
     if (self.valueInterval == 0) {
         _valueInterval = 3;
@@ -82,16 +75,21 @@
     _loadAnimationTime = [dict objectForKey:@"loadAnimationTime"] ? [[dict objectForKey:@"loadAnimationTime"] floatValue] : LoadAnimationTime;
     if (_loadAnimationTime < 0.1) _loadAnimationTime = 0.1;
     _animationType = [[dict objectForKey:@"animationType"] integerValue];
+    _showTipViewArrow = [[dict objectForKey:@"showTipViewArrow"] boolValue];
+    _minWidthHideAxisText = [dict objectForKey:@"minWidthHideAxisText"] ? [[dict objectForKey:@"minWidthHideAxisText"] floatValue] : 40;
+    _minItemWidth = [dict objectForKey:@"minItemWidth"] ? [[dict objectForKey:@"minItemWidth"] floatValue] : 20;
+    _showAxisDashLine = [dict objectForKey:@"showAxisDashLine"] ? [[dict objectForKey:@"showAxisDashLine"] boolValue] : NO;
+    _showAxisHardLine = [dict objectForKey:@"showAxisHardLine"] ? [[dict objectForKey:@"showAxisHardLine"] boolValue] : NO;
+    _showDataDashLine = [dict objectForKey:@"showDataDashLine"] ? [[dict objectForKey:@"showDataDashLine"] boolValue] : NO;
+    _showDataHardLine = [dict objectForKey:@"showDataHardLine"] ? [[dict objectForKey:@"showDataHardLine"] boolValue] : YES;
+    _tipViewBackgroundHexColor = [dict objectForKey:@"tipViewBackgroundHexColor"] ? [dict objectForKey:@"tipViewBackgroundHexColor"] : @"000000";
+    _tipViewBackgroundColorAlpha = [dict objectForKey:@"tipViewBackgroundColorAlpha"] ? [[dict objectForKey:@"tipViewBackgroundColorAlpha"] floatValue] : 0.65;
+    
     NSDictionary *styleDict = [dict objectForKey:@"styles"];
     [self dealStyleDict:styleDict];
 }
 - (void)dealStyleDict:(NSDictionary *)styleDict {
-    _minItemWidth = 20;
-    _groupSpace = 5;
-    self.showAxisDashLine = NO;
-    self.showAxisHardLine = NO;
-    self.showDataDashLine = NO;
-    self.showDataHardLine = YES;
+    
 }
 - (void)layoutSubviews {
     [super layoutSubviews];
@@ -192,25 +190,35 @@
     [self insertSubview:_containerView belowSubview:_gestureScroll];
     [self findBeginAndEndIndex];
     [self calculateMaxAndMinValue];
-    [self calculateDataSegment];
+    [self calculateDataSegment]; //根据最大和最小值，决定正轴和负轴分别应该画几条分段线，并计算每条分段线的递进值
     [self addAxisLayer];
     [self addAxisScaleLayer];
     [self addDataLayer];
     [self addDataScaleLayer];
     [self drawDataPoint];
-    if (self.hadTapped) {
-        [self updateTipLayer:self.tappedGroup item:self.tappedItem];
+    if (self.hadTapped) { //重绘目前选中的点
+        [self updateSelectedGroup:_tappedGroup item:_tappedItem]; //更新选中的点
+        [self updateTipLayer:self.tappedGroup item:self.tappedItem]; //更新提示框
     }
 }
 - (void)chartDidTapping:(UITapGestureRecognizer *)tapGesture {
     CGPoint tapP = [tapGesture locationInView:self.gestureScroll];
     NSDictionary *groupItemDict = [self tappedGroupAndItem:tapP];
+    if (!groupItemDict) return;
+    if (_hadTapped && [[groupItemDict objectForKey:@"group"] integerValue] == _tappedGroup && [[groupItemDict objectForKey:@"item"] integerValue] == _tappedItem) {
+        _hadTapped = NO; //重复点击同一个时，取消选中
+        [self removeTipView];
+        [self removeSelectedLayer];
+    } else {
+        _hadTapped = YES;
+    }
     _tappedGroup = [[groupItemDict objectForKey:@"group"] integerValue];
     _tappedItem = [[groupItemDict objectForKey:@"item"] integerValue];
-    _hadTapped = YES;
-    [self saveTapPointRatio:tapP group:_tappedGroup item:_tappedItem];
-
-    [self updateTipLayer:_tappedGroup item:_tappedItem];
+    if (_hadTapped) {
+        [self saveTapPointRatio:tapP group:_tappedGroup item:_tappedItem];
+        [self updateSelectedGroup:_tappedGroup item:_tappedItem];
+        [self updateTipLayer:_tappedGroup item:_tappedItem];
+    }
     if (self.delegate && [self.delegate respondsToSelector:@selector(didTapChart:group:item:)]) {
         [self.delegate didTapChart:self group:_tappedGroup item:_tappedItem];
     }
@@ -222,9 +230,22 @@
     UIView *existedV = [self.gestureScroll viewWithTag:101];
     [existedV removeFromSuperview];
 }
+- (void)removeSelectedLayer {
+    UIView *subContainer = [self.containerView viewWithTag:102];
+    NSArray *subLayers = subContainer.layer.sublayers;
+    for (NSUInteger i=subLayers.count-1;i>0;i--) {
+        CALayer *layer = subLayers[i];
+        if ([layer isKindOfClass:[CAShapeLayer class]] && ([layer.name isEqualToString:@"borderCircle"] || [layer.name isEqualToString:@"centerCircle"] || [layer.name isEqualToString:@"subline"] || [layer.name isEqualToString:@"mask"])) {
+            [layer removeFromSuperlayer];
+        }
+    }
+}
 - (NSDictionary *)tappedGroupAndItem:(CGPoint)tapP {
     NSUInteger group = 0, item = 0;
     return @{ @"group": @(group), @"item": @(item) };
+}
+- (void)updateSelectedGroup:(NSUInteger)group item:(NSUInteger)item {
+    
 }
 - (void)updateTipLayer:(NSUInteger)group item:(NSUInteger)item {
     [self removeTipView];
@@ -234,14 +255,15 @@
     NSString *dataStr = [dataDict objectForKey:@"dataStr"];
     
     CGFloat tipTextH = 11;
-    CGFloat tipH = 10 + 2 * tipTextH + 5;
+    CGFloat arrowH = 5;
+    CGFloat tipH = TipViewPadding*2 + 2 * tipTextH + arrowH;
     CGFloat tipMaxW = [axisStr measureTextWidth:[UIFont systemFontOfSize:9]];
     tipMaxW = MAX(tipMaxW, [dataStr measureTextWidth:[UIFont systemFontOfSize:9]]);
     if (groupStr.length) {
         tipMaxW = MAX(tipMaxW, [groupStr measureTextWidth:[UIFont systemFontOfSize:9]]);
         tipH += tipTextH;
     }
-    tipMaxW += 10;
+    tipMaxW += TipViewPadding*2;
 
     NSUInteger arrowP = 2; //箭头在中间位置
     CGPoint tempP = [self adjustTipViewLocation:group item:item];
@@ -272,85 +294,92 @@
     [self.gestureScroll addSubview:tipView];
 
     CAShapeLayer *rectLayer = [CAShapeLayer layer];
+    CGSize cornerRadii = CGSizeMake(3, 3);
     UIBezierPath *rectPath;
+    CGRect rectFrame;
     if (arrowP > 10) {
-        rectPath = [UIBezierPath bezierPathWithRect:CGRectMake(0, 5, tipMaxW, tipH - 5)];
+        rectFrame = CGRectMake(0, 5, tipMaxW, tipH - 5);
     } else {
-        rectPath = [UIBezierPath bezierPathWithRect:CGRectMake(0, 0, tipMaxW, tipH - 5)];
+        rectFrame = CGRectMake(0, 0, tipMaxW, tipH - 5);
     }
-    CGSize cornerRadii = CGSizeMake(5, 5);
-    CGRect topRect = CGRectMake(0, 0, tipMaxW, tipH - 5);
-    CGRect bottomRect = CGRectMake(0, 5, tipMaxW, tipH - 5);
-    switch (arrowP) {
-        case 1: { //左下箭头
-            rectPath = [UIBezierPath
-                bezierPathWithRoundedRect:topRect
-                        byRoundingCorners:UIRectCornerTopLeft | UIRectCornerTopRight | UIRectCornerBottomRight
-                              cornerRadii:cornerRadii];
-            [self drawArrow:rectPath
-                     startP:CGPointMake(0, tipH - 5)
-                    middleP:CGPointMake(0, tipH)
-                       endP:CGPointMake(2.5, tipH - 5)];
-        } break;
-        case 2: { //中下箭头
-            rectPath = [UIBezierPath bezierPathWithRoundedRect:topRect
-                                             byRoundingCorners:UIRectCornerAllCorners
-                                                   cornerRadii:cornerRadii];
-            [self drawArrow:rectPath
-                     startP:CGPointMake(tipMaxW / 2 - 2.5, tipH - 5)
-                    middleP:CGPointMake(tipMaxW / 2, tipH)
-                       endP:CGPointMake(tipMaxW / 2 + 2.5, tipH - 5)];
-        } break;
-        case 3: { //右下箭头
-            rectPath = [UIBezierPath
-                bezierPathWithRoundedRect:topRect
-                        byRoundingCorners:UIRectCornerTopLeft | UIRectCornerTopRight | UIRectCornerBottomLeft
-                              cornerRadii:cornerRadii];
-            [self drawArrow:rectPath
-                     startP:CGPointMake(tipMaxW - 2.5, tipH - 5)
-                    middleP:CGPointMake(tipMaxW, tipH)
-                       endP:CGPointMake(tipMaxW, tipH - 5)];
-        } break;
-        case 11: { //左上箭头
-            rectPath = [UIBezierPath
-                bezierPathWithRoundedRect:bottomRect
-                        byRoundingCorners:UIRectCornerBottomLeft | UIRectCornerTopRight | UIRectCornerBottomRight
-                              cornerRadii:cornerRadii];
-            [self drawArrow:rectPath startP:CGPointMake(0, 5) middleP:CGPointMake(0, 0) endP:CGPointMake(2.5, 5)];
-        } break;
-        case 12: { //中上箭头
-            rectPath = [UIBezierPath bezierPathWithRoundedRect:bottomRect
-                                             byRoundingCorners:UIRectCornerAllCorners
-                                                   cornerRadii:cornerRadii];
-            [self drawArrow:rectPath
-                     startP:CGPointMake(tipMaxW / 2 - 2.5, 5)
-                    middleP:CGPointMake(tipMaxW / 2, 0)
-                       endP:CGPointMake(tipMaxW / 2 + 2.5, 5)];
-        } break;
-        case 13: { //右上箭头
-            rectPath = [UIBezierPath
-                bezierPathWithRoundedRect:bottomRect
-                        byRoundingCorners:UIRectCornerTopLeft | UIRectCornerBottomLeft | UIRectCornerBottomRight
-                              cornerRadii:cornerRadii];
-            [self drawArrow:rectPath
-                     startP:CGPointMake(tipMaxW - 2.5, 5)
-                    middleP:CGPointMake(tipMaxW, 0)
-                       endP:CGPointMake(tipMaxW, 5)];
-        } break;
-
-        default:
-            break;
+    if (self.showTipViewArrow) {
+        rectPath = [UIBezierPath bezierPathWithRect:rectFrame];
+        CGRect topRect = CGRectMake(0, 0, tipMaxW, tipH - 5);
+        CGRect bottomRect = CGRectMake(0, 5, tipMaxW, tipH - 5);
+        switch (arrowP) {
+            case 1: { //左下箭头
+                rectPath = [UIBezierPath
+                            bezierPathWithRoundedRect:topRect
+                            byRoundingCorners:UIRectCornerTopLeft | UIRectCornerTopRight | UIRectCornerBottomRight
+                            cornerRadii:cornerRadii];
+                [self drawArrow:rectPath
+                         startP:CGPointMake(0, tipH - 5)
+                        middleP:CGPointMake(0, tipH)
+                           endP:CGPointMake(2.5, tipH - 5)];
+            } break;
+            case 2: { //中下箭头
+                rectPath = [UIBezierPath bezierPathWithRoundedRect:topRect
+                                                 byRoundingCorners:UIRectCornerAllCorners
+                                                       cornerRadii:cornerRadii];
+                [self drawArrow:rectPath
+                         startP:CGPointMake(tipMaxW / 2 - 2.5, tipH - 5)
+                        middleP:CGPointMake(tipMaxW / 2, tipH)
+                           endP:CGPointMake(tipMaxW / 2 + 2.5, tipH - 5)];
+            } break;
+            case 3: { //右下箭头
+                rectPath = [UIBezierPath
+                            bezierPathWithRoundedRect:topRect
+                            byRoundingCorners:UIRectCornerTopLeft | UIRectCornerTopRight | UIRectCornerBottomLeft
+                            cornerRadii:cornerRadii];
+                [self drawArrow:rectPath
+                         startP:CGPointMake(tipMaxW - 2.5, tipH - 5)
+                        middleP:CGPointMake(tipMaxW, tipH)
+                           endP:CGPointMake(tipMaxW, tipH - 5)];
+            } break;
+            case 11: { //左上箭头
+                rectPath = [UIBezierPath
+                            bezierPathWithRoundedRect:bottomRect
+                            byRoundingCorners:UIRectCornerBottomLeft | UIRectCornerTopRight | UIRectCornerBottomRight
+                            cornerRadii:cornerRadii];
+                [self drawArrow:rectPath startP:CGPointMake(0, 5) middleP:CGPointMake(0, 0) endP:CGPointMake(2.5, 5)];
+            } break;
+            case 12: { //中上箭头
+                rectPath = [UIBezierPath bezierPathWithRoundedRect:bottomRect
+                                                 byRoundingCorners:UIRectCornerAllCorners
+                                                       cornerRadii:cornerRadii];
+                [self drawArrow:rectPath
+                         startP:CGPointMake(tipMaxW / 2 - 2.5, 5)
+                        middleP:CGPointMake(tipMaxW / 2, 0)
+                           endP:CGPointMake(tipMaxW / 2 + 2.5, 5)];
+            } break;
+            case 13: { //右上箭头
+                rectPath = [UIBezierPath
+                            bezierPathWithRoundedRect:bottomRect
+                            byRoundingCorners:UIRectCornerTopLeft | UIRectCornerBottomLeft | UIRectCornerBottomRight
+                            cornerRadii:cornerRadii];
+                [self drawArrow:rectPath
+                         startP:CGPointMake(tipMaxW - 2.5, 5)
+                        middleP:CGPointMake(tipMaxW, 0)
+                           endP:CGPointMake(tipMaxW, 5)];
+            } break;
+                
+            default:
+                break;
+        }
+    } else {
+        rectPath = [UIBezierPath bezierPathWithRoundedRect:rectFrame cornerRadius:cornerRadii.width];
     }
+    
     rectLayer.path = rectPath.CGPath;
-    rectLayer.fillColor = [UIColor hexChangeFloat:@"0D2940"].CGColor;
+    rectLayer.fillColor = [UIColor hexChangeFloat:self.tipViewBackgroundHexColor alpha:self.tipViewBackgroundColorAlpha].CGColor;
     [tipView.layer addSublayer:rectLayer];
 
-    CGFloat startY = 5;
+    CGFloat startY = TipViewPadding;
     if (arrowP > 10) {
-        startY = 10;
+        startY += 5;
     }
     if (groupStr.length) {
-        CGRect textFrame = CGRectMake(5, startY, tipMaxW - 10, tipTextH);
+        CGRect textFrame = CGRectMake(TipViewPadding, startY, tipMaxW - 10, tipTextH);
         CATextLayer *text = [self getTextLayerWithString:groupStr
                                                textColor:TipTextColor
                                                 fontSize:TipTextFont
@@ -364,14 +393,14 @@
                                                textColor:TipTextColor
                                                 fontSize:TipTextFont
                                          backgroundColor:[UIColor clearColor]
-                                                   frame:CGRectMake(5, startY, tipMaxW - 10, tipTextH)
+                                                   frame:CGRectMake(TipViewPadding, startY, tipMaxW - 10, tipTextH)
                                            alignmentMode:kCAAlignmentLeft];
     [tipView.layer addSublayer:axisText];
     CATextLayer *dataText = [self getTextLayerWithString:dataStr
                                                textColor:TipTextColor
                                                 fontSize:TipTextFont
                                          backgroundColor:[UIColor clearColor]
-                                                   frame:CGRectMake(5, startY + tipTextH, tipMaxW - 10, tipTextH)
+                                                   frame:CGRectMake(TipViewPadding, startY + tipTextH, tipMaxW - 10, tipTextH)
                                            alignmentMode:kCAAlignmentLeft];
     [tipView.layer addSublayer:dataText];
 }
@@ -515,7 +544,6 @@
 }
 - (void)drawDataPoint {
 }
-
 - (void)addAxisLayer {
 }
 - (void)addAxisScaleLayer {
@@ -589,16 +617,21 @@
     }
     return _newPinScale;
 }
-- (void)defaultColors {
-    NSArray *colors = @[
-        @"45abff", @"6be6c1", @"ffa51f", @"ffd64e", @"3fd183", @"6ea7c7", @"5b7cf4", @"00bfd5", @"8bc7ff", @"f48784",
-        @"d25537"
-    ];
+- (void)dealItemColors:(NSArray *)colors {
+    if (!colors || !colors.count) {
+        colors = [self defaultColors];
+    }
     NSMutableArray *tempColors = [NSMutableArray arrayWithCapacity:self.Datas.count];
     for (NSUInteger i = 0; i < self.Datas.count; i++) {
         [tempColors addObject:colors[i % colors.count]];
     }
     _itemColors = [tempColors copy];
+}
+- (NSArray *)defaultColors {
+    return @[
+                        @"4698EB", @"A3DFFF", @"34C7C7", @"96EBEB", @"3BCC90", @"A4EBCD", @"80C25D", @"BBE390", @"FFA51F", @"FCCC79", @"F06260", @"FD9E9C", @"886FE7", @"B9A7FE"
+    ];
+    
 }
 
 - (CGFloat)dataItemUnitScale {
@@ -616,5 +649,22 @@
         return [value floatValue];
     }
     return 0;
+}
+
+- (NSString *)layerTag:(NSUInteger)group item:(NSUInteger)item {
+    return [NSString stringWithFormat:@"group%ld_item%ld",(unsigned long)group,(unsigned long)item];
+}
+- (BOOL)shouldHideAxisText {
+    if (self.zoomedItemAxis < self.minWidthHideAxisText) return YES;
+    return NO;
+}
+- (CGFloat)axisUnitScale {
+    return ChartHeight / (self.dataNegativeSegmentNum + self.dataPostiveSegmentNum);
+}
++ (BOOL)respondsFloatValueSelector:(id)idValue {
+    if ([idValue respondsToSelector:@selector(floatValue)]) {
+        return YES;
+    }
+    return NO;
 }
 @end

@@ -14,17 +14,6 @@
 
 @implementation YHHorizontalBarChartView
 
-- (void)dealStyleDict:(NSDictionary *)styleDict {
-    NSDictionary *barStyle = [styleDict objectForKey:@"barStyle"];
-    self.minItemWidth =
-    [barStyle objectForKey:@"minItemWidth"] ? [[barStyle objectForKey:@"minItemWidth"] floatValue] : 20;
-    self.groupSpace = [barStyle objectForKey:@"groupSpace"] ? [[barStyle objectForKey:@"groupSpace"] floatValue] : 5;
-    self.showAxisDashLine = [barStyle objectForKey:@"showAxisDashLine"] ? [[barStyle objectForKey:@"showAxisDashLine"] boolValue] : NO;
-    self.showAxisHardLine = [barStyle objectForKey:@"showAxisHardLine"] ? [[barStyle objectForKey:@"showAxisHardLine"] boolValue] : NO;
-    self.showDataDashLine = [barStyle objectForKey:@"showDataDashLine"] ? [[barStyle objectForKey:@"showDataDashLine"] boolValue] : NO;
-    self.showDataHardLine = [barStyle objectForKey:@"showDataHardLine"] ? [[barStyle objectForKey:@"showDataHardLine"] boolValue] : YES;
-}
-
 - (CGSize)gestureScrollContentSize {
     return CGSizeMake(self.scrollContentSizeWidth, ChartHeight);
 }
@@ -100,18 +89,31 @@
         if (item > self.Datas.count - 1) {
             item = self.Datas.count - 1;
         }
+        if(![[self.Datas[item] objectAtIndex:group] respondsToSelector:@selector(floatValue)]) return nil;
     } else if (self.chartType == BarChartTypeSingle) {
         group = floorf(tapP.x / (self.zoomedItemAxis + self.groupSpace));
         item = 0;
+        if(![[self.Datas[item] objectAtIndex:group] respondsToSelector:@selector(floatValue)]) return nil;
     } else { // BarChartTypeStack
         group = floorf(tapP.x / (self.zoomedItemAxis + self.groupSpace));
+        
+        for(NSUInteger i=0;i<self.Datas.count;) {
+            if ([[self.Datas[i] objectAtIndex:group] respondsToSelector:@selector(floatValue)]) {
+                item = i;
+                break;
+            }
+            if (i == self.Datas.count - 1) return nil;
+            i += 1;
+        }
+        
         CGFloat tempY = self.zeroLine;
-        for (NSUInteger i = 0; i < self.Datas.count; i++) {
+        for (NSUInteger i = item; i < self.Datas.count; i++) {
+            if (![[self.Datas[i] objectAtIndex:group] respondsToSelector:@selector(floatValue)]) continue;
             CGFloat h = [self dataAtGroup:group item:i] * self.dataItemUnitScale;
             if (tapP.y > self.zeroLine) {
                 if (h < 0) {
+                    item = i;
                     if (tapP.y <= (tempY - h) || i == self.Datas.count - 1) {
-                        item = i;
                         break;
                     } else {
                         tempY -= h;
@@ -119,8 +121,8 @@
                 }
             } else {
                 if (h >= 0) {
+                    item = i;
                     if (tapP.y >= (tempY - h) || i == self.Datas.count - 1) {
-                        item = i;
                         break;
                     } else {
                         tempY -= h;
@@ -248,101 +250,6 @@
     }
 }
 
-- (void)calculateMaxAndMinValue {
-    switch (self.chartType) {
-        case BarChartTypeSingle: {
-            if (self.beginGroupIndex == self.endGroupIndex) {
-                self.minDataValue = [self dataAtGroup:self.beginGroupIndex item:0];
-                self.maxDataValue = self.minDataValue;
-            } else {
-                NSMutableArray *array =
-                    [NSMutableArray arrayWithCapacity:(self.endGroupIndex - self.beginGroupIndex + 1)];
-                for (NSUInteger i = self.beginGroupIndex; i <= self.endGroupIndex; i++) {
-                    [array addObject:[(NSArray *)self.Datas[0] objectAtIndex:i]];
-                }
-                self.minDataValue = [self verifyDataValue:array[0]];
-                self.maxDataValue = self.minDataValue;
-                [self findMaxAndMinValue:0 rightIndex:array.count - 1 compareA:array];
-            }
-        } break;
-        case BarChartTypeStack: {
-            if (self.beginGroupIndex == self.endGroupIndex) {
-                self.minDataValue = 0;
-                self.maxDataValue = 0;
-                for (NSUInteger i = 0; i < self.Datas.count; i++) {
-                    CGFloat y = [self dataAtGroup:self.beginGroupIndex item:i];
-                    if (y < 0) {
-                        self.minDataValue += y;
-                    } else {
-                        self.maxDataValue += y;
-                    }
-                }
-            } else {
-                NSMutableArray *minDataValues =
-                    [NSMutableArray arrayWithCapacity:(self.endGroupIndex - self.beginGroupIndex + 1)];
-                NSMutableArray *maxDataValues =
-                    [NSMutableArray arrayWithCapacity:(self.endGroupIndex - self.beginGroupIndex + 1)];
-
-                for (NSUInteger i = self.beginGroupIndex; i <= self.endGroupIndex; i++) {
-                    CGFloat tempMinYValue = 0, tempMaxYValue = 0;
-                    for (NSUInteger j = 0; j < self.Datas.count; j++) {
-                        CGFloat y = [self dataAtGroup:i item:j];
-                        if (y < 0) {
-                            tempMinYValue += y;
-                        } else {
-                            tempMaxYValue += y;
-                        }
-                    }
-                    [minDataValues addObject:[NSString stringWithFormat:@"%f", tempMinYValue]];
-                    [maxDataValues addObject:[NSString stringWithFormat:@"%f", tempMaxYValue]];
-                }
-                self.minDataValue = [self verifyDataValue:minDataValues[0]];
-                self.maxDataValue = [self verifyDataValue:maxDataValues[0]];
-                for (NSString *value in minDataValues) {
-                    self.minDataValue = MIN(self.minDataValue, [self verifyDataValue:value]);
-                }
-                for (NSString *value in maxDataValues) {
-                    self.maxDataValue = MAX(self.maxDataValue, [self verifyDataValue:value]);
-                }
-            }
-        } break;
-        case BarChartTypeGroup: {
-            if (self.beginGroupIndex == self.endGroupIndex) {
-                if (self.beginItemIndex > self.endItemIndex) {
-                    self.beginItemIndex = self.endItemIndex;
-                }
-                self.minDataValue = [self dataAtGroup:self.beginGroupIndex item:self.beginItemIndex];
-                self.maxDataValue = self.minDataValue;
-                for (NSUInteger i = self.beginItemIndex + 1; i <= self.endItemIndex; i++) {
-                    CGFloat tempValue = [self dataAtGroup:self.beginGroupIndex item:i];
-                    self.minDataValue = MIN(self.minDataValue, tempValue);
-                    self.maxDataValue = MAX(self.maxDataValue, tempValue);
-                }
-            } else if (self.beginGroupIndex == self.endGroupIndex - 1) {
-                self.minDataValue = [self dataAtGroup:self.beginGroupIndex item:self.beginItemIndex];
-                self.maxDataValue = self.minDataValue;
-
-                [self compareBeginAndEndItemValue:self.beginItemIndex + 1
-                                          endItem:self.Datas.count - 1
-                                     isBeginGroup:YES];
-                [self compareBeginAndEndItemValue:0 endItem:self.endItemIndex isBeginGroup:NO];
-            } else {
-                self.minDataValue = [self dataAtGroup:self.beginGroupIndex item:self.beginItemIndex];
-                self.maxDataValue = self.minDataValue;
-
-                [self compareBeginAndEndItemValue:self.beginItemIndex + 1
-                                          endItem:self.Datas.count - 1
-                                     isBeginGroup:YES];
-                [self compareBeginAndEndItemValue:0 endItem:self.endItemIndex isBeginGroup:NO];
-                [self campareMaxAndMinValue:self.beginGroupIndex + 1 rightIndex:self.endGroupIndex - 1];
-            }
-        } break;
-
-        default:
-            break;
-    }
-}
-
 - (CGFloat)dataItemUnitScale {
     if (self.itemDataScale == 0) return 0;
     return ChartHeight / (self.itemDataScale * (self.dataPostiveSegmentNum + self.dataNegativeSegmentNum));
@@ -351,7 +258,10 @@
 - (void)drawDataPoint {
     UIView *subContainerV = [[UIView alloc] initWithFrame:CGRectMake(LeftEdge, TopEdge, ChartWidth, ChartHeight)];
     subContainerV.layer.masksToBounds = YES;
+    subContainerV.tag = 102;
     [self.containerView addSubview:subContainerV];
+    [self drawGroupSeparateLine];
+    
     NSUInteger drawNum = lroundf(self.endGroupIndex * self.dataNumFactor);
     switch (self.chartType) {
         case BarChartTypeSingle: {
@@ -369,9 +279,10 @@
                                                                 yPoint, self.zoomedItemAxis,
                                                                 fabs(dataV) * self.dataItemUnitScale)];
                 yValueLayer.path = yValueBezier.CGPath;
-                yValueLayer.lineWidth = 1;
-                yValueLayer.strokeColor = [[UIColor hexChangeFloat:self.itemColors[0]] CGColor];
-                yValueLayer.fillColor = [[UIColor hexChangeFloat:self.itemColors[0]] CGColor];
+                yValueLayer.lineWidth = 0;
+                yValueLayer.strokeColor = [[UIColor hexChangeFloat:self.itemColors[0] alpha:self.barColorAlpha] CGColor];
+                yValueLayer.fillColor = [[UIColor hexChangeFloat:self.itemColors[0] alpha:self.barColorAlpha] CGColor];
+                yValueLayer.name = [self layerTag:i item:0];
                 [subContainerV.layer addSublayer:yValueLayer];
             }
         } break;
@@ -381,6 +292,7 @@
                 CGFloat positiveY = self.zeroLine, negativeY = self.zeroLine, yPoint = self.zeroLine;
                 for (NSUInteger j = 0; j < self.Datas.count; j++) {
                     NSArray *array = self.Datas[j];
+                    if (![YHBaseChartView respondsFloatValueSelector:array[i]]) continue;
                     CGFloat dataV = [self verifyDataValue:array[i]] * self.dataValueFactor;
                     CAShapeLayer *yValueLayer = [CAShapeLayer layer];
                     if (dataV >= 0) {
@@ -395,9 +307,10 @@
                                                       self.zoomedItemAxis,
                                                       fabs(dataV) * self.dataItemUnitScale)];
                     yValueLayer.path = yValueBezier.CGPath;
-                    yValueLayer.lineWidth = 1;
-                    yValueLayer.strokeColor = [[UIColor hexChangeFloat:self.itemColors[j]] CGColor];
-                    yValueLayer.fillColor = [[UIColor hexChangeFloat:self.itemColors[j]] CGColor];
+                    yValueLayer.lineWidth = 0;
+                    yValueLayer.strokeColor = [[UIColor hexChangeFloat:self.itemColors[j] alpha:self.barColorAlpha] CGColor];
+                    yValueLayer.fillColor = [[UIColor hexChangeFloat:self.itemColors[j] alpha:self.barColorAlpha] CGColor];
+                    yValueLayer.name = [self layerTag:i item:j];
                     [subContainerV.layer addSublayer:yValueLayer];
 
                     if (dataV < 0) {
@@ -443,9 +356,10 @@
                                                       yPoint, self.zoomedItemAxis,
                                                       fabs(dataV) * self.dataItemUnitScale)];
                     yValueLayer.path = yValueBezier.CGPath;
-                    yValueLayer.lineWidth = 1;
-                    yValueLayer.strokeColor = [[UIColor hexChangeFloat:self.itemColors[j]] CGColor];
-                    yValueLayer.fillColor = [[UIColor hexChangeFloat:self.itemColors[j]] CGColor];
+                    yValueLayer.lineWidth = 0;
+                    yValueLayer.strokeColor = [[UIColor hexChangeFloat:self.itemColors[j] alpha:self.barColorAlpha] CGColor];
+                    yValueLayer.fillColor = [[UIColor hexChangeFloat:self.itemColors[j] alpha:self.barColorAlpha] CGColor];
+                    yValueLayer.name = [self layerTag:i item:j];
                     [subContainerV.layer addSublayer:yValueLayer];
                 }
             }
@@ -479,14 +393,16 @@
         UIBezierPath *yValueBezier = [UIBezierPath
             bezierPathWithRect:CGRectMake(x, yPoint, self.zoomedItemAxis, fabs(itemValue) * self.dataItemUnitScale)];
         yValueLayer.path = yValueBezier.CGPath;
-        yValueLayer.lineWidth = 1;
-        yValueLayer.strokeColor = [[UIColor hexChangeFloat:self.itemColors[i]] CGColor];
-        yValueLayer.fillColor = [[UIColor hexChangeFloat:self.itemColors[i]] CGColor];
+        yValueLayer.lineWidth = 0;
+        yValueLayer.strokeColor = [[UIColor hexChangeFloat:self.itemColors[i] alpha:self.barColorAlpha] CGColor];
+        yValueLayer.fillColor = [[UIColor hexChangeFloat:self.itemColors[i] alpha:self.barColorAlpha] CGColor];
+        yValueLayer.name = [self layerTag:leftIndex item:i];
         [subContainerV.layer addSublayer:yValueLayer];
     }
 }
 
 - (void)addAxisLayer {
+    if ([self shouldHideAxisText]) return;
     CGFloat offsetX = self.gestureScroll.contentOffset.x;
     for (NSUInteger i = self.beginGroupIndex; i <= self.endGroupIndex; i++) {
         CGRect textFrame;
@@ -515,7 +431,7 @@
     CAShapeLayer *xScaleLayer = [CAShapeLayer layer];
     UIBezierPath *xScaleBezier = [UIBezierPath bezierPath];
     [xScaleBezier moveToPoint:CGPointMake(LeftEdge, self.bounds.size.height - BottomEdge)];
-    [xScaleBezier addLineToPoint:CGPointMake(self.bounds.size.width, self.bounds.size.height - BottomEdge)];
+    [xScaleBezier addLineToPoint:CGPointMake(self.bounds.size.width-RightEdge, self.bounds.size.height - BottomEdge)];
     xScaleLayer.path = xScaleBezier.CGPath;
     xScaleLayer.lineWidth = self.referenceLineWidth;
     xScaleLayer.strokeColor = self.referenceLineColor.CGColor;
@@ -574,8 +490,9 @@
         CAShapeLayer *dashLineLayer = [CAShapeLayer layer];
         UIBezierPath *dashLineBezier = [UIBezierPath bezierPath];
         for (NSUInteger i = 0; i < self.dataNegativeSegmentNum + self.dataPostiveSegmentNum; i++) {
+            if (i == self.dataPostiveSegmentNum) continue;
             [dashLineBezier moveToPoint:CGPointMake(LeftEdge, TopEdge + i * [self axisUnitScale])];
-            [dashLineBezier addLineToPoint:CGPointMake(self.bounds.size.width, TopEdge + i * [self axisUnitScale])];
+            [dashLineBezier addLineToPoint:CGPointMake(self.bounds.size.width-RightEdge, TopEdge + i * [self axisUnitScale])];
         }
         dashLineLayer.path = dashLineBezier.CGPath;
         if (self.showDataDashLine) {
@@ -586,6 +503,19 @@
         dashLineLayer.strokeColor = self.referenceLineColor.CGColor;
         dashLineLayer.fillColor = [UIColor clearColor].CGColor;
         [self.containerView.layer addSublayer:dashLineLayer];
+        
+        CAShapeLayer *zeroLineLayer = [CAShapeLayer layer];
+        UIBezierPath *zeroLineBezier = [UIBezierPath bezierPath];
+        [zeroLineBezier moveToPoint:CGPointMake(LeftEdge, TopEdge + self.dataPostiveSegmentNum * [self axisUnitScale])];
+        [zeroLineBezier addLineToPoint:CGPointMake(self.bounds.size.width-RightEdge, TopEdge + self.dataPostiveSegmentNum * [self axisUnitScale])];
+        zeroLineLayer.lineWidth = self.referenceLineWidth*2;
+        zeroLineLayer.strokeColor = ZeroLineColor.CGColor;
+        zeroLineLayer.path = zeroLineBezier.CGPath;
+        if (self.showDataDashLine) {
+            [zeroLineLayer setLineDashPattern:[NSArray arrayWithObjects:[NSNumber numberWithInt:5], [NSNumber numberWithInt:5], nil]];
+        }
+        zeroLineLayer.fillColor = [UIColor clearColor].CGColor;
+        [self.containerView.layer addSublayer:zeroLineLayer];
     }
 }
 
@@ -593,19 +523,14 @@
     if (self.itemAxisScale == 0) {
         if (self.chartType == BarChartTypeGroup) {
             CGFloat w =
-                (ChartWidth - [self.Datas[0] count] * self.groupSpace) / [self.Datas[0] count] / self.Datas.count;
+                ChartWidth / [self.Datas[0] count] / (self.Datas.count + self.groupSpaceDivideBarWidth);
             self.itemAxisScale = w > self.minItemWidth ? w : self.minItemWidth;
         } else {
-            self.itemAxisScale = (ChartWidth / [self.Datas[0] count] - self.groupSpace) > self.minItemWidth
-                                 ? (ChartWidth / [self.Datas[0] count] - self.groupSpace)
-                                 : self.minItemWidth;
+            self.itemAxisScale = ChartWidth / [self.Datas[0] count] /(1+self.groupSpaceDivideBarWidth) > self.minItemWidth
+                                 ? ChartWidth / [self.Datas[0] count] / (1+self.groupSpaceDivideBarWidth) : self.minItemWidth;
         }
     }
     return self.itemAxisScale;
-}
-
-- (CGFloat)axisUnitScale {
-    return ChartHeight / (self.dataNegativeSegmentNum + self.dataPostiveSegmentNum);
 }
 
 - (CGFloat)scrollContentSizeWidth {
@@ -633,4 +558,26 @@
         }
     }
 }
+
+- (void)drawGroupSeparateLine {
+    if (self.showBarGroupSeparateLine && self.chartType == BarChartTypeGroup && self.seperateLineWidth/self.groupSpace <= self.separateLineDivideGroupSpace) {
+        UIView *subContainer = [self.containerView viewWithTag:102];
+        CGFloat groupWidth = self.groupSpace + self.Datas.count * self.zoomedItemAxis;
+        CGFloat offsetX = self.gestureScroll.contentOffset.x;
+        for (NSUInteger i=self.beginGroupIndex; i<self.endGroupIndex; i++) {
+            CAShapeLayer *separateLine = [CAShapeLayer layer];
+            UIBezierPath *bezier = [UIBezierPath bezierPath];
+            CGFloat x = (i+1)*groupWidth-self.groupSpace/2.0-self.seperateLineWidth/2.0 - offsetX;
+            [bezier moveToPoint:CGPointMake(x, 0)];
+            [bezier addLineToPoint:CGPointMake(x, ChartHeight)];
+            separateLine.lineWidth = self.seperateLineWidth;
+            separateLine.fillColor = self.referenceLineColor.CGColor;
+            separateLine.strokeColor = self.referenceLineColor.CGColor;
+            separateLine.path = bezier.CGPath;
+            [separateLine setLineDashPattern:[NSArray arrayWithObjects:[NSNumber numberWithInt:5],[NSNumber numberWithInt:5], nil]];
+            [subContainer.layer addSublayer:separateLine];
+        }
+    }
+}
+
 @end

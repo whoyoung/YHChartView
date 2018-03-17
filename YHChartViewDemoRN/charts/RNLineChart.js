@@ -30,7 +30,8 @@ const dict = {
           "lineStyle": {
                   "lineWidth":"1",
                   "showAxisDashLine":true,
-                  "circleBorderWidth":2
+                  "circleBorderWidth":2,
+                  "originType": 1
                   }
           }
   };

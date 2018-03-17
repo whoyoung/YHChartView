@@ -100,8 +100,9 @@ typedef NS_ENUM(NSUInteger, LineChartOriginType) {
 
 - (NSDictionary *)tappedGroupAndItem:(CGPoint)tapP {
     NSUInteger group = 0, item = 0;
-    group = floorf(tapP.x / self.zoomedItemAxis);
-    if ((tapP.x - group * self.zoomedItemAxis) > self.zoomedItemAxis/2.0 && group <  self.Datas[0].count - 1) {
+    CGFloat tapX = (self.originType == LineChartOriginTypeCenter || self.AxisArray.count == 1) ? (tapP.x < self.zoomedItemAxis/2.0 ? 0 : tapP.x - self.zoomedItemAxis/2.0) : tapP.x;
+    group = floorf(tapX / self.zoomedItemAxis);
+    if ((tapX - group * self.zoomedItemAxis) > self.zoomedItemAxis/2.0 && group <  self.Datas[0].count - 1) {
         group += 1;
     }
     for(NSUInteger i=0;i<self.Datas.count;) {
@@ -139,8 +140,9 @@ typedef NS_ENUM(NSUInteger, LineChartOriginType) {
     self.pointRatio = YHTapPointRatioInItemMake(1, 1);
 }
 - (CGPoint)adjustTipViewLocation:(NSUInteger)group item:(NSUInteger)item {
+    CGFloat extraOffset = (self.originType == LineChartOriginTypeCenter || self.AxisArray.count == 1) ? self.zoomedItemAxis/2.0 : 0;
     CGPoint tempP;
-    tempP.x = group * self.zoomedItemAxis;
+    tempP.x = group * self.zoomedItemAxis+extraOffset;
     tempP.y = self.zeroLine - [super dataAtGroup:group item:item] * self.dataItemUnitScale;
     tempP = [self.gestureScroll convertPoint:tempP toView:self.containerView];
     return tempP;
@@ -498,7 +500,8 @@ typedef NS_ENUM(NSUInteger, LineChartOriginType) {
     CGFloat offsetX = self.gestureScroll.contentOffset.x;
     CGFloat zeroY = self.dataPostiveSegmentNum * [self axisUnitScale];
     CGFloat yPoint = zeroY - [self dataAtGroup:group item:item] * self.dataItemUnitScale * self.dataValueFactor;
-    CGPoint p = CGPointMake(group*self.zoomedItemAxis-offsetX, yPoint);
+    CGFloat extraOffset = (self.originType == LineChartOriginTypeCenter || self.AxisArray.count == 1) ? self.zoomedItemAxis/2.0 : 0;
+    CGPoint p = CGPointMake(group*self.zoomedItemAxis-offsetX+extraOffset, yPoint);
     [self selectedSublineLayers:NSStringFromCGPoint(p) circleColor:self.itemColors[item] parentView:subContainer];
 }
 
