@@ -39,7 +39,8 @@
                                    @"lineStyle": @{
                                            @"lineWidth":@"1",
                                            @"circleBorderWidth":@2,
-                                           @"chartType": @1
+                                           @"chartType": @1,
+                                           @"originType": @1
                                            }
                                    }
                            };

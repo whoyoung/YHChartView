@@ -12,6 +12,10 @@ typedef NS_ENUM(NSUInteger, LineChartType) {
     LineChartTypeCurve = 1 //曲线
     
 };
+typedef NS_ENUM(NSUInteger, LineChartOriginType) {
+    LineChartOriginTypeLeft = 0, //起点靠左
+    LineChartOriginTypeCenter = 1 //起点在中间
+};
 @interface YHLineChartView()
 @property (nonatomic, assign) CGFloat lineWidth;
 @property (nonatomic, assign) CGFloat circleRadius;
@@ -20,6 +24,7 @@ typedef NS_ENUM(NSUInteger, LineChartType) {
 @property (nonatomic, assign) BOOL showSelectedSubLine;
 @property (nonatomic, copy) NSString *subLineColor;
 @property (nonatomic, assign) LineChartType chartType;
+@property (nonatomic, assign) LineChartOriginType originType;
 @end
 
 @implementation YHLineChartView
@@ -40,6 +45,8 @@ typedef NS_ENUM(NSUInteger, LineChartType) {
     self.subLineColor = [lineStyle objectForKey:@"subLineColor"] ? [lineStyle objectForKey:@"subLineColor"] : @"cccccc";
     self.chartType =
     [lineStyle objectForKey:@"chartType"] ? [[lineStyle objectForKey:@"chartType"] integerValue] : LineChartTypeStraight;
+    self.originType =
+    [lineStyle objectForKey:@"originType"] ? [[lineStyle objectForKey:@"originType"] integerValue] : LineChartOriginTypeLeft;
 }
 
 - (CGSize)gestureScrollContentSize {
@@ -167,6 +174,7 @@ typedef NS_ENUM(NSUInteger, LineChartType) {
         CGFloat zeroY = self.dataPostiveSegmentNum * [self axisUnitScale];
         yValueLayer.name = [self layerTag:0 item:i];
         
+        CGFloat extraOffset = (self.originType == LineChartOriginTypeCenter || self.AxisArray.count == 1) ? self.zoomedItemAxis/2.0 : 0;
         if(self.chartType == LineChartTypeCurve) { //绘制曲线原理参考自：https://www.jianshu.com/p/c33081adce28
             for (NSInteger j=self.beginGroupIndex; j<drawNum; j++) {
                 if (![values[j] respondsToSelector:@selector(floatValue)]) continue;
@@ -187,24 +195,24 @@ typedef NS_ENUM(NSUInteger, LineChartType) {
                 }
                 
                 CGFloat yPoint = zeroY - [self verifyDataValue:curveArray[0]] * self.dataItemUnitScale * self.dataValueFactor;
-                CGPoint p = CGPointMake((j-1)*self.zoomedItemAxis-offsetX, yPoint);
+                CGPoint p = CGPointMake((j-1)*self.zoomedItemAxis-offsetX+extraOffset, yPoint);
                 if (j == self.beginGroupIndex || ![YHBaseChartView respondsFloatValueSelector:values[j-1]]) {
                     if ([curveArray[1] respondsToSelector:@selector(floatValue)]) {
                         CGFloat y1 = zeroY - [self verifyDataValue:curveArray[1]] * self.dataItemUnitScale * self.dataValueFactor;
-                        CGPoint p1 = CGPointMake(j*self.zoomedItemAxis-offsetX, y1);
+                        CGPoint p1 = CGPointMake(j*self.zoomedItemAxis-offsetX+extraOffset, y1);
                         [yValueBezier moveToPoint:p1];
                     }
                 }
                 if ([YHBaseChartView respondsFloatValueSelector:curveArray[1]] && [YHBaseChartView respondsFloatValueSelector:curveArray[2]]) {
                     CGFloat y1 = zeroY - [self verifyDataValue:curveArray[1]] * self.dataItemUnitScale * self.dataValueFactor;
-                    CGPoint p1 = CGPointMake(j*self.zoomedItemAxis-offsetX, y1);
+                    CGPoint p1 = CGPointMake(j*self.zoomedItemAxis-offsetX+extraOffset, y1);
                     CGFloat y2 = zeroY - [self verifyDataValue:curveArray[2]] * self.dataItemUnitScale * self.dataValueFactor;
-                    CGPoint p2 = CGPointMake((j+1)*self.zoomedItemAxis-offsetX, y2);
+                    CGPoint p2 = CGPointMake((j+1)*self.zoomedItemAxis-offsetX+extraOffset, y2);
                     CGFloat y3 = ChartHeight/2.0;
                     if ([YHBaseChartView respondsFloatValueSelector:curveArray[3]]) {
                         y3 = zeroY - [self verifyDataValue:curveArray[3]] * self.dataItemUnitScale * self.dataValueFactor;
                     }
-                    CGPoint p3 = CGPointMake((j+2)*self.zoomedItemAxis-offsetX, y3);
+                    CGPoint p3 = CGPointMake((j+2)*self.zoomedItemAxis-offsetX+extraOffset, y3);
 
                     [self getControlPointx0:p.x andy0:p.y x1:p1.x andy1:p1.y x2:p2.x andy2:p2.y x3:p3.x andy3:p3.y path:yValueBezier];
                 }
@@ -213,7 +221,7 @@ typedef NS_ENUM(NSUInteger, LineChartType) {
             for (NSUInteger j=self.beginGroupIndex; j<drawNum+1; j++) {
                 if (![values[j] respondsToSelector:@selector(floatValue)]) continue;
                 CGFloat yPoint = zeroY - [self verifyDataValue:values[j]] * self.dataItemUnitScale * self.dataValueFactor;
-                CGPoint p = CGPointMake(j*self.zoomedItemAxis-offsetX, yPoint);
+                CGPoint p = CGPointMake(j*self.zoomedItemAxis-offsetX+extraOffset, yPoint);
                 if (j == self.beginGroupIndex || ![values[j-1] respondsToSelector:@selector(floatValue)]) {
                     [yValueBezier moveToPoint:p];
                 } else {
@@ -232,13 +240,15 @@ typedef NS_ENUM(NSUInteger, LineChartType) {
         for (NSUInteger j=self.beginGroupIndex; j<drawNum+1; j++) {
             if (![values[j] respondsToSelector:@selector(floatValue)]) continue;
             CGFloat yPoint = zeroY - [self verifyDataValue:values[j]] * self.dataItemUnitScale * self.dataValueFactor;
-            CGPoint p = CGPointMake(j*self.zoomedItemAxis-offsetX, yPoint);
+            CGPoint p = CGPointMake(j*self.zoomedItemAxis-offsetX+extraOffset, yPoint);
             if (j > self.beginGroupIndex && j < self.endGroupIndex) {
                 if (![values[j-1] respondsToSelector:@selector(floatValue)] && ![values[j+1] respondsToSelector:@selector(floatValue)]) {
                     [circlePoints addObject:NSStringFromCGPoint(p)];
                 }
             } else if (j == self.beginGroupIndex) {
                 if (j < self.endGroupIndex && ![values[j+1] respondsToSelector:@selector(floatValue)]) {
+                    [circlePoints addObject:NSStringFromCGPoint(p)];
+                } else if (self.beginGroupIndex == self.endGroupIndex) {
                     [circlePoints addObject:NSStringFromCGPoint(p)];
                 }
             } else {
@@ -313,8 +323,14 @@ typedef NS_ENUM(NSUInteger, LineChartType) {
     if ([self shouldHideAxisText]) return;
     CGFloat offsetX = self.gestureScroll.contentOffset.x;
     for (NSUInteger i=self.beginGroupIndex; i<=self.endGroupIndex; i++) {
-        if (self.zoomedItemAxis*i-offsetX < 0) continue;
-        CGRect textFrame = CGRectMake(LeftEdge + self.zoomedItemAxis*i-offsetX-self.zoomedItemAxis/2.0, self.bounds.size.height-self.axisTextFontSize-2, self.zoomedItemAxis, self.axisTextFontSize+1);
+        CGRect textFrame;
+        if (self.originType == LineChartOriginTypeCenter || self.AxisArray.count == 1) {
+            if (self.zoomedItemAxis*(i+0.5)-offsetX < 0) continue;
+            textFrame = CGRectMake(LeftEdge + self.zoomedItemAxis*i-offsetX, self.bounds.size.height-self.axisTextFontSize-2, self.zoomedItemAxis, self.axisTextFontSize+1);
+        } else {
+            if (self.zoomedItemAxis*i-offsetX < 0) continue;
+            textFrame = CGRectMake(LeftEdge + self.zoomedItemAxis*i-offsetX-self.zoomedItemAxis/2.0, self.bounds.size.height-self.axisTextFontSize-2, self.zoomedItemAxis, self.axisTextFontSize+1);
+        }
         CATextLayer *text = [self getTextLayerWithString:self.AxisArray[i] textColor:self.axisTextColor fontSize:self.axisTextFontSize backgroundColor:[UIColor clearColor] frame:textFrame alignmentMode:kCAAlignmentCenter];
         [self.containerView.layer addSublayer:text];
     }
@@ -327,9 +343,15 @@ typedef NS_ENUM(NSUInteger, LineChartType) {
     
     CGFloat offsetX = self.gestureScroll.contentOffset.x;
     for (NSUInteger i=self.beginGroupIndex; i<=self.endGroupIndex; i++) {
-        if (self.zoomedItemAxis*i - offsetX < 0) continue;
-        [xScaleBezier moveToPoint:CGPointMake(LeftEdge + self.zoomedItemAxis*i - offsetX, self.bounds.size.height-BottomEdge)];
-        [xScaleBezier addLineToPoint:CGPointMake(LeftEdge + self.zoomedItemAxis*i - offsetX, self.bounds.size.height-BottomEdge+5)];
+        if (self.originType == LineChartOriginTypeCenter || self.AxisArray.count == 1) {
+            if (self.zoomedItemAxis*(i+0.5)-offsetX < 0) continue;
+            [xScaleBezier moveToPoint:CGPointMake(LeftEdge + self.zoomedItemAxis*(i+0.5) - offsetX, self.bounds.size.height-BottomEdge)];
+            [xScaleBezier addLineToPoint:CGPointMake(LeftEdge + self.zoomedItemAxis*(i+0.5) - offsetX, self.bounds.size.height-BottomEdge+5)];
+        } else {
+            if (self.zoomedItemAxis*i-offsetX < 0) continue;
+            [xScaleBezier moveToPoint:CGPointMake(LeftEdge + self.zoomedItemAxis*i - offsetX, self.bounds.size.height-BottomEdge)];
+            [xScaleBezier addLineToPoint:CGPointMake(LeftEdge + self.zoomedItemAxis*i - offsetX, self.bounds.size.height-BottomEdge+5)];
+        }
     }
     xScaleLayer.path = xScaleBezier.CGPath;
     xScaleLayer.lineWidth = self.referenceLineWidth;
@@ -341,9 +363,15 @@ typedef NS_ENUM(NSUInteger, LineChartType) {
         CAShapeLayer *dashLineLayer = [CAShapeLayer layer];
         UIBezierPath *dashLineBezier = [UIBezierPath bezierPath];
         for (NSUInteger i=self.beginGroupIndex; i<=self.endGroupIndex; i++) {
-            if (self.zoomedItemAxis*i - offsetX < 0) continue;
-            [dashLineBezier moveToPoint:CGPointMake(LeftEdge + self.zoomedItemAxis*i - offsetX, self.bounds.size.height-BottomEdge-1)];
-            [dashLineBezier addLineToPoint:CGPointMake(LeftEdge + self.zoomedItemAxis*i - offsetX, TopEdge)];
+            if (self.originType == LineChartOriginTypeCenter || self.AxisArray.count == 1) {
+                if (self.zoomedItemAxis*i-offsetX+self.zoomedItemAxis/2.0 < 0) continue;
+                [dashLineBezier moveToPoint:CGPointMake(LeftEdge + self.zoomedItemAxis*(i+0.5) - offsetX, self.bounds.size.height-BottomEdge-1)];
+                [dashLineBezier addLineToPoint:CGPointMake(LeftEdge + self.zoomedItemAxis*(i+0.5) - offsetX, TopEdge)];
+            } else {
+                if (self.zoomedItemAxis*i-offsetX < 0) continue;
+                [dashLineBezier moveToPoint:CGPointMake(LeftEdge + self.zoomedItemAxis*i - offsetX, self.bounds.size.height-BottomEdge-1)];
+                [dashLineBezier addLineToPoint:CGPointMake(LeftEdge + self.zoomedItemAxis*i - offsetX, TopEdge)];
+            }
         }
         dashLineLayer.path = dashLineBezier.CGPath;
         if (self.showAxisDashLine) {
