@@ -24,8 +24,10 @@ pod 'YHChartView'
 4. run command: open ios <br>
 5. run YHChartViewDemo.xcodeproj used by XCode <br>
 ## Demo
-Line Chart <br>
+Straight Line Chart <br>
 ![line](./Gif/line.gif) <br><br>
+Curve Line Chart <br>
+![line](./Gif/curveLine.gif) <br><br>
 Stack Horizontal Bar Chart <br>
 ![line](./Gif/HorizontalBar.gif) <br><br>
 Stack Vertical Bar Chart <br>
