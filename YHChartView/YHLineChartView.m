@@ -344,23 +344,27 @@ typedef NS_ENUM(NSUInteger, LineChartOriginType) {
     [xScaleBezier addLineToPoint:CGPointMake(self.bounds.size.width-RightEdge, self.bounds.size.height-BottomEdge)];
     
     CGFloat offsetX = self.gestureScroll.contentOffset.x;
-    for (NSUInteger i=self.beginGroupIndex; i<=self.endGroupIndex; i++) {
-        if (self.originType == LineChartOriginTypeCenter || self.AxisArray.count == 1) {
-            if (self.zoomedItemAxis*(i+0.5)-offsetX < 0) continue;
-            [xScaleBezier moveToPoint:CGPointMake(LeftEdge + self.zoomedItemAxis*(i+0.5) - offsetX, self.bounds.size.height-BottomEdge)];
-            [xScaleBezier addLineToPoint:CGPointMake(LeftEdge + self.zoomedItemAxis*(i+0.5) - offsetX, self.bounds.size.height-BottomEdge+5)];
-        } else {
-            if (self.zoomedItemAxis*i-offsetX < 0) continue;
-            [xScaleBezier moveToPoint:CGPointMake(LeftEdge + self.zoomedItemAxis*i - offsetX, self.bounds.size.height-BottomEdge)];
-            [xScaleBezier addLineToPoint:CGPointMake(LeftEdge + self.zoomedItemAxis*i - offsetX, self.bounds.size.height-BottomEdge+5)];
+    if (![self shouldHideAxisText]) {
+        for (NSUInteger i=self.beginGroupIndex; i<=self.endGroupIndex; i++) {
+            if (self.originType == LineChartOriginTypeCenter || self.AxisArray.count == 1) {
+                if (self.zoomedItemAxis*(i+0.5)-offsetX < 0) continue;
+                [xScaleBezier moveToPoint:CGPointMake(LeftEdge + self.zoomedItemAxis*(i+0.5) - offsetX, self.bounds.size.height-BottomEdge)];
+                [xScaleBezier addLineToPoint:CGPointMake(LeftEdge + self.zoomedItemAxis*(i+0.5) - offsetX, self.bounds.size.height-BottomEdge+5)];
+            } else {
+                if (self.zoomedItemAxis*i-offsetX < 0) continue;
+                [xScaleBezier moveToPoint:CGPointMake(LeftEdge + self.zoomedItemAxis*i - offsetX, self.bounds.size.height-BottomEdge)];
+                [xScaleBezier addLineToPoint:CGPointMake(LeftEdge + self.zoomedItemAxis*i - offsetX, self.bounds.size.height-BottomEdge+5)];
+            }
         }
     }
+    
     xScaleLayer.path = xScaleBezier.CGPath;
     xScaleLayer.lineWidth = self.referenceLineWidth;
     xScaleLayer.strokeColor = self.referenceLineColor.CGColor;
     xScaleLayer.fillColor = [UIColor clearColor].CGColor;
     [self.containerView.layer addSublayer:xScaleLayer];
     
+    if ([self shouldHideAxisText]) return;
     if (self.showAxisDashLine || self.showAxisHardLine) {
         CAShapeLayer *dashLineLayer = [CAShapeLayer layer];
         UIBezierPath *dashLineBezier = [UIBezierPath bezierPath];
