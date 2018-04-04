@@ -22,7 +22,7 @@
     switch (pinGesture.state) {
         case UIGestureRecognizerStateBegan: {
             CGPoint pinCenterContainer = [pinGesture locationInView:self.containerView];
-            self.pinCenterToLeftDistance = pinCenterContainer.x - LeftEdge;
+            self.pinCenterToLeftDistance = pinCenterContainer.x - self.leftEdge;
             CGPoint pinCenterScrollView = [pinGesture locationInView:self.gestureScroll];
             self.pinCenterRatio = pinCenterScrollView.x / self.gestureScroll.contentSize.width;
         } break;
@@ -256,7 +256,7 @@
 }
 
 - (void)drawDataPoint {
-    UIView *subContainerV = [[UIView alloc] initWithFrame:CGRectMake(LeftEdge, TopEdge, ChartWidth, ChartHeight)];
+    UIView *subContainerV = [[UIView alloc] initWithFrame:CGRectMake(self.leftEdge, TopEdge, ChartWidth, ChartHeight)];
     subContainerV.layer.masksToBounds = YES;
     subContainerV.tag = 102;
     [self.containerView addSubview:subContainerV];
@@ -409,11 +409,11 @@
         if (self.chartType == BarChartTypeGroup) {
             if ((self.Datas.count * self.zoomedItemAxis + self.groupSpace) * (i + 0.5) - offsetX < 0) continue;
             textFrame =
-                CGRectMake(LeftEdge + (self.Datas.count * self.zoomedItemAxis + self.groupSpace) * i - offsetX,
+                CGRectMake(self.leftEdge + (self.Datas.count * self.zoomedItemAxis + self.groupSpace) * i - offsetX,
                            self.bounds.size.height - self.axisTextFontSize-2, self.Datas.count * self.zoomedItemAxis, self.axisTextFontSize+1);
         } else {
             if ((self.zoomedItemAxis + self.groupSpace) * (i + 0.5) - offsetX < 0) continue;
-            textFrame = CGRectMake(LeftEdge + (self.zoomedItemAxis + self.groupSpace) * i - offsetX,
+            textFrame = CGRectMake(self.leftEdge + (self.zoomedItemAxis + self.groupSpace) * i - offsetX,
                                    self.bounds.size.height - self.axisTextFontSize-2, self.zoomedItemAxis, self.axisTextFontSize+1);
         }
         CATextLayer *text = [self getTextLayerWithString:self.AxisArray[i]
@@ -430,7 +430,7 @@
 - (void)addAxisScaleLayer {
     CAShapeLayer *xScaleLayer = [CAShapeLayer layer];
     UIBezierPath *xScaleBezier = [UIBezierPath bezierPath];
-    [xScaleBezier moveToPoint:CGPointMake(LeftEdge, self.bounds.size.height - BottomEdge)];
+    [xScaleBezier moveToPoint:CGPointMake(self.leftEdge, self.bounds.size.height - BottomEdge)];
     [xScaleBezier addLineToPoint:CGPointMake(self.bounds.size.width-RightEdge, self.bounds.size.height - BottomEdge)];
     xScaleLayer.path = xScaleBezier.CGPath;
     xScaleLayer.lineWidth = self.referenceLineWidth;
@@ -442,7 +442,7 @@
 - (void)addDataLayer {
     for (NSUInteger i = 0; i < self.dataNegativeSegmentNum; i++) {
         CGRect textFrame =
-            CGRectMake(0, self.bounds.size.height - 1.5 * BottomEdge - i * [self axisUnitScale], TextWidth, BottomEdge);
+            CGRectMake(0, self.bounds.size.height - 1.5 * BottomEdge - i * [self axisUnitScale], self.leftEdge-5, BottomEdge);
         NSString *str =
             [NSString stringWithFormat:@"-%@", [self adjustScaleValue:(self.dataNegativeSegmentNum - i) * self.itemDataScale]];
         CATextLayer *text = [self getTextLayerWithString:str
@@ -456,7 +456,7 @@
     for (NSInteger i = 0; i <= self.dataPostiveSegmentNum; i++) {
         CGRect textFrame = CGRectMake(
             0, self.bounds.size.height - 1.5 * BottomEdge - (self.dataNegativeSegmentNum + i) * [self axisUnitScale],
-            TextWidth, BottomEdge);
+            self.leftEdge-5, BottomEdge);
         NSString *str = [NSString stringWithFormat:@"%@", [self adjustScaleValue:i * self.itemDataScale]];
         CATextLayer *text = [self getTextLayerWithString:str
                                                textColor:self.dataTextColor
@@ -472,13 +472,9 @@
     if (self.showDataEdgeLine) {
         CAShapeLayer *yScaleLayer = [CAShapeLayer layer];
         UIBezierPath *yScaleBezier = [UIBezierPath bezierPath];
-        [yScaleBezier moveToPoint:CGPointMake(LeftEdge + 1, TopEdge)];
-        [yScaleBezier addLineToPoint:CGPointMake(LeftEdge + 1, self.bounds.size.height - BottomEdge)];
+        [yScaleBezier moveToPoint:CGPointMake(self.leftEdge + 1, TopEdge)];
+        [yScaleBezier addLineToPoint:CGPointMake(self.leftEdge + 1, self.bounds.size.height - BottomEdge)];
 
-        for (NSUInteger i = 0; i <= self.dataNegativeSegmentNum + self.dataPostiveSegmentNum + 1; i++) {
-            [yScaleBezier moveToPoint:CGPointMake(LeftEdge - 5, TopEdge + i * [self axisUnitScale])];
-            [yScaleBezier addLineToPoint:CGPointMake(LeftEdge, TopEdge + i * [self axisUnitScale])];
-        }
         yScaleLayer.path = yScaleBezier.CGPath;
         yScaleLayer.lineWidth = self.referenceLineWidth;
         yScaleLayer.strokeColor = self.referenceLineColor.CGColor;
@@ -491,7 +487,7 @@
         UIBezierPath *dashLineBezier = [UIBezierPath bezierPath];
         for (NSUInteger i = 0; i < self.dataNegativeSegmentNum + self.dataPostiveSegmentNum; i++) {
             if (i == self.dataPostiveSegmentNum) continue;
-            [dashLineBezier moveToPoint:CGPointMake(LeftEdge, TopEdge + i * [self axisUnitScale])];
+            [dashLineBezier moveToPoint:CGPointMake(self.leftEdge, TopEdge + i * [self axisUnitScale])];
             [dashLineBezier addLineToPoint:CGPointMake(self.bounds.size.width-RightEdge, TopEdge + i * [self axisUnitScale])];
         }
         dashLineLayer.path = dashLineBezier.CGPath;
@@ -506,7 +502,7 @@
         
         CAShapeLayer *zeroLineLayer = [CAShapeLayer layer];
         UIBezierPath *zeroLineBezier = [UIBezierPath bezierPath];
-        [zeroLineBezier moveToPoint:CGPointMake(LeftEdge, TopEdge + self.dataPostiveSegmentNum * [self axisUnitScale])];
+        [zeroLineBezier moveToPoint:CGPointMake(self.leftEdge, TopEdge + self.dataPostiveSegmentNum * [self axisUnitScale])];
         [zeroLineBezier addLineToPoint:CGPointMake(self.bounds.size.width-RightEdge, TopEdge + self.dataPostiveSegmentNum * [self axisUnitScale])];
         zeroLineLayer.lineWidth = self.referenceLineWidth*2;
         zeroLineLayer.strokeColor = ZeroLineColor.CGColor;
@@ -544,16 +540,16 @@
 }
 - (void)adjustScale:(CGRect)origionFrame newFrame:(CGRect)newFrame {
     self.itemAxisScale *=
-    (newFrame.size.width - LeftEdge - RightEdge) / (origionFrame.size.width - LeftEdge - RightEdge);
+    (newFrame.size.width - self.leftEdge - RightEdge) / (origionFrame.size.width - self.leftEdge - RightEdge);
     
-    if ([self gestureScrollContentSize].width < (newFrame.size.width - LeftEdge - RightEdge)) {
+    if ([self gestureScrollContentSize].width < (newFrame.size.width - self.leftEdge - RightEdge)) {
         if (self.chartType == BarChartTypeGroup) {
             self.oldPinScale *=
-            ((newFrame.size.width - LeftEdge - RightEdge) / [self.Datas[0] count] - self.groupSpace) /
+            ((newFrame.size.width - self.leftEdge - RightEdge) / [self.Datas[0] count] - self.groupSpace) /
             self.Datas.count / self.itemAxisScale / self.oldPinScale;
         } else {
             self.oldPinScale *=
-            ((newFrame.size.width - LeftEdge - RightEdge) / [self.Datas[0] count] - self.groupSpace) /
+            ((newFrame.size.width - self.leftEdge - RightEdge) / [self.Datas[0] count] - self.groupSpace) /
             self.itemAxisScale / self.oldPinScale;
         }
     }
