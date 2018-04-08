@@ -37,6 +37,8 @@ Group Horizontal Bar Chart <br>
 Group Vertical Bar Chart <br>
 ![line](./Gif/GroupV.gif) <br><br>
 ## Change logs
+### version 0.3.12
+1. 删除不必要的短刻度线；chartView绘图区域距左边距的距离设为一个属性leftEdge；删除TextWidth宏，它的值由(self.leftEdge - 5)替代
 ### version 0.3.11
 1. 折线图UI细节修正 <br>
 ### version 0.3.10
