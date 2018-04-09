@@ -111,4 +111,5 @@ YHTapPointRatioInItemMake(CGFloat x, CGFloat y) {
 - (CGFloat)axisUnitScale;
 + (BOOL)respondsFloatValueSelector:(id)idValue;
 - (CGFloat)defaultLeftEdge;
+- (void)updateChartConfigure:(NSDictionary *)configureDict frame:(CGRect)frame;//更新视图的数据及frame，可用于视图切换等场景
 @end

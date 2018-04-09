@@ -27,6 +27,18 @@
     }
     return self;
 }
+- (void)updateChartConfigure:(NSDictionary *)configureDict frame:(CGRect)frame {
+    [self dealChartConfigure:configureDict];
+    self.pointRatio = YHTapPointRatioInItemMake(0, 0);
+    self.hadTapped = NO;
+    self.frame = frame;
+    self.gestureScroll.contentOffset = CGPointZero;
+    self.gestureScroll.frame = CGRectMake(self.leftEdge, TopEdge, ChartWidth, ChartHeight);
+    self.gestureScroll.contentSize = [self gestureScrollContentSize];
+    self.oldPinScale = 1.0;
+    self.itemAxisScale = 0;
+    [self redraw];
+}
 - (void)updateChartFrame:(CGRect)frame {
     [self adjustScale:self.frame newFrame:frame];
     CGFloat offSetXRatio = self.gestureScroll.contentOffset.x / self.gestureScroll.contentSize.width;
@@ -234,10 +246,12 @@
 - (void)removeSelectedLayer {
     UIView *subContainer = [self.containerView viewWithTag:102];
     NSArray *subLayers = subContainer.layer.sublayers;
+    if (!subLayers || !subLayers.count) return;
     for (NSUInteger i=subLayers.count-1;i>0;i--) {
         CALayer *layer = subLayers[i];
-        if ([layer isKindOfClass:[CAShapeLayer class]] && ([layer.name isEqualToString:@"borderCircle"] || [layer.name isEqualToString:@"centerCircle"] || [layer.name isEqualToString:@"subline"] || [layer.name isEqualToString:@"mask"])) {
+        if (layer.name && ([layer.name isEqualToString:@"mask"])) {
             [layer removeFromSuperlayer];
+            break;
         }
     }
 }

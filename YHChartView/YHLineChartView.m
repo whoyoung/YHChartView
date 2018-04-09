@@ -490,10 +490,12 @@ typedef NS_ENUM(NSUInteger, LineChartOriginType) {
 - (void)updateSelectedGroup:(NSUInteger)group item:(NSUInteger)item {
     UIView *subContainer = [self.containerView viewWithTag:102];
     NSArray *subLayers = subContainer.layer.sublayers;
+    if (!subLayers || !subLayers.count) return;
     for (NSUInteger i=subLayers.count-1;i>0;i--) {
         CALayer *layer = subLayers[i];
-        if ([layer isKindOfClass:[CAShapeLayer class]] && ([layer.name isEqualToString:@"borderCircle"] || [layer.name isEqualToString:@"centerCircle"] || [layer.name isEqualToString:@"subline"])) {
+        if ([layer.name isEqualToString:@"mask"]) {
             [layer removeFromSuperlayer];
+            break;
         }
     }
     
@@ -507,7 +509,8 @@ typedef NS_ENUM(NSUInteger, LineChartOriginType) {
 
 - (void)selectedSublineLayers:(NSString *)pointString circleColor:(NSString *)hexColor parentView:(UIView *)parentV {
     CGPoint selectedP = CGPointFromString(pointString);
-    
+    CALayer *layer = [CALayer layer];
+    layer.name = @"mask";
     if(self.showSelectedSubLine) {
         CAShapeLayer *sublineLayer = [CAShapeLayer layer];
         UIBezierPath *sublineBezierP = [UIBezierPath bezierPath];
@@ -517,8 +520,7 @@ typedef NS_ENUM(NSUInteger, LineChartOriginType) {
         sublineLayer.lineWidth = 0.5;
         sublineLayer.strokeColor = [UIColor hexChangeFloat:self.subLineColor].CGColor;
         sublineLayer.fillColor = [UIColor hexChangeFloat:self.subLineColor].CGColor;
-        sublineLayer.name = @"subline";
-        [parentV.layer addSublayer:sublineLayer];
+        [layer addSublayer:sublineLayer];
     }
     
     CAShapeLayer *shaperLayer = [CAShapeLayer layer];
@@ -531,8 +533,7 @@ typedef NS_ENUM(NSUInteger, LineChartOriginType) {
     shaperLayer.path = bezierP.CGPath;
     shaperLayer.strokeColor = [UIColor hexChangeFloat:hexColor alpha:self.circleBorderColorAlpha].CGColor;
     shaperLayer.fillColor = [UIColor hexChangeFloat:hexColor alpha:self.circleBorderColorAlpha].CGColor;
-    shaperLayer.name = @"borderCircle";
-    [parentV.layer addSublayer:shaperLayer];
+    [layer addSublayer:shaperLayer];
     
     CAShapeLayer *centerLayer = [CAShapeLayer layer];
     UIBezierPath *centerBezierP = [UIBezierPath bezierPathWithArcCenter:selectedP
@@ -544,8 +545,8 @@ typedef NS_ENUM(NSUInteger, LineChartOriginType) {
     centerLayer.path = centerBezierP.CGPath;
     centerLayer.strokeColor = [UIColor hexChangeFloat:hexColor].CGColor;
     centerLayer.fillColor = [UIColor hexChangeFloat:hexColor].CGColor;
-    centerLayer.name = @"centerCircle";
-    [parentV.layer addSublayer:centerLayer];
+    [layer addSublayer:centerLayer];
+    [parentV.layer addSublayer:layer];
 }
 
 @end
