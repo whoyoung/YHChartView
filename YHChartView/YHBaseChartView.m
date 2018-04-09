@@ -278,7 +278,7 @@
         tipMaxW = MAX(tipMaxW, [groupStr measureTextWidth:[UIFont systemFontOfSize:9]]);
         tipH += tipTextH;
     }
-    tipMaxW = tipMaxW > ChartWidth ? ChartWidth : tipMaxW;
+    tipMaxW = tipMaxW > (ChartWidth-TipViewPadding*2) ? (ChartWidth-TipViewPadding*2) : tipMaxW;
     tipMaxW += TipViewPadding*2;
 
     NSUInteger arrowP = 2; //箭头在中间位置
