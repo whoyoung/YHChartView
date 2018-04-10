@@ -37,6 +37,9 @@ Group Horizontal Bar Chart <br>
 Group Vertical Bar Chart <br>
 ![line](./Gif/GroupV.gif) <br><br>
 ## Change logs
+### version 0.3.14
+1. 垂直柱状图标题轴文字隐藏规则修正 <br> 
+2. 文字高度动态调整，避免展示不全 <br>
 ### version 0.3.13
 1. 提供更新视图数据的方法，可用于视图切换等场景 <br> 
 2. 选中状态下提示窗layer层优化，减少不必要的循环 <br>
