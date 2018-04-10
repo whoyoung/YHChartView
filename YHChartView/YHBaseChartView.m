@@ -428,10 +428,15 @@
 
 - (NSDictionary *)prepareTipViewTexts:(NSUInteger)group item:(NSUInteger)item {
     NSString *groupStr = @"";
-    if (self.groupMembers.count > 1) {
+    if (self.groupMembers && self.groupMembers.count > 1) {
         groupStr = [NSString stringWithFormat:@"%@: %@", self.groupDimension, self.groupMembers[item]];
     }
-    NSString *axisStr = [NSString stringWithFormat:@"%@: %@", self.axisTitle, self.AxisArray[group]];
+    NSString *axisStr;
+    if (self.axisTitle && self.axisTitle.length) {
+        axisStr = [NSString stringWithFormat:@"%@: %@", self.axisTitle, self.AxisArray[group]];
+    } else {
+        axisStr = [NSString stringWithFormat:@"%@", self.AxisArray[group]];
+    }
     NSString *data = [[self.Datas[item] objectAtIndex:group] respondsToSelector:@selector(floatValue)]
     ? [self.Datas[item] objectAtIndex:group]
     : @"N/A";
