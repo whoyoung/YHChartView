@@ -243,7 +243,7 @@
 }
 
 - (void)drawDataPoint {
-    UIView *subContainerV = [[UIView alloc] initWithFrame:CGRectMake(LeftEdge, TopEdge, ChartWidth, ChartHeight)];
+    UIView *subContainerV = [[UIView alloc] initWithFrame:CGRectMake(self.leftEdge, TopEdge, ChartWidth, ChartHeight)];
     subContainerV.layer.masksToBounds = YES;
     subContainerV.tag = 102;
     [self.containerView addSubview:subContainerV];
@@ -380,10 +380,10 @@
         CGRect textFrame;
         if (self.chartType == BarChartTypeGroup) {
             if ((self.Datas.count*self.zoomedItemAxis+self.groupSpace)*i - offsetY + (self.Datas.count*self.zoomedItemAxis-TextHeight)/2.0 < 0) continue;
-            textFrame = CGRectMake(0, TopEdge+(self.Datas.count*self.zoomedItemAxis+self.groupSpace)*i - offsetY + (self.Datas.count*self.zoomedItemAxis-TextHeight)/2.0, LeftEdge, TextHeight);
+            textFrame = CGRectMake(0, TopEdge+(self.Datas.count*self.zoomedItemAxis+self.groupSpace)*i - offsetY + (self.Datas.count*self.zoomedItemAxis-TextHeight)/2.0, self.leftEdge-5, TextHeight);
         } else {
             if ((self.zoomedItemAxis+self.groupSpace)*i - offsetY + (self.zoomedItemAxis-TextHeight)/2.0 < 0) continue;
-            textFrame = CGRectMake(0, TopEdge+(self.zoomedItemAxis+self.groupSpace)*i - offsetY + (self.zoomedItemAxis-TextHeight)/2.0, LeftEdge, TextHeight);
+            textFrame = CGRectMake(0, TopEdge+(self.zoomedItemAxis+self.groupSpace)*i - offsetY + (self.zoomedItemAxis-TextHeight)/2.0, self.leftEdge-5, TextHeight);
         }
         CATextLayer *text = [self getTextLayerWithString:self.AxisArray[i] textColor:self.axisTextColor fontSize:self.axisTextFontSize backgroundColor:[UIColor clearColor] frame:textFrame alignmentMode:kCAAlignmentRight];
         [self.containerView.layer addSublayer:text];
@@ -392,8 +392,8 @@
 - (void)addAxisScaleLayer {
     CAShapeLayer *yScaleLayer = [CAShapeLayer layer];
     UIBezierPath *yScaleBezier = [UIBezierPath bezierPath];
-    [yScaleBezier moveToPoint:CGPointMake(LeftEdge, TopEdge)];
-    [yScaleBezier addLineToPoint:CGPointMake(LeftEdge, self.bounds.size.height-BottomEdge)];
+    [yScaleBezier moveToPoint:CGPointMake(self.leftEdge, TopEdge)];
+    [yScaleBezier addLineToPoint:CGPointMake(self.leftEdge, self.bounds.size.height-BottomEdge)];
     yScaleLayer.path = yScaleBezier.CGPath;
     yScaleLayer.lineWidth = self.referenceLineWidth;
     yScaleLayer.strokeColor = self.referenceLineColor.CGColor;
@@ -402,12 +402,12 @@
 }
 - (void)addDataLayer {
     for (NSUInteger i=0; i<self.dataNegativeSegmentNum; i++) {
-        CGRect textFrame = CGRectMake((i-0.5)*[self axisUnitScale]+LeftEdge, self.bounds.size.height-self.axisTextFontSize-2, [self axisUnitScale], self.axisTextFontSize+1);
+        CGRect textFrame = CGRectMake((i-0.5)*[self axisUnitScale]+self.leftEdge, self.bounds.size.height-self.axisTextFontSize-2, [self axisUnitScale], self.axisTextFontSize+1);
         CATextLayer *text = [self getTextLayerWithString:[NSString stringWithFormat:@"-%@",[self adjustScaleValue:(self.dataNegativeSegmentNum-i)*self.itemDataScale]] textColor:self.dataTextColor fontSize:self.dataTextFontSize backgroundColor:[UIColor clearColor] frame:textFrame alignmentMode:kCAAlignmentCenter];
         [self.containerView.layer addSublayer:text];
     }
     for (NSInteger i=0; i<=self.dataPostiveSegmentNum+1; i++) {
-        CGRect textFrame = CGRectMake((self.dataNegativeSegmentNum+i-0.5)*[self axisUnitScale]+LeftEdge, self.bounds.size.height-self.axisTextFontSize-2, [self axisUnitScale], self.axisTextFontSize+1);
+        CGRect textFrame = CGRectMake((self.dataNegativeSegmentNum+i-0.5)*[self axisUnitScale]+self.leftEdge, self.bounds.size.height-self.axisTextFontSize-2, [self axisUnitScale], self.axisTextFontSize+1);
         CATextLayer *text = [self getTextLayerWithString:[NSString stringWithFormat:@"%@",[self adjustScaleValue:i*self.itemDataScale]] textColor:self.dataTextColor fontSize:self.dataTextFontSize backgroundColor:[UIColor clearColor] frame:textFrame alignmentMode:kCAAlignmentCenter];
         [self.containerView.layer addSublayer:text];
     }
@@ -418,8 +418,8 @@
         CAShapeLayer *xScaleLayer = [CAShapeLayer layer];
         UIBezierPath *xScaleBezier = [UIBezierPath bezierPath];
         for (NSUInteger i=0; i<=self.dataNegativeSegmentNum+self.dataPostiveSegmentNum+1; i++) {
-            [xScaleBezier moveToPoint:CGPointMake(LeftEdge+i*[self axisUnitScale], self.bounds.size.height-BottomEdge)];
-            [xScaleBezier addLineToPoint:CGPointMake(LeftEdge+i*[self axisUnitScale], self.bounds.size.height-BottomEdge+5)];
+            [xScaleBezier moveToPoint:CGPointMake(self.leftEdge+i*[self axisUnitScale], self.bounds.size.height-BottomEdge)];
+            [xScaleBezier addLineToPoint:CGPointMake(self.leftEdge+i*[self axisUnitScale], self.bounds.size.height-BottomEdge+5)];
         }
         xScaleLayer.path = xScaleBezier.CGPath;
         xScaleLayer.lineWidth = self.referenceLineWidth;
@@ -433,8 +433,8 @@
         UIBezierPath *dashLineBezier = [UIBezierPath bezierPath];
         for (NSUInteger i=1; i<=self.dataNegativeSegmentNum+self.dataPostiveSegmentNum; i++) {
             if (i == self.dataNegativeSegmentNum) continue;
-            [dashLineBezier moveToPoint:CGPointMake(LeftEdge+i*[self axisUnitScale], self.bounds.size.height-BottomEdge)];
-            [dashLineBezier addLineToPoint:CGPointMake(LeftEdge+i*[self axisUnitScale], TopEdge)];
+            [dashLineBezier moveToPoint:CGPointMake(self.leftEdge+i*[self axisUnitScale], self.bounds.size.height-BottomEdge)];
+            [dashLineBezier addLineToPoint:CGPointMake(self.leftEdge+i*[self axisUnitScale], TopEdge)];
         }
         dashLineLayer.path = dashLineBezier.CGPath;
         if (self.showDataDashLine) {
@@ -447,8 +447,8 @@
         
         CAShapeLayer *zeroLineLayer = [CAShapeLayer layer];
         UIBezierPath *zeroLineBezier = [UIBezierPath bezierPath];
-        [zeroLineBezier moveToPoint:CGPointMake(LeftEdge+self.dataNegativeSegmentNum*[self axisUnitScale], self.bounds.size.height-BottomEdge)];
-        [zeroLineBezier addLineToPoint:CGPointMake(LeftEdge+self.dataNegativeSegmentNum*[self axisUnitScale], TopEdge)];
+        [zeroLineBezier moveToPoint:CGPointMake(self.leftEdge+self.dataNegativeSegmentNum*[self axisUnitScale], self.bounds.size.height-BottomEdge)];
+        [zeroLineBezier addLineToPoint:CGPointMake(self.leftEdge+self.dataNegativeSegmentNum*[self axisUnitScale], TopEdge)];
         zeroLineLayer.lineWidth = self.referenceLineWidth*2;
         zeroLineLayer.strokeColor = ZeroLineColor.CGColor;
         zeroLineLayer.path = zeroLineBezier.CGPath;
@@ -526,5 +526,7 @@
 - (CGFloat)axisUnitScale {
     return ChartWidth/(self.dataNegativeSegmentNum + self.dataPostiveSegmentNum);
 }
-
+- (CGFloat)defaultLeftEdge {
+    return LeftEdge+10;
+}
 @end

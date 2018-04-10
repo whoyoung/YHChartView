@@ -13,6 +13,8 @@
 @property (nonatomic, strong) NSDictionary *dataDict;
 @property (nonatomic, assign) BOOL isHorizontal;
 @property (nonatomic, strong) YHBaseChartView *chartView;
+@property (nonatomic, copy) NSString *lastDataMd5;
+@property (nonatomic, assign) BOOL shouldChangeConfigure;
 @end
 
 @implementation XSYBarChartView
@@ -20,15 +22,26 @@
     NSData *strData = [data dataUsingEncoding:NSUTF8StringEncoding];
     _dataDict = [NSJSONSerialization JSONObjectWithData:strData options:NSJSONReadingMutableLeaves error:nil];
     self.isHorizontal = [[_dataDict objectForKey:@"horizontal"] boolValue];
+    NSString *md5 = [NSString md5:data];
+    if (self.lastDataMd5 && ![self.lastDataMd5 isEqualToString:md5]) {
+      _shouldChangeConfigure = YES;
+      [self setNeedsLayout];
+    }
+    self.lastDataMd5 = md5;
 }
 - (void)layoutSubviews {
     [super layoutSubviews];
     NSArray *subviews = self.subviews;
     BOOL isExisted = NO;
     for (UIView *view in subviews) {
-        if ([view isKindOfClass:[YHHorizontalBarChartView class]] ||
-            [view isKindOfClass:[YHVerticalBarChartView class]]) {
+        if (([view isKindOfClass:[YHHorizontalBarChartView class]] && self.isHorizontal) ||
+            ([view isKindOfClass:[YHVerticalBarChartView class]] && !self.isHorizontal)) {
             isExisted = YES;
+            if (self.shouldChangeConfigure) {
+              self.shouldChangeConfigure = NO;
+              [(YHBaseChartView *)view updateChartConfigure:self.dataDict frame:self.frame];
+              break;
+            }
             [(YHBaseChartView *)view updateChartFrame:self.frame];
             break;
         }

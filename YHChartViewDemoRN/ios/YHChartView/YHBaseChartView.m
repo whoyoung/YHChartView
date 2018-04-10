@@ -27,12 +27,24 @@
     }
     return self;
 }
+- (void)updateChartConfigure:(NSDictionary *)configureDict frame:(CGRect)frame {
+    [self dealChartConfigure:configureDict];
+    self.pointRatio = YHTapPointRatioInItemMake(0, 0);
+    self.hadTapped = NO;
+    self.frame = frame;
+    self.gestureScroll.contentOffset = CGPointZero;
+    self.gestureScroll.frame = CGRectMake(self.leftEdge, TopEdge, ChartWidth, ChartHeight);
+    self.gestureScroll.contentSize = [self gestureScrollContentSize];
+    self.oldPinScale = 1.0;
+    self.itemAxisScale = 0;
+    [self redraw];
+}
 - (void)updateChartFrame:(CGRect)frame {
     [self adjustScale:self.frame newFrame:frame];
     CGFloat offSetXRatio = self.gestureScroll.contentOffset.x / self.gestureScroll.contentSize.width;
     CGFloat offSetYRatio = self.gestureScroll.contentOffset.y / self.gestureScroll.contentSize.height;
     self.frame = frame;
-    self.gestureScroll.frame = CGRectMake(LeftEdge, TopEdge, ChartWidth, ChartHeight);
+    self.gestureScroll.frame = CGRectMake(self.leftEdge, TopEdge, ChartWidth, ChartHeight);
     self.gestureScroll.contentSize = [self gestureScrollContentSize];
     if (offSetXRatio * self.gestureScroll.contentSize.width + ChartWidth > self.gestureScroll.contentSize.width ||
         offSetYRatio * self.gestureScroll.contentSize.height + ChartHeight > self.gestureScroll.contentSize.height) {
@@ -46,8 +58,8 @@
     [self redraw];
 }
 - (void)adjustScale:(CGRect)origionFrame newFrame:(CGRect)newFrame {
-    _itemAxisScale *= (newFrame.size.width - LeftEdge - RightEdge) / (origionFrame.size.width - LeftEdge - RightEdge);
-    _oldPinScale *= (origionFrame.size.width - LeftEdge - RightEdge) / (newFrame.size.width - LeftEdge - RightEdge);
+    _itemAxisScale *= (newFrame.size.width - self.leftEdge - RightEdge) / (origionFrame.size.width - self.leftEdge - RightEdge);
+    _oldPinScale *= (origionFrame.size.width - self.leftEdge - RightEdge) / (newFrame.size.width - self.leftEdge - RightEdge);
 }
 - (void)dealChartConfigure:(NSDictionary *)dict {
     _AxisArray = [dict objectForKey:@"axis"];
@@ -84,6 +96,7 @@
     _showDataHardLine = [dict objectForKey:@"showDataHardLine"] ? [[dict objectForKey:@"showDataHardLine"] boolValue] : YES;
     _tipViewBackgroundHexColor = [dict objectForKey:@"tipViewBackgroundHexColor"] ? [dict objectForKey:@"tipViewBackgroundHexColor"] : @"000000";
     _tipViewBackgroundColorAlpha = [dict objectForKey:@"tipViewBackgroundColorAlpha"] ? [[dict objectForKey:@"tipViewBackgroundColorAlpha"] floatValue] : 0.65;
+    _leftEdge = [dict objectForKey:@"leftEdge"] ? [[dict objectForKey:@"leftEdge"] floatValue] : [self defaultLeftEdge];
     
     NSDictionary *styleDict = [dict objectForKey:@"styles"];
     [self dealStyleDict:styleDict];
@@ -149,7 +162,7 @@
 - (void)addGestureScroll {
     if (!_gestureScroll) {
         UIScrollView *scroll =
-            [[UIScrollView alloc] initWithFrame:CGRectMake(LeftEdge, TopEdge, ChartWidth, ChartHeight)];
+            [[UIScrollView alloc] initWithFrame:CGRectMake(self.leftEdge, TopEdge, ChartWidth, ChartHeight)];
         scroll.showsVerticalScrollIndicator = NO;
         scroll.showsHorizontalScrollIndicator = NO;
         scroll.minimumZoomScale = 1.0;
@@ -233,10 +246,12 @@
 - (void)removeSelectedLayer {
     UIView *subContainer = [self.containerView viewWithTag:102];
     NSArray *subLayers = subContainer.layer.sublayers;
+    if (!subLayers || !subLayers.count) return;
     for (NSUInteger i=subLayers.count-1;i>0;i--) {
         CALayer *layer = subLayers[i];
-        if ([layer isKindOfClass:[CAShapeLayer class]] && ([layer.name isEqualToString:@"borderCircle"] || [layer.name isEqualToString:@"centerCircle"] || [layer.name isEqualToString:@"subline"] || [layer.name isEqualToString:@"mask"])) {
+        if (layer.name && ([layer.name isEqualToString:@"mask"])) {
             [layer removeFromSuperlayer];
+            break;
         }
     }
 }
@@ -263,21 +278,22 @@
         tipMaxW = MAX(tipMaxW, [groupStr measureTextWidth:[UIFont systemFontOfSize:9]]);
         tipH += tipTextH;
     }
+    tipMaxW = tipMaxW > (ChartWidth-TipViewPadding*2) ? (ChartWidth-TipViewPadding*2) : tipMaxW;
     tipMaxW += TipViewPadding*2;
 
     NSUInteger arrowP = 2; //箭头在中间位置
     CGPoint tempP = [self adjustTipViewLocation:group item:item];
     CGFloat originX = tempP.x - tipMaxW / 2.0;
-    if (originX < LeftEdge) {
+    if (originX < self.leftEdge) {
         originX = tempP.x;
         arrowP = 1; //箭头在左边位置
-        if ((originX+LeftEdge) < LeftEdge) {
+        if ((originX+self.leftEdge) < self.leftEdge) {
             return;
         }
-    } else if (tempP.x + tipMaxW / 2.0 > ChartWidth + LeftEdge) {
+    } else if (tempP.x + tipMaxW / 2.0 > ChartWidth + self.leftEdge) {
         originX = tempP.x - tipMaxW;
         arrowP = 3; //箭头在右边位置
-        if (originX>(LeftEdge+ChartWidth)) {
+        if (originX>(self.leftEdge+ChartWidth)) {
             return;
         }
     }
@@ -288,7 +304,7 @@
         arrowP += 10; //箭头在弹窗上方
     }
     CGPoint contentOffset = self.gestureScroll.contentOffset;
-    UIView *tipView = [[UIView alloc] initWithFrame:CGRectMake(contentOffset.x + originX- LeftEdge, contentOffset.y + originY - TopEdge, tipMaxW, tipH)];
+    UIView *tipView = [[UIView alloc] initWithFrame:CGRectMake(contentOffset.x + originX- self.leftEdge, contentOffset.y + originY - TopEdge, tipMaxW, tipH)];
     tipView.backgroundColor = [UIColor clearColor];
     tipView.tag = 101;
     [self.gestureScroll addSubview:tipView];
@@ -666,5 +682,8 @@
         return YES;
     }
     return NO;
+}
+- (CGFloat)defaultLeftEdge {
+    return LeftEdge;
 }
 @end

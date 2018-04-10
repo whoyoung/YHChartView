@@ -11,11 +11,19 @@
 @interface XSYLineChartView () <YHCommonChartViewDelegate>
 @property (nonatomic, strong) NSDictionary *dataDict;
 @property (nonatomic, strong) YHLineChartView *chartView;
+@property (nonatomic, copy) NSString *lastDataMd5;
+@property (nonatomic, assign) BOOL shouldChangeConfigure;
 @end
 @implementation XSYLineChartView
 - (void)setData:(NSString *)data {
     NSData *strData = [data dataUsingEncoding:NSUTF8StringEncoding];
     _dataDict = [NSJSONSerialization JSONObjectWithData:strData options:NSJSONReadingMutableLeaves error:nil];
+    NSString *md5 = [NSString md5:data];
+    if (self.lastDataMd5 && ![self.lastDataMd5 isEqualToString:md5]) {
+      _shouldChangeConfigure = YES;
+      [self setNeedsLayout];
+    }
+    self.lastDataMd5 = md5;
 }
 - (void)layoutSubviews {
     [super layoutSubviews];
@@ -24,6 +32,11 @@
     for (UIView *view in subviews) {
         if ([view isKindOfClass:[YHLineChartView class]]) {
             isExisted = YES;
+            if (self.shouldChangeConfigure) {
+              self.shouldChangeConfigure = NO;
+              [(YHLineChartView *)view updateChartConfigure:self.dataDict frame:self.frame];
+              break;
+            }
             [(YHLineChartView *)view updateChartFrame:self.frame];
             break;
         }

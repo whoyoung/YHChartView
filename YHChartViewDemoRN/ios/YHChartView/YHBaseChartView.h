@@ -86,6 +86,7 @@ YHTapPointRatioInItemMake(CGFloat x, CGFloat y) {
 
 @property (nonatomic, assign, readonly) BOOL showTipViewArrow; //显示tipview的箭头
 @property (nonatomic, assign, readonly) CGFloat minWidthHideAxisText; //若 每组item的宽度 < minWidthHideAxisText, 则不绘制坐标轴文本
+@property (nonatomic, assign, readonly) CGFloat leftEdge; //chartView距左边沿的距离
 
 - (void)redraw; //重新绘制
 - (void)compareBeginAndEndItemValue:(NSUInteger)beginItem endItem:(NSUInteger)endItem isBeginGroup:(BOOL)isBeginGroup;
@@ -109,4 +110,6 @@ YHTapPointRatioInItemMake(CGFloat x, CGFloat y) {
 - (BOOL)shouldHideAxisText;
 - (CGFloat)axisUnitScale;
 + (BOOL)respondsFloatValueSelector:(id)idValue;
+- (CGFloat)defaultLeftEdge;
+- (void)updateChartConfigure:(NSDictionary *)configureDict frame:(CGRect)frame;//更新视图的数据及frame，可用于视图切换等场景
 @end
