@@ -328,10 +328,10 @@ typedef NS_ENUM(NSUInteger, LineChartOriginType) {
         CGRect textFrame;
         if (self.originType == LineChartOriginTypeCenter || self.AxisArray.count == 1) {
             if (self.zoomedItemAxis*(i+0.5)-offsetX < 0) continue;
-            textFrame = CGRectMake(self.leftEdge + self.zoomedItemAxis*i-offsetX, self.bounds.size.height-self.axisTextFontSize-2, self.zoomedItemAxis, self.axisTextFontSize+1);
+            textFrame = CGRectMake(self.leftEdge + self.zoomedItemAxis*i-offsetX, self.bounds.size.height-AxisTextHeight, self.zoomedItemAxis, AxisTextHeight);
         } else {
             if (self.zoomedItemAxis*i-offsetX < 0) continue;
-            textFrame = CGRectMake(self.leftEdge + self.zoomedItemAxis*i-offsetX-self.zoomedItemAxis/2.0, self.bounds.size.height-self.axisTextFontSize-2, self.zoomedItemAxis, self.axisTextFontSize+1);
+            textFrame = CGRectMake(self.leftEdge + self.zoomedItemAxis*i-offsetX-self.zoomedItemAxis/2.0, self.bounds.size.height-AxisTextHeight, self.zoomedItemAxis, AxisTextHeight);
         }
         CATextLayer *text = [self getTextLayerWithString:self.AxisArray[i] textColor:self.axisTextColor fontSize:self.axisTextFontSize backgroundColor:[UIColor clearColor] frame:textFrame alignmentMode:kCAAlignmentCenter];
         [self.containerView.layer addSublayer:text];
