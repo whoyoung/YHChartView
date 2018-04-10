@@ -37,8 +37,13 @@ Group Horizontal Bar Chart <br>
 Group Vertical Bar Chart <br>
 ![line](./Gif/GroupV.gif) <br><br>
 ## Change logs
+### version 0.3.13
+1. 提供更新视图数据的方法，可用于视图切换等场景 <br> 
+2. 选中状态下提示窗layer层优化，减少不必要的循环 <br>
+3. 限制弹窗的最大宽度 <br>
+4. 更新 RN demo <br>
 ### version 0.3.12
-1. 删除不必要的短刻度线；chartView绘图区域距左边距的距离设为一个属性leftEdge；删除TextWidth宏，它的值由(self.leftEdge - 5)替代
+1. 删除不必要的短刻度线；chartView绘图区域距左边距的距离设为一个属性leftEdge；删除TextWidth宏，它的值由(self.leftEdge - 5)替代 <br>
 ### version 0.3.11
 1. 折线图UI细节修正 <br>
 ### version 0.3.10
