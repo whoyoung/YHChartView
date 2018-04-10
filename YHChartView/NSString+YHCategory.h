@@ -9,4 +9,7 @@
 #import <UIKit/UIKit.h>
 @interface NSString (YHCategory)
 - (CGFloat)measureTextWidth:(UIFont *)desFont;
++ (BOOL)isEmpty:(NSString *)string;
++ (NSString *)md5:(NSString *)str;
+
 @end
