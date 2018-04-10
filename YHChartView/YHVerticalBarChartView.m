@@ -379,11 +379,11 @@
     for (NSUInteger i=self.beginGroupIndex; i<=self.endGroupIndex; i++) {
         CGRect textFrame;
         if (self.chartType == BarChartTypeGroup) {
-            if ((self.Datas.count*self.zoomedItemAxis+self.groupSpace)*i - offsetY + (self.Datas.count*self.zoomedItemAxis-TextHeight)/2.0 < 0) continue;
-            textFrame = CGRectMake(0, TopEdge+(self.Datas.count*self.zoomedItemAxis+self.groupSpace)*i - offsetY + (self.Datas.count*self.zoomedItemAxis-TextHeight)/2.0, self.leftEdge-5, TextHeight);
+            if ((self.Datas.count*self.zoomedItemAxis+self.groupSpace)*i - offsetY + (self.Datas.count*self.zoomedItemAxis-AxisTextHeight)/2.0 < 0) continue;
+            textFrame = CGRectMake(0, TopEdge+(self.Datas.count*self.zoomedItemAxis+self.groupSpace)*i - offsetY + (self.Datas.count*self.zoomedItemAxis-AxisTextHeight)/2.0, self.leftEdge-5, AxisTextHeight);
         } else {
-            if ((self.zoomedItemAxis+self.groupSpace)*i - offsetY + (self.zoomedItemAxis-TextHeight)/2.0 < 0) continue;
-            textFrame = CGRectMake(0, TopEdge+(self.zoomedItemAxis+self.groupSpace)*i - offsetY + (self.zoomedItemAxis-TextHeight)/2.0, self.leftEdge-5, TextHeight);
+            if ((self.zoomedItemAxis+self.groupSpace)*i - offsetY + (self.zoomedItemAxis-AxisTextHeight)/2.0 < 0) continue;
+            textFrame = CGRectMake(0, TopEdge+(self.zoomedItemAxis+self.groupSpace)*i - offsetY + (self.zoomedItemAxis-AxisTextHeight)/2.0, self.leftEdge-5, AxisTextHeight);
         }
         CATextLayer *text = [self getTextLayerWithString:self.AxisArray[i] textColor:self.axisTextColor fontSize:self.axisTextFontSize backgroundColor:[UIColor clearColor] frame:textFrame alignmentMode:kCAAlignmentRight];
         [self.containerView.layer addSublayer:text];
@@ -402,12 +402,12 @@
 }
 - (void)addDataLayer {
     for (NSUInteger i=0; i<self.dataNegativeSegmentNum; i++) {
-        CGRect textFrame = CGRectMake((i-0.5)*[self axisUnitScale]+self.leftEdge, self.bounds.size.height-self.axisTextFontSize-2, [self axisUnitScale], self.axisTextFontSize+1);
+        CGRect textFrame = CGRectMake((i-0.5)*[self axisUnitScale]+self.leftEdge, self.bounds.size.height-self.dataTextFontSize-4, [self axisUnitScale], self.dataTextFontSize+4);
         CATextLayer *text = [self getTextLayerWithString:[NSString stringWithFormat:@"-%@",[self adjustScaleValue:(self.dataNegativeSegmentNum-i)*self.itemDataScale]] textColor:self.dataTextColor fontSize:self.dataTextFontSize backgroundColor:[UIColor clearColor] frame:textFrame alignmentMode:kCAAlignmentCenter];
         [self.containerView.layer addSublayer:text];
     }
     for (NSInteger i=0; i<=self.dataPostiveSegmentNum+1; i++) {
-        CGRect textFrame = CGRectMake((self.dataNegativeSegmentNum+i-0.5)*[self axisUnitScale]+self.leftEdge, self.bounds.size.height-self.axisTextFontSize-2, [self axisUnitScale], self.axisTextFontSize+1);
+        CGRect textFrame = CGRectMake((self.dataNegativeSegmentNum+i-0.5)*[self axisUnitScale]+self.leftEdge, self.bounds.size.height-self.dataTextFontSize-4, [self axisUnitScale], self.dataTextFontSize+4);
         CATextLayer *text = [self getTextLayerWithString:[NSString stringWithFormat:@"%@",[self adjustScaleValue:i*self.itemDataScale]] textColor:self.dataTextColor fontSize:self.dataTextFontSize backgroundColor:[UIColor clearColor] frame:textFrame alignmentMode:kCAAlignmentCenter];
         [self.containerView.layer addSublayer:text];
     }
@@ -528,5 +528,14 @@
 }
 - (CGFloat)defaultLeftEdge {
     return LeftEdge+10;
+}
+- (BOOL)shouldHideAxisText {
+    if (self.chartType == BarChartTypeGroup) {
+        if (self.Datas.count * self.zoomedItemAxis < AxisTextHeight) return YES;
+        return NO;
+    } else {
+        if (self.zoomedItemAxis < AxisTextHeight) return YES;
+        return NO;
+    }
 }
 @end

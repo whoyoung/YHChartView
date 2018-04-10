@@ -107,7 +107,7 @@
 - (void)layoutSubviews {
     [super layoutSubviews];
     if (self.isDataError) {
-        CGRect textFrame = CGRectMake(0, (ChartHeight - TextHeight) / 2.0, ChartWidth, TextHeight);
+        CGRect textFrame = CGRectMake(0, (ChartHeight - AxisTextHeight) / 2.0, ChartWidth, AxisTextHeight);
         CATextLayer *text = [self getTextLayerWithString:@"数据格式有误"
                                                textColor:[UIColor lightGrayColor]
                                                 fontSize:TipTextFont

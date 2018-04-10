@@ -410,11 +410,11 @@
             if ((self.Datas.count * self.zoomedItemAxis + self.groupSpace) * (i + 0.5) - offsetX < 0) continue;
             textFrame =
                 CGRectMake(self.leftEdge + (self.Datas.count * self.zoomedItemAxis + self.groupSpace) * i - offsetX,
-                           self.bounds.size.height - self.axisTextFontSize-2, self.Datas.count * self.zoomedItemAxis, self.axisTextFontSize+1);
+                           self.bounds.size.height - AxisTextHeight, self.Datas.count * self.zoomedItemAxis, AxisTextHeight);
         } else {
             if ((self.zoomedItemAxis + self.groupSpace) * (i + 0.5) - offsetX < 0) continue;
             textFrame = CGRectMake(self.leftEdge + (self.zoomedItemAxis + self.groupSpace) * i - offsetX,
-                                   self.bounds.size.height - self.axisTextFontSize-2, self.zoomedItemAxis, self.axisTextFontSize+1);
+                                   self.bounds.size.height - AxisTextHeight, self.zoomedItemAxis, AxisTextHeight);
         }
         CATextLayer *text = [self getTextLayerWithString:self.AxisArray[i]
                                                textColor:self.dataTextColor
